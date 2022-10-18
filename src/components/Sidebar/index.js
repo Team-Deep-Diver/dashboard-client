@@ -2,13 +2,13 @@ import { Wrapper } from "./style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
-function Sidebar({ setOpenSideBar, role }) {
+function Sidebar({ setIsOpen, role }) {
   return (
     <Wrapper>
       <FontAwesomeIcon
         icon={faArrowLeft}
         className="arrow-left"
-        onClick={() => setOpenSideBar(false)}
+        onClick={() => setIsOpen(false)}
       />
       {role === "GUEST" && (
         <div className="content1">회원가입</div>

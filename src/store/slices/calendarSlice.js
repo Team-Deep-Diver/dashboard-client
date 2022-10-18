@@ -13,12 +13,14 @@ const calendarSlice = createSlice({
       const dateObj = new Date(state.currentDate);
       const date = dateObj.getDate();
       const newDate = new Date(dateObj.setDate(date + 1));
+
       state.currentDate = newDate.toString();
     },
     showPrevDay(state) {
       const dateObj = new Date(state.currentDate);
       const date = dateObj.getDate();
       const newDate = new Date(dateObj.setDate(date - 1));
+
       state.currentDate = newDate.toString();
     },
   },

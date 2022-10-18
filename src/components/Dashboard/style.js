@@ -14,5 +14,7 @@ export const Wrapper = styled.div`
     margin: 30px;
     height: 55px;
     color: #A3BDED;
+    border-radius: 50%;
+    box-shadow: 2px 2px 2px 2px grey;
   }
 `;
