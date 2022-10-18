@@ -9,11 +9,6 @@ const calendarSlice = createSlice({
   name: "calendar",
   initialState,
   reducers: {
-    // showDay(state, action) {
-    //   const { year, month, date } = action.payload;
-    //   const newDate = new Date(year, month - 1, date);
-    //   state.currentDate = newDate.toString();
-    // },
     showNextDay(state) {
       const dateObj = new Date(state.currentDate);
       const date = dateObj.getDate();

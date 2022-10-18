@@ -17,7 +17,7 @@ function CalendarDate() {
         className="left-arrow"
         onClick={() => dispatch(showPrevDay())}
       />
-      <div>{`${year}-${month}-${date}`}</div>
+      <div className="font">{`${year}-${month}-${date}`}</div>
       <FontAwesomeIcon
         icon={faAnglesRight}
         className="right-arrow"

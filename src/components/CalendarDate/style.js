@@ -7,7 +7,11 @@ export const Wrapper = styled.div`
   width: 100%;
   height: 60px;
   background: #FFFFFF;
-  font-size: 40px;
+  border-bottom: solid #A3BDED;
+  .font {
+    font-family: "GangwonEdu_OTFBoldA";
+    font-size: 35px;
+  }
   .left-arrow {
     height: 40px;
     margin-right: 40px;
