@@ -1,6 +1,11 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -90px;
+  margin-left: -175px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,9 +16,11 @@ export const Wrapper = styled.div`
   box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.5);
 
   .message {
-    margin-top: 50px;
-    margin-bottom: 20px;
-    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 220px;
+    height: 120px;
     font-size: 23px;
     text-align: center;
   }
@@ -23,7 +30,6 @@ export const Wrapper = styled.div`
     width: 80px;
     height: 35px;
     background: #a3bded;
-    margin-top: 15px;
     border-radius: 3px;
     border: none;
     color: #ffffff;

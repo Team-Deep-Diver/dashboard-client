@@ -1,15 +1,11 @@
 import styled from "styled-components";
 
-export const Background = styled.div`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.3);
-`;
-
 export const Wrapper = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -200px;
+  margin-left: -275px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -36,6 +32,7 @@ export const Wrapper = styled.div`
     height: 130px;
     border-radius: 10px;
     border: 3px solid #a3bded;
+    overflow: scroll;
   }
 
   .list-item {

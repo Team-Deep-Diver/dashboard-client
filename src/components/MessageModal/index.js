@@ -1,9 +1,9 @@
 import { Wrapper } from "./style";
-import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setModalClose } from "../../store/slices/modalSlice";
 
-function MessageModal({message}) {
-  const navigate = useNavigate();
-  const { user_id } = useParams();
+function MessageModal({ message }) {
+  const dispatch = useDispatch();
 
   return (
     <Wrapper>
@@ -12,7 +12,7 @@ function MessageModal({message}) {
         type="submit"
         value="닫기"
         className="close-button"
-        onClick={() => navigate(`/users/${user_id}`)}
+        onClick={() => dispatch(setModalClose())}
       />
     </Wrapper>
   );

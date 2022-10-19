@@ -16,5 +16,6 @@ export const Wrapper = styled.div`
     color: #A3BDED;
     border-radius: 50%;
     box-shadow: 2px 2px 2px 2px grey;
+    cursor: pointer;
   }
 `;

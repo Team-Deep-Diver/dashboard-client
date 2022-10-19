@@ -6,22 +6,11 @@ import { Route, Routes } from "react-router-dom";
 import Welcome from "./pages/Welcome";
 import Layout from "./pages/Layout";
 import Login from "./pages/Login";
-import JoinGroupModal from "./components/JoinGroupModal";
-import MessageModal from "./components/MessageModal";
 
-const message = "신청되었습니다."
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Welcome />,
-  },
-  {
-    path: "/users/:user_id",
-    element: <JoinGroupModal />,
-  },
-  {
-    path: "/message",
-    element: <MessageModal message={message}/>
   },
   {
     path: "/login",

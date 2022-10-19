@@ -14,13 +14,13 @@ function MiniSidebar({ setIsOpen, role }) {
         className="bars"
         onClick={() => setIsOpen(true)}
       />
-      {role !== "GUEST" &&
+      {role !== "GUEST" && (
         <FontAwesomeIcon
           icon={faRightFromBracket}
           className="logout"
           onClick={logout}
         />
-      }
+      )}
     </Wrapper>
   );
 }

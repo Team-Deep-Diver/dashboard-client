@@ -6,8 +6,8 @@ export const Wrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 60px;
-  background: #FFFFFF;
-  border-bottom: solid #A3BDED;
+  background: #ffffff;
+  border-bottom: solid #a3bded;
   .font {
     font-family: "GangwonEdu_OTFBoldA";
     font-size: 35px;
@@ -15,11 +15,13 @@ export const Wrapper = styled.div`
   .left-arrow {
     height: 40px;
     margin-right: 40px;
-    color: #A3BDED;
+    cursor: pointer;
+    color: #a3bded;
   }
   .right-arrow {
     height: 40px;
     margin-left: 40px;
-    color: #A3BDED;
+    cursor: pointer;
+    color: #a3bded;
   }
 `;
