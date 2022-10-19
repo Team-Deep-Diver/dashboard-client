@@ -3,6 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 function Sidebar({ setIsOpen, role }) {
+  const joinGroup = () => {
+    // 그룹 참가하기 로직 작성 -> 모달로 보여줄 것.
+  }
+
   return (
     <Wrapper>
       <FontAwesomeIcon
@@ -15,7 +19,7 @@ function Sidebar({ setIsOpen, role }) {
       )}
       {role === "MEMBER" && (
         <div>
-          <div className="content1">그룹 참가하기</div>
+          <div className="content1" onClick={joinGroup}>그룹 참가하기</div>
           <div className="content2">내 그룹 현황</div>
         </div>
       )}

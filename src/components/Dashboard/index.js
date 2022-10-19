@@ -12,13 +12,7 @@ function Dashboard() {
 
   useEffect(() => {
     async function getUserCards() {
-      const response = await fetch(`${process.env.REACT_APP_SOCKET_SERVER_URL}/users/${user_id}/cards`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          date: currentDate
-        })
-      });
+      const response = await fetch(`${process.env.REACT_APP_SOCKET_SERVER_URL}/users/${user_id}/cards?date=${currentDate}`);
 
       const { cards } = await response.json();
       setCards(cards);
