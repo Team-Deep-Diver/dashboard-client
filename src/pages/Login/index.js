@@ -34,24 +34,37 @@ function Login() {
   const login = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-
-    formData.append("email", email);
-    formData.append("password", password);
-
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_REQUEST_HOST}/login`,
       {
         method: "POST",
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
-        body: formData,
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       }
     );
 
     if (res.status === 200) {
-      navigate(`/users/${res._id}`);
+      const result = await res.json();
+
+      const res2 = await fetch(
+        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${result.user._id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: result.token,
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        navigate(`/users/${result.user._id}`);
+      }
     } else {
       setMessage(res.message);
     }
@@ -78,7 +91,7 @@ function Login() {
           name="email"
           placeholder="이메일"
           required
-          value={email}
+          value={email || ""}
           onChange={(e) => handleChange(e)}
         />
         <input
@@ -87,7 +100,7 @@ function Login() {
           name="password"
           placeholder="비밀번호"
           required
-          value={password}
+          value={password || ""}
           onChange={(e) => handleChange(e)}
         />
         <div className="validation-message">{message}</div>
