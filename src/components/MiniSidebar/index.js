@@ -19,7 +19,8 @@ function MiniSidebar({ setIsSidebarOpen, role }) {
     );
 
     if (res.status === 200) {
-      navigate(`/welcome`);
+      setShowMessage(true);
+      navigate("/");
     }
   }
 
