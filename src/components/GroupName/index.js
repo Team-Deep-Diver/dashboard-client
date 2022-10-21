@@ -12,7 +12,7 @@ function GroupName({ handleGroupName, onCheck }) {
     onCheck(groupName);
   };
   return (
-    <div>
+    <div className="group-container">
       <input
         placeholder="그룹명"
         type="text"

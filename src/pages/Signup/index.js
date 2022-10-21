@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
+import { Wrapper } from "./style";
 import GroupName from "../../components/GroupName";
-import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const navigate = useNavigate();
@@ -135,104 +137,106 @@ function Signup() {
   };
 
   return (
-    <div>
+    <>
       <button>{"<"}</button>
-      <h1>회원가입</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="닉네임"
-          name="nickname"
-          value={nickname}
-          onChange={handleInputs}
-          required
-        />
-        <div>
+      <Wrapper>
+        <h1>회원가입</h1>
+        <form onSubmit={handleSubmit}>
           <input
-            type="email"
-            placeholder="이메일"
-            name="email"
-            value={email}
+            type="text"
+            placeholder="닉네임"
+            name="nickname"
+            value={nickname}
             onChange={handleInputs}
             required
           />
-          <button onClick={() => setIsSending(true)}>중복확인</button>
-        </div>
-        <input
-          type="password"
-          placeholder="비밀번호"
-          name="password"
-          value={password}
-          onChange={handleInputs}
-          required
-        />
-        <p>숫자, 영문자 포함 8자 이상이어야 합니다.</p>
-        <input
-          type="password"
-          placeholder="비밀번호 확인"
-          name="passwordConfirm"
-          value={passwordConfirm}
-          onChange={handleInputs}
-          required
-        />
-        <div>
-          권한
-          <FontAwesomeIcon
-            onMouseOver={onHover}
-            onMouseLeave={onHover}
-            icon={faInfoCircle}
+          <div className="email-container">
+            <input
+              type="email"
+              placeholder="이메일"
+              name="email"
+              value={email}
+              onChange={handleInputs}
+              required
+            />
+            <button onClick={() => setIsSending(true)}>중복확인</button>
+          </div>
+          <input
+            type="password"
+            placeholder="비밀번호"
+            name="password"
+            value={password}
+            onChange={handleInputs}
+            required
           />
-          <div>
-            <label htmlFor="member" />
-            <input
-              id="member"
-              type="radio"
-              value="member"
-              name="role"
-              checked={selectedRole === "member"}
-              onChange={handleRole}
-            />
-            member
+          <input
+            type="password"
+            placeholder="비밀번호 확인"
+            name="passwordConfirm"
+            value={passwordConfirm}
+            onChange={handleInputs}
+            required
+          />
+          <p>숫자, 영문자 포함 8자 이상이어야 합니다.</p>
+          <div className="role-container">
+            <div className="info-toggle">
+              <span>권한</span>
+              <FontAwesomeIcon
+                onMouseOver={onHover}
+                onMouseLeave={onHover}
+                icon={faInfoCircle}
+              />
+            </div>
+            <div className="role">
+              <label htmlFor="member">member</label>
+              <input
+                id="member"
+                type="radio"
+                value="member"
+                name="role"
+                checked={selectedRole === "member"}
+                onChange={handleRole}
+              />
+              <label htmlFor="admin">admin</label>
+              <input
+                id="admin"
+                type="radio"
+                value="admin"
+                name="role"
+                checked={selectedRole === "admin"}
+                onChange={handleRole}
+              />
+            </div>
           </div>
-          <div>
-            <label htmlFor="admin" />
-            <input
-              id="admin"
-              type="radio"
-              value="admin"
-              name="role"
-              checked={selectedRole === "admin"}
-              onChange={handleRole}
-            />
-            admin
-          </div>
+        </form>
+        <div>
+          {message}
+          {nickname.length < 2 && "닉네임은 최소 2자 이상 입력해주세요"}
+          {(nickname || email || password || passwordConfirm) &&
+            "모든 값을 입력해주세요"}
+          {password !== passwordConfirm && "비밀번호가 일치하지 않습니다"}
+          {password.length < 8 && "숫자, 영문자 포함 8자 이상이어야 합니다."}
+          {hover && (
+            <div>
+              <p>
+                * member는 복수의 그룹에 참여할 수 있습니다.
+                <br />* admin은 하나의 그룹을 생성하고, 관리할 수 있습니다.
+              </p>
+            </div>
+          )}
         </div>
-        <button onClick={() => setIsSending(true)}>제출</button>
-      </form>
-      <div>
-        {message}
-        {nickname.length < 2 && "닉네임은 최소 2자 이상 입력해주세요"}
-        {(nickname || email || password || passwordConfirm) &&
-          "모든 값을 입력해주세요"}
-        {password !== passwordConfirm && "비밀번호가 일치하지 않습니다"}
-        {password.length < 8 && "숫자, 영문자 포함 8자 이상이어야 합니다."}
-        {hover && (
-          <div>
-            <p>
-              * member는 복수의 그룹에 참여할 수 있습니다.
-              <br />* admin은 하나의 그룹을 생성하고, 관리할 수 있습니다.
-            </p>
-          </div>
+        {selectedRole === "admin" && (
+          <GroupName
+            groupName={groupName}
+            handleGroupName={handleGroupName}
+            onCheck={() => setIsSending(true)}
+          />
         )}
-      </div>
-      {selectedRole === "admin" && (
-        <GroupName
-          groupName={groupName}
-          handleGroupName={handleGroupName}
-          onCheck={() => setIsSending(true)}
-        />
-      )}
-    </div>
+        <button className="submit" onClick={() => setIsSending(true)}>
+          제출
+        </button>
+      </Wrapper>
+    </>
   );
 }
 
