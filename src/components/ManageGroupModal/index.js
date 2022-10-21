@@ -16,12 +16,15 @@ function ManageGroupModal() {
   const dispatch = useDispatch();
   const { user_id } = useParams();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [group_id, setGroupId] = useState("");
   const [applicants, setApplicants] = useState([]);
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
     async function getGroupInfo() {
+      setIsLoading(true);
+
       const res = await fetch(
         `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups`
       );
@@ -32,16 +35,14 @@ function ManageGroupModal() {
         setGroupId(group.applicants._id);
         setApplicants(group.applicants.applicants);
         setMembers(group.members.members);
+        setIsLoading(false);
       }
     }
 
     getGroupInfo();
   }, []);
 
-  async function acceptApplicant(e) {
-    const applicant_id = e.target.closest("li").dataset.id;
-    const applicant_name = e.target.closest("li").dataset.name;
-
+  async function acceptApplicant({ _id: applicant_id, name: applicant_name }) {
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups/${group_id}/${applicant_id}`,
       {
@@ -69,10 +70,10 @@ function ManageGroupModal() {
     }
   }
 
-  async function rejectApplicant(e) {
-    const applicant_id = e.target.closest("li").dataset.id;
-    const applicant_name = e.target.closest("li").dataset.name;
-
+  async function rejectApplicant({
+    _id: applicant_id,
+    nickname: applicant_name,
+  }) {
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups/${applicant_id}`,
       {
@@ -101,7 +102,7 @@ function ManageGroupModal() {
   }
 
   return (
-    <Wrapper>
+    <>
       <ModalWrapper>
         <ModalHeader>
           <h3>그룹관리</h3>
@@ -110,9 +111,10 @@ function ManageGroupModal() {
           <div className="members">
             <strong>Members</strong>
             <div className="contents-wrap">
+              {isLoading ? "불러오는 중입니다..." : ""}
               <ul className="members-list">
                 {members.map((member) => (
-                  <li>{member.nickname}</li>
+                  <li key={member._id}>{member.nickname}</li>
                 ))}
               </ul>
             </div>
@@ -120,13 +122,18 @@ function ManageGroupModal() {
           <div className="applicants">
             <strong>Applicants</strong>
             <div className="contents-wrap">
+              {isLoading ? "불러오는 중입니다..." : ""}
               <ul className="applicants-list">
                 {applicants.map((applicant) => (
-                  <li data-id={applicant._id} data-name={applicant.nickname}>
+                  <li key={applicant._id}>
                     <span className="name">{applicant.nickname}</span>
                     <div>
-                      <button onClick={acceptApplicant}>수락</button>
-                      <button onClick={rejectApplicant}>거절</button>
+                      <button onClick={acceptApplicant.bind(null, applicant)}>
+                        수락
+                      </button>
+                      <button onClick={rejectApplicant.bind(null, applicant)}>
+                        거절
+                      </button>
                     </div>
                   </li>
                 ))}
@@ -143,7 +150,7 @@ function ManageGroupModal() {
           </button>
         </ModalFooter>
       </ModalWrapper>
-    </Wrapper>
+    </>
   );
 }
 
