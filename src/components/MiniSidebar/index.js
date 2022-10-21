@@ -1,39 +1,36 @@
-import { Wrapper } from "./style";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+
+import { Wrapper } from "./style";
+import MessageModal from "../MessageModal";
 
 function MiniSidebar({ setIsOpen, role }) {
-  const navigate = useNavigate();
-
-  async function logout() {
-    const res = await fetch(
-      `${process.env.REACT_APP_SERVER_REQUEST_HOST}/logout`,
-      {
-        method: "POST",
-      }
-    );
-
-    if (res.status === 200) {
-      navigate(`/welcome`);
-    }
-  }
+  const [showMessage, setShowMessage] = useState(false);
 
   return (
-    <Wrapper>
-      <FontAwesomeIcon
-        icon={faBars}
-        className="bars"
-        onClick={() => setIsOpen(true)}
-      />
-      {role !== "GUEST" && (
-        <FontAwesomeIcon
-          icon={faRightFromBracket}
-          className="logout"
-          onClick={logout}
+    <>
+      {showMessage && (
+        <MessageModal
+          message="로그아웃 되셨습니다. 메인페이지로 이동합니다."
+          type="logout"
         />
       )}
-    </Wrapper>
+      <Wrapper>
+        <FontAwesomeIcon
+          icon={faBars}
+          className="bars"
+          onClick={() => setIsOpen(true)}
+        />
+        {role !== "GUEST" && (
+          <FontAwesomeIcon
+            icon={faRightFromBracket}
+            className="logout"
+            onClick={() => setShowMessage(true)}
+          />
+        )}
+      </Wrapper>
+    </>
   );
 }
 
