@@ -14,6 +14,7 @@ import ManageGroupModal from "../../components/ManageGroupModal";
 import MessageModal from "../../components/MessageModal";
 import NoticeModal from "../../components/NoticeModal";
 import CreateCardModal from "../../components/CreateCardModal";
+import MyGroupListModal from "../../components/MyGroupListModal";
 
 function Layout() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,9 +34,9 @@ function Layout() {
       const res = await fetch(
         `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}`
       );
-      if (res.status === 200) {
-        const { userInfo } = await res.json();
 
+      if (res.status === 200) {
+        const userInfo = await res.json();
         setRole(userInfo.role);
       }
     }
@@ -63,6 +64,7 @@ function Layout() {
           {modalType === "message" && <MessageModal message={message} />}
           {modalType === "manageGroup" && <ManageGroupModal />}
           {modalType === "createCard" && <CreateCardModal socket={socket} />}
+          {modalType === "myGroupList" && <MyGroupListModal />}
         </ShowModal>
       )}
       <Wrapper>
