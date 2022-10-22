@@ -10,6 +10,7 @@ function Dashboard({ socket }) {
   const dispatch = useDispatch();
   const { user_id } = useParams();
   const [cards, setCards] = useState([]);
+  const [todoChange, setTodoChange] = useState(null);
   const { currentDate } = useSelector((state) => state.calendar);
 
   useEffect(() => {
@@ -22,6 +23,7 @@ function Dashboard({ socket }) {
         const cardContent = snapshots[0].value;
 
         const cardInfo = {
+          snapshotId: snapshots[0]._id,
           colorCode,
           period,
           category: snapshots[0].category,
@@ -37,15 +39,46 @@ function Dashboard({ socket }) {
     });
   }, [socket, currentDate]);
 
+  useEffect(() => {
+    socket?.emit("modifyCard", { todoChange });
+  }, [todoChange]);
+
+  const handleCheckbox = (e, card) => {
+    const newcard = card.todo.map((item) => {
+      return {
+        text: item.text,
+        checked: (item.text === e.target.id) ? !item.checked : item.checked
+      }
+    });
+
+    const cardInput = {
+      snapshotId: card.snapshotId,
+      currentDate,
+      createdBy: user_id,
+      category: card.category,
+      startDate: card.period.startDate,
+      endDate: card.period.endDate,
+      colorCode: card.colorCode,
+      todos: newcard,
+      imgUrl: card.imgUrl,
+      description: card.description,
+      x: 0,
+      y: 0,
+    }
+
+    setTodoChange(cardInput);
+  };
+
   return (
     <Wrapper>
       {cards?.map((card, idx) => (
         <Content
           key={idx}
           color={card.colorCode}
-          onClick={() =>
-            dispatch(setModalOpen({ type: "handleCard", message: card }))
-          }
+          onDoubleClick={(e) => {
+            const parentElement = e.target.parentElement;
+            !(parentElement.id === "todo-item") && dispatch(setModalOpen({ type: "handleCard", message: card }))
+          }}
         >
           <div className="hash-tag" size={card.category.length}>
             #{card.category}
@@ -58,8 +91,8 @@ function Dashboard({ socket }) {
           </div>
           <div className="todo-box">
             {card.todo.map((item) => (
-              <div key={item._id}>
-                <input type="checkbox" id={item.text} />
+              <div key={item._id} id="todo-item" onClick={(e) => handleCheckbox(e, card)}>
+                <input type="checkbox" id={item.text}/>
                 <label htmlFor={item.text} className="todo-text">
                   {item.text}
                 </label>

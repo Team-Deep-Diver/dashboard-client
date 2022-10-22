@@ -13,17 +13,23 @@ function CardModal({ socket }) {
   const { currentDate } = useSelector((state) => state.calendar);
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [socketType, setSocketType] = useState(null);
   const [showConfirmMessage, setShowConfirmMessage] = useState(false);
   const themeColors = ["#CDDAFD", "#BEE1E6", "#E2ECE9", "#FDE2E4", "#FFF1E6"];
 
   const [cardInput, setCardInput] = useState({
+    snapshotId: message ? message.snapshotId : "",
     currentDate,
     createdBy: user_id,
     category: message ? message.category : "",
     startDate: message ? message.startDate : "",
     endDate: message ? message.endDate : "",
     colorCode: message ? message.colorCode : "",
-    todos: message ? message.todo.map((item) => item.text) : [],
+    todos: message
+      ? message.todo.map((item) => {
+          return { text: item.text, checked: item.checked };
+        })
+      : [],
     imgUrl: message ? message.imgUrl : "",
     description: message ? message.description : "",
     x: 0,
@@ -52,13 +58,13 @@ function CardModal({ socket }) {
 
     setCardInput({
       ...cardInput,
-      todos: [...cardInput.todos, todoValue],
+      todos: [...cardInput.todos, { text: todoValue, checked: false }],
     });
   };
 
   const validationCheck = (e) => {
     e.preventDefault();
-    const type = message ? "edit" : "create";
+    const type = message ? "modify" : "create";
     const errors = validateCardForm(cardInput, type);
 
     if (errors.length > 0) {
@@ -66,6 +72,13 @@ function CardModal({ socket }) {
       return setErrorMessage(message);
     }
 
+    message ? setSocketType("modifyCard") : setSocketType("createCard");
+    setShowConfirmMessage(true);
+  };
+
+  const deleteCard = (e) => {
+    e.preventDefault();
+    setSocketType("deleteCard");
     setShowConfirmMessage(true);
   };
 
@@ -75,19 +88,27 @@ function CardModal({ socket }) {
         (message ? (
           <ConfirmMessageModal
             socket={socket}
-            socketType="editCard"
+            socketType={socketType}
             socketValue={cardInput}
-            confirmMessage="카드를 수정하시겠습니까?"
-            endMessage="카드가 수정되었습니다."
+            confirmMessage={
+              socketType === "modifyCard"
+                ? "카드를 수정하시겠습니까?"
+                : "카드를 삭제하시겠습니까?"
+            }
+            endMessage={
+              socketType === "modifyCard"
+                ? "카드가 수정되었습니다."
+                : "카드가 삭제되었습니다."
+            }
           />
         ) : (
           <ConfirmMessageModal
-          socket={socket}
-          socketType="createCard"
-          socketValue={cardInput}
-          confirmMessage="카드를 생성하시겠습니까?"
-          endMessage="카드가 생성되었습니다."
-        />
+            socket={socket}
+            socketType="createCard"
+            socketValue={cardInput}
+            confirmMessage="카드를 생성하시겠습니까?"
+            endMessage="카드가 생성되었습니다."
+          />
         ))}
       <Wrapper>
         <div className="title">
@@ -102,7 +123,7 @@ function CardModal({ socket }) {
             onChange={handleChange}
           />
         </div>
-        {cardInput.startDate === "" && (
+        {!message && (
           <div className="layout-top">
             <div className="category-name">기간 *</div>
             <div className="category-date">
@@ -142,10 +163,10 @@ function CardModal({ socket }) {
           <div>
             <div className="todo">
               {cardInput.todos.map((item, idx) => (
-                <div className="layout-todo-show" key={item + idx}>
+                <div className="layout-todo-show" key={item.text + idx}>
                   <div className="todo-item">{idx + 1}.</div>
-                  <div className="todo-item" key={item + idx}>
-                    {item}
+                  <div className="todo-item" key={item.text + idx}>
+                    {item.text}
                   </div>
                 </div>
               ))}
@@ -194,6 +215,14 @@ function CardModal({ socket }) {
             className="button"
             onClick={validationCheck}
           />
+          {message && (
+            <input
+              type="submit"
+              value="삭제"
+              className="button"
+              onClick={deleteCard}
+            />
+          )}
         </div>
       </Wrapper>
     </>

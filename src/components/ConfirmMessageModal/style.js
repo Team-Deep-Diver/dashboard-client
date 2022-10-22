@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 220px;
+    width: 230px;
     height: 120px;
     font-size: 23px;
     text-align: center;

@@ -2,7 +2,7 @@ export function validateCardForm(cardInput, type) {
   const { category, startDate, endDate, colorCode } = cardInput;
   const errors = [];
 
-  if (type === "edit") {
+  if (type === "modify") {
     if (!category || !colorCode) {
       errors.push({ message: "필수 항목을 채워주세요." });
     }
