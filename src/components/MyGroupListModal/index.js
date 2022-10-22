@@ -1,14 +1,23 @@
 import { Wrapper, EntryBox } from "./style";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import DeleteModal from "../DeleteModal";
+import { setModalClose } from "../../store/slices/modalSlice";
 
 function MyGroupListModal() {
+  const dispatch = useDispatch();
   const { user_id } = useParams();
   const [getGroups, setGetGroups] = useState([]);
   const [targetedGroupId, setTargetedGroupId] = useState("");
   const [isConfirm, setIsConfirm] = useState(false);
   const [confirmTarget, setConfirmTarget] = useState(false);
+
+  const handleClick = ({ groupId }, e) => {
+    setIsConfirm(true);
+    setConfirmTarget(e.target.value);
+    setTargetedGroupId(groupId);
+  };
 
   useEffect(() => {
     const onOpenList = async () => {
@@ -26,12 +35,6 @@ function MyGroupListModal() {
 
     onOpenList();
   }, []);
-
-  const handleClick = ({ groupId }, e) => {
-    setIsConfirm(true);
-    setConfirmTarget(e.target.value);
-    setTargetedGroupId(groupId);
-  };
 
   return (
     <Wrapper>
@@ -81,7 +84,7 @@ function MyGroupListModal() {
             );
           })}
       </EntryBox>
-      <button>닫기</button>
+      <button onClick={() => dispatch(setModalClose())}>닫기</button>
       {isConfirm && (
         <div>
           <DeleteModal
