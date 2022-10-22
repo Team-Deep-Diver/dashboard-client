@@ -33,7 +33,14 @@ function Sidebar({ setIsSidebarOpen, role }) {
           >
             그룹 참가하기
           </div>
-          <div className="content2">내 그룹 현황</div>
+          <div
+            className="content2"
+            onClick={() =>
+              dispatch(setModalOpen({ type: "myGroupList", message: "" }))
+            }
+          >
+            내 그룹 현황
+          </div>
         </div>
       )}
       {role === "ADMIN" && (

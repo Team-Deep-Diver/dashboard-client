@@ -15,6 +15,7 @@ import ManageGroupModal from "../../components/ManageGroupModal";
 import MessageModal from "../../components/MessageModal";
 import NoticeModal from "../../components/NoticeModal";
 import CardModal from "../../components/CardModal";
+import MyGroupListModal from "../../components/MyGroupListModal";
 
 function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -35,8 +36,9 @@ function Layout() {
       const res = await fetch(
         `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}`
       );
+
       if (res.status === 200) {
-        const { userInfo } = await res.json();
+        const userInfo = await res.json();
         setRole(userInfo.role);
         setGroupList(userInfo.groups?.map((group) => group.groupName));
       }
@@ -61,15 +63,26 @@ function Layout() {
       {isModalOpen && (
         <ShowModal>
           {modalType === "joinGroup" && <JoinGroupModal />}
-          {modalType === "createNotice" && <NoticeModal socket={socket} adminId={user_id} groupList={groupList} />}
+          {modalType === "createNotice" && (
+            <NoticeModal
+              socket={socket}
+              adminId={user_id}
+              groupList={groupList}
+            />
+          )}
           {modalType === "message" && <MessageModal message={message} />}
           {modalType === "manageGroup" && <ManageGroupModal />}
           {modalType === "handleCard" && <CardModal socket={socket} />}
+          {modalType === "myGroupList" && <MyGroupListModal />}
         </ShowModal>
       )}
       <Wrapper>
         {isSidebarOpen ? (
-          <Sidebar setIsSidebarOpen={setIsSidebarOpen} role={role} groupList={groupList} />
+          <Sidebar
+            setIsSidebarOpen={setIsSidebarOpen}
+            role={role}
+            groupList={groupList}
+          />
         ) : (
           <MiniSidebar setIsSidebarOpen={setIsSidebarOpen} role={role} />
         )}
