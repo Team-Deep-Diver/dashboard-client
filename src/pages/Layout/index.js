@@ -14,7 +14,7 @@ import JoinGroupModal from "../../components/JoinGroupModal";
 import ManageGroupModal from "../../components/ManageGroupModal";
 import MessageModal from "../../components/MessageModal";
 import NoticeModal from "../../components/NoticeModal";
-import CreateCardModal from "../../components/CreateCardModal";
+import CardModal from "../../components/CardModal";
 
 function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -63,7 +63,7 @@ function Layout() {
           {modalType === "createNotice" && <NoticeModal socket={socket} />}
           {modalType === "message" && <MessageModal message={message} />}
           {modalType === "manageGroup" && <ManageGroupModal />}
-          {modalType === "createCard" && <CreateCardModal socket={socket} />}
+          {modalType === "handleCard" && <CardModal socket={socket} />}
         </ShowModal>
       )}
       <Wrapper>

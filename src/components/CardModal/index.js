@@ -6,25 +6,26 @@ import { setModalClose } from "../../store/slices/modalSlice";
 import { validateCardForm } from "../../utils/validateCardForm";
 import ConfirmMessageModal from "../ConfirmMessageModal";
 
-function CreateCardModal({ socket }) {
+function CardModal({ socket }) {
   const dispatch = useDispatch();
   const { user_id } = useParams();
-  const themeColors = ["#CDDAFD", "#BEE1E6", "#E2ECE9", "#FDE2E4", "#FFF1E6"];
-  const [todo, setTodo] = useState([]);
+  const { message } = useSelector((state) => state.modal);
+  const { currentDate } = useSelector((state) => state.calendar);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [showConfirmMessage, setShowConfirmMessage] = useState(false);
-  const { currentDate } = useSelector((state) => state.calendar);
+  const themeColors = ["#CDDAFD", "#BEE1E6", "#E2ECE9", "#FDE2E4", "#FFF1E6"];
 
   const [cardInput, setCardInput] = useState({
     currentDate,
     createdBy: user_id,
-    category: "",
-    startDate: "",
-    endDate: "",
-    colorCode: "",
-    todos: [],
-    imgUrl: "",
-    description: "",
+    category: message ? message.category : "",
+    startDate: message ? message.startDate : "",
+    endDate: message ? message.endDate : "",
+    colorCode: message ? message.colorCode : "",
+    todos: message ? message.todo.map((item) => item.text) : [],
+    imgUrl: message ? message.imgUrl : "",
+    description: message ? message.description : "",
     x: 0,
     y: 0,
   });
@@ -47,19 +48,18 @@ function CreateCardModal({ socket }) {
 
   const addTodo = (e) => {
     const todoValue = e.target.previousSibling.value;
-    const newTodo = [...todo, todoValue];
     e.target.previousSibling.value = "";
 
-    setTodo(newTodo);
     setCardInput({
       ...cardInput,
-      todos: newTodo,
+      todos: [...cardInput.todos, todoValue],
     });
   };
 
   const validationCheck = (e) => {
     e.preventDefault();
-    const errors = validateCardForm(cardInput);
+    const type = message ? "edit" : "create";
+    const errors = validateCardForm(cardInput, type);
 
     if (errors.length > 0) {
       const { message } = errors[0];
@@ -71,51 +71,66 @@ function CreateCardModal({ socket }) {
 
   return (
     <>
-      {showConfirmMessage && (
-        <ConfirmMessageModal
+      {showConfirmMessage &&
+        (message ? (
+          <ConfirmMessageModal
+            socket={socket}
+            socketType="editCard"
+            socketValue={cardInput}
+            confirmMessage="카드를 수정하시겠습니까?"
+            endMessage="카드가 수정되었습니다."
+          />
+        ) : (
+          <ConfirmMessageModal
           socket={socket}
           socketType="createCard"
           socketValue={cardInput}
           confirmMessage="카드를 생성하시겠습니까?"
           endMessage="카드가 생성되었습니다."
         />
-      )}
+        ))}
       <Wrapper>
-        <div className="title">카드 생성하기</div>
+        <div className="title">
+          {message ? "카드 수정하기" : "카드 생성하기"}
+        </div>
         <div className="layout-top">
-          <div className="category-name">카테고리</div>
+          <div className="category-name">카테고리 *</div>
           <input
             name="category"
             className="category-input"
+            defaultValue={cardInput.category}
             onChange={handleChange}
           />
         </div>
-        <div className="layout-top">
-          <div className="category-name">기간</div>
-          <div className="category-date">
-            <input
-              type="date"
-              name="startDate"
-              className="date-input"
-              onChange={handleChange}
-            />
-            <div className="date-hyphen">-</div>
-            <input
-              type="date"
-              name="endDate"
-              className="date-input"
-              onChange={handleChange}
-            />
+        {cardInput.startDate === "" && (
+          <div className="layout-top">
+            <div className="category-name">기간 *</div>
+            <div className="category-date">
+              <input
+                type="date"
+                name="startDate"
+                className="date-input"
+                onChange={handleChange}
+              />
+              <div className="date-hyphen">-</div>
+              <input
+                type="date"
+                name="endDate"
+                className="date-input"
+                onChange={handleChange}
+              />
+            </div>
           </div>
-        </div>
+        )}
         <div className="layout-top">
-          <div className="category-name">테마</div>
+          <div className="category-name">테마 *</div>
           {themeColors.map((color) => (
             <div className="category-color" key={color}>
               <input
                 type="radio"
                 name="colorCode"
                 value={color}
+                checked={cardInput.colorCode === color}
                 onChange={handleChange}
               />
               <Content color={color}></Content>
@@ -126,7 +141,7 @@ function CreateCardModal({ socket }) {
           <div className="category-name">TODO</div>
           <div>
             <div className="todo">
-              {todo.map((item, idx) => (
+              {cardInput.todos.map((item, idx) => (
                 <div className="layout-todo-show" key={item + idx}>
                   <div className="todo-item">{idx + 1}.</div>
                   <div className="todo-item" key={item + idx}>
@@ -152,6 +167,7 @@ function CreateCardModal({ socket }) {
             name="imgUrl"
             className="category-input"
             placeholder="이미지 url 을 입력하세요"
+            defaultValue={cardInput.imgUrl}
             onChange={handleChange}
           />
         </div>
@@ -160,6 +176,7 @@ function CreateCardModal({ socket }) {
           <textarea
             name="description"
             className="category-text"
+            defaultValue={cardInput.description}
             onChange={handleChange}
           ></textarea>
         </div>
@@ -183,4 +200,4 @@ function CreateCardModal({ socket }) {
   );
 }
 
-export default CreateCardModal;
+export default CardModal;

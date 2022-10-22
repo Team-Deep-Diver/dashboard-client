@@ -40,7 +40,13 @@ function Dashboard({ socket }) {
   return (
     <Wrapper>
       {cards?.map((card, idx) => (
-        <Content key={idx} color={card.colorCode}>
+        <Content
+          key={idx}
+          color={card.colorCode}
+          onClick={() =>
+            dispatch(setModalOpen({ type: "handleCard", message: card }))
+          }
+        >
           <div className="hash-tag" size={card.category.length}>
             #{card.category}
           </div>
@@ -71,9 +77,9 @@ function Dashboard({ socket }) {
       <FontAwesomeIcon
         icon={faCirclePlus}
         className="plus-icon"
-        onClick={() => {
-          dispatch(setModalOpen({ type: "createCard", message: "" }));
-        }}
+        onClick={() =>
+          dispatch(setModalOpen({ type: "handleCard", message: "" }))
+        }
       />
     </Wrapper>
   );

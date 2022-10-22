@@ -51,7 +51,7 @@ export const Wrapper = styled.div`
   }
 
   & .category-name {
-    width: 80px;
+    width: 100px;
     margin-left: 10px;
     font-size: 23px;
   }
