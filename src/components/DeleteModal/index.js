@@ -29,10 +29,6 @@ function DeleteModal({ confirmMessage, fetchedValue }) {
     isFetching && onSubmit();
   }, [targetedGroupId, isFetching]);
 
-  const handleConfirm = () => {
-    setIsFetching(true);
-  };
-
   return (
     <Wrapper>
       <div className="message">{confirmMessage}</div>
@@ -47,7 +43,7 @@ function DeleteModal({ confirmMessage, fetchedValue }) {
           type="submit"
           value="확인"
           className="button"
-          onClick={handleConfirm}
+          onClick={() => setIsFetching(true)}
         />
       </div>
     </Wrapper>

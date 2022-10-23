@@ -49,6 +49,10 @@ function Layout() {
 
   const [socket, setSocket] = useState();
 
+  socket?.on(groupList[0], (data) => {
+    console.log(data);
+  });
+
   useEffect(() => {
     const socketIO = io.connect(process.env.REACT_APP_SERVER_REQUEST_HOST);
     setSocket(socketIO);

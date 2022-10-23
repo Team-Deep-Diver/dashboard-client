@@ -38,9 +38,5 @@ export const Wrapper = styled.div`
     height: 35px;
     background: #a3bded;
     border-radius: 3px;
-    border: none;
-    color: #ffffff;
-    cursor: pointer;
-    font-family: "GangwonEdu_OTFBoldA";
   }
 `;
