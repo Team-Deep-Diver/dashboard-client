@@ -33,3 +33,25 @@ export const Wrapper = styled.div`
     color: #ffffff;
   }
 `;
+
+export const NoticeWrapper = styled.ul`
+  margin-top: 40px;
+  padding: 10px;
+
+  & > li {
+    border-radius: 10px;
+    padding: 5px;
+  }
+
+  & > li strong {
+    font-size: 20px;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  & > li p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
+`;

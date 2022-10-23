@@ -25,6 +25,7 @@ function Layout() {
     (state) => state.modal
   );
   const { user_id } = useParams();
+  const [groups, setGroups] = useState([]);
 
   useEffect(() => {
     async function getUserInfo() {
@@ -85,7 +86,8 @@ function Layout() {
           <Sidebar
             setIsSidebarOpen={setIsSidebarOpen}
             role={role}
-            groupList={groupList}
+            socket={socket}
+            groups={groups}
           />
         ) : (
           <MiniSidebar setIsSidebarOpen={setIsSidebarOpen} role={role} />
