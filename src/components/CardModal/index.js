@@ -124,40 +124,42 @@ function CardModal({ socket }) {
           />
         </div>
         {!message && (
-          <div className="layout-top">
-            <div className="category-name">기간 *</div>
-            <div className="category-date">
-              <input
-                type="date"
-                name="startDate"
-                className="date-input"
-                onChange={handleChange}
-              />
-              <div className="date-hyphen">-</div>
-              <input
-                type="date"
-                name="endDate"
-                className="date-input"
-                onChange={handleChange}
-              />
+          <>
+            <div className="layout-top">
+              <div className="category-name">기간 *</div>
+              <div className="category-date">
+                <input
+                  type="date"
+                  name="startDate"
+                  className="date-input"
+                  onChange={handleChange}
+                />
+                <div className="date-hyphen">-</div>
+                <input
+                  type="date"
+                  name="endDate"
+                  className="date-input"
+                  onChange={handleChange}
+                />
+              </div>
             </div>
-          </div>
+            <div className="layout-top">
+              <div className="category-name">테마 *</div>
+              {themeColors.map((color) => (
+                <div className="category-color" key={color}>
+                  <input
+                    type="radio"
+                    name="colorCode"
+                    value={color}
+                    checked={cardInput.colorCode === color}
+                    onChange={handleChange}
+                  />
+                  <Content color={color}></Content>
+                </div>
+              ))}
+            </div>
+          </>
         )}
-        <div className="layout-top">
-          <div className="category-name">테마 *</div>
-          {themeColors.map((color) => (
-            <div className="category-color" key={color}>
-              <input
-                type="radio"
-                name="colorCode"
-                value={color}
-                checked={cardInput.colorCode === color}
-                onChange={handleChange}
-              />
-              <Content color={color}></Content>
-            </div>
-          ))}
-        </div>
         <div className="layout-bottom">
           <div className="category-name">TODO</div>
           <div>

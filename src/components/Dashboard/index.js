@@ -16,9 +16,7 @@ function Dashboard({ socket }) {
   useEffect(() => {
     socket?.emit("searchMyCards", { user_id, currentDate });
     socket?.on("getMyCards", (data) => {
-      const socketRecievedCards = data.myCards;
-
-      const cardInfoArr = socketRecievedCards.map((card) => {
+      const cardInfoArr = data.map((card) => {
         const { colorCode, period, snapshots } = card;
         const cardContent = snapshots[0].value;
 
@@ -37,7 +35,7 @@ function Dashboard({ socket }) {
 
       setCards(cardInfoArr);
     });
-  }, [socket, currentDate]);
+  }, [socket, currentDate, cards]);
 
   useEffect(() => {
     socket?.emit("modifyCard", { todoChange });
