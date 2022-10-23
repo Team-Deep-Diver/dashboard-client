@@ -18,7 +18,8 @@ import MyGroupListModal from "../../components/MyGroupListModal";
 
 function Layout() {
   const [isOpen, setIsOpen] = useState(false);
-  const [role, setRole] = useState("ADMIN");
+  const [role, setRole] = useState(null);
+  const [groupList, setGroupList] = useState(null);
   const { isModalOpen, modalType, message } = useSelector(
     (state) => state.modal
   );
@@ -38,6 +39,7 @@ function Layout() {
       if (res.status === 200) {
         const userInfo = await res.json();
         setRole(userInfo.role);
+        setGroupList(userInfo.groups?.map((group) => group.groupName));
       }
     }
 
@@ -45,6 +47,10 @@ function Layout() {
   }, []);
 
   const [socket, setSocket] = useState();
+
+  socket?.on(groupList[0], (data) => {
+    console.log(data);
+  });
 
   useEffect(() => {
     const socketIO = io.connect(process.env.REACT_APP_SERVER_REQUEST_HOST);
@@ -60,7 +66,13 @@ function Layout() {
       {isModalOpen && (
         <ShowModal>
           {modalType === "joinGroup" && <JoinGroupModal />}
-          {modalType === "createNotice" && <NoticeModal socket={socket} />}
+          {modalType === "createNotice" && (
+            <NoticeModal
+              socket={socket}
+              adminId={user_id}
+              groupList={groupList}
+            />
+          )}
           {modalType === "message" && <MessageModal message={message} />}
           {modalType === "manageGroup" && <ManageGroupModal />}
           {modalType === "createCard" && <CreateCardModal socket={socket} />}

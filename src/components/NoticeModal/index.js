@@ -5,11 +5,13 @@ import { setModalClose } from "../../store/slices/modalSlice";
 import { validateNoticeForm } from "../../utils/validateNoticeForm";
 import ConfirmMessageModal from "../ConfirmMessageModal";
 
-function NoticeModal({ socket }) {
+function NoticeModal({ socket, adminId, groupList }) {
   const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState("");
   const [showConfirmMessage, setShowConfirmMessage] = useState(false);
   const [notice, setNotice] = useState({
+    adminId,
+    groupList,
     startDate: "",
     endDate: "",
     groupNotice: "",

@@ -8,7 +8,7 @@ import { setModalClose } from "../../store/slices/modalSlice";
 function MyGroupListModal() {
   const dispatch = useDispatch();
   const { user_id } = useParams();
-  const [getGroups, setGetGroups] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [targetedGroupId, setTargetedGroupId] = useState("");
   const [isConfirm, setIsConfirm] = useState(false);
   const [confirmTarget, setConfirmTarget] = useState(false);
@@ -20,20 +20,20 @@ function MyGroupListModal() {
   };
 
   useEffect(() => {
-    const onOpenList = async () => {
+    const getGroupList = async () => {
       try {
         const response = await fetch(
           `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups`
         );
         const result = await response.json();
 
-        setGetGroups(result);
+        setGroups(result);
       } catch (err) {
         console.error(err);
       }
     };
 
-    onOpenList();
+    getGroupList();
   }, []);
 
   return (
@@ -41,8 +41,8 @@ function MyGroupListModal() {
       <h1>내 그룹 현황</h1>
       <div>참여중</div>
       <EntryBox>
-        {getGroups &&
-          getGroups.map((group) => {
+        {groups &&
+          groups.map((group) => {
             const { _id, status, groupName } = group;
             return (
               <div key={_id}>
@@ -62,8 +62,8 @@ function MyGroupListModal() {
       </EntryBox>
       <div>지원 현황</div>
       <EntryBox>
-        {getGroups &&
-          getGroups.map((group) => {
+        {groups &&
+          groups.map((group) => {
             const { _id, status, groupName } = group;
 
             return (
