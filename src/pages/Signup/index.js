@@ -2,34 +2,112 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
-import { Wrapper } from "./style";
-import GroupName from "../../components/GroupName";
+import MessageModal from "../../components/MessageModal";
+
+import { Wrapper, SignupForm } from "./style";
+import { validateEmail } from "../../utils";
 
 function Signup() {
   const navigate = useNavigate();
-  const [signupValues, setSignupValues] = useState({
-    nickname: "",
-    email: "",
-    password: "",
-    passwordConfirm: "",
-  });
-  const [selectedRole, setSelectedRole] = useState("member");
-  const [groupName, setGroupName] = useState("");
-  const [message, setMessage] = useState("");
-  const [isSending, setIsSending] = useState(false);
+  const [signupValues, setSignupValues] = useState("");
+  const [selectedRole, setSelectedRole] = useState("MEMBER");
+  const [confirmMessage, setConfirmMessage] = useState("");
+  const [disabledSubmitButton, setDisabledSubmitButton] = useState(true);
+  const [isShowMessageModal, setIsShowMessageModal] = useState(false);
+  const [signupResultMessage, setSignupResultMessage] = useState("");
 
-  const [hover, setHover] = useState(false);
+  const { nickname, email, password, passwordConfirm, groupName } =
+    signupValues;
 
-  const { nickname, email, password, passwordConfirm } = signupValues;
-
-  const onHover = () => {
-    setHover(!hover);
+  const goWelcomePage = () => {
+    navigate("/");
   };
 
-  const handleInputs = (e) => {
+  const checkDuplicateEmail = async (e) => {
+    e.preventDefault();
+
+    try {
+      const result = await fetch(
+        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/signup/check-email`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+          }),
+        }
+      );
+
+      const res = await result.json();
+
+      if (res) {
+        setConfirmMessage("사용 불가능한 이메일입니다.");
+      }
+    } catch (err) {
+      setConfirmMessage("사용 가능한 이메일입니다.");
+    }
+  };
+
+  const checkDuplicateGroupName = async (e) => {
+    e.preventDefault();
+
+    try {
+      const result = await fetch(
+        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/signup/check-group-name`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            groupName,
+          }),
+        }
+      );
+
+      const res = await result.json();
+
+      if (res) {
+        setConfirmMessage("사용 불가능한 그룹명입니다.");
+      }
+    } catch (err) {
+      setConfirmMessage("사용 가능한 그룹명입니다.");
+    }
+  };
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "nickname") {
+      setConfirmMessage(
+        value.length > 2 ? "" : "* 닉네임은 최소 2자 이상 입력해주세요."
+      );
+    }
+
+    if (name === "email") {
+      setConfirmMessage(
+        validateEmail(value) ? "" : "* 이메일 형식에 맞지 않습니다."
+      );
+    }
+
+    if (name === "password") {
+      setConfirmMessage(
+        value.length > 8 ? "" : "* 숫자, 영문자 포함 8자 이상이어야 합니다."
+      );
+    }
+
+    if (name === "passwordConfirm") {
+      setConfirmMessage(
+        value === password ? "" : "* 비밀번호가 일치하지 않습니다."
+      );
+    }
+
+    if (name === "groupName") {
+      setConfirmMessage(
+        value.length > 2 ? "" : "* 그룹명은 최소 2자 이상 입력해주세요."
+      );
+    }
 
     setSignupValues({
       ...signupValues,
@@ -37,206 +115,154 @@ function Signup() {
     });
   };
 
-  useEffect(() => {
-    const onSubmit = async () => {
-      try {
-        const result = await fetch(
-          `${process.env.REACT_APP_SERVER_REQUEST_HOST}/signup`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              nickname,
-              email,
-              password,
-              selectedRole,
-              groupName,
-            }),
-          }
-        );
-
-        const res = await res.json();
-
-        if (result.status === 201) {
-          navigate("/login");
-        }
-
-        navigate("/signup");
-        setMessage(res.message);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    const onCheckGroupName = async () => {
-      try {
-        const result = await fetch(
-          `${process.env.REACT_APP_SERVER_REQUEST_HOST}/signup/check-group-name`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              groupName,
-            }),
-          }
-        );
-
-        const res = await res.json();
-
-        navigate("/signup");
-
-        if (result.status === 400) {
-          setMessage(res.message);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    const onCheckEmail = async () => {
-      try {
-        const result = await fetch(
-          `${process.env.REACT_APP_SERVER_REQUEST_HOST}signup/check-email`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              groupName,
-            }),
-          }
-        );
-
-        const res = await res.json();
-
-        navigate("/signup");
-
-        if (result.status === 400) {
-          setMessage(res.message);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    isSending && onSubmit();
-    isSending && onCheckEmail();
-    isSending && onCheckGroupName();
-  }, [isSending]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSending(true);
-  };
-
-  const handleGroupName = (group) => {
-    setGroupName(group);
-  };
-
   const handleRole = (e) => {
     setSelectedRole(e.target.value);
   };
 
+  const signup = async (e) => {
+    e.preventDefault();
+
+    try {
+      const result = await fetch(
+        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/signup`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nickname,
+            email,
+            password,
+            passwordConfirm,
+            role: selectedRole,
+            groupName,
+          }),
+        }
+      );
+
+      if (result.status === 201) {
+        setSignupResultMessage(
+          "회원 가입 되셨습니다. \n 로그인페이지로 이동합니다."
+        );
+        setIsShowMessageModal(true);
+      } else {
+        setSignupResultMessage(
+          "회원 가입에 실패하셨습니다. 다시 입력해주시길 바랍니다."
+        );
+        setIsShowMessageModal(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedRole === "MEMBER") {
+      if (Object.keys(signupValues).length === 4 && confirmMessage === "") {
+        setDisabledSubmitButton(false);
+      } else {
+        setDisabledSubmitButton(true);
+      }
+    } else if (selectedRole === "ADMIN") {
+      if (Object.keys(signupValues).length === 5 && confirmMessage === "") {
+        setDisabledSubmitButton(false);
+      } else {
+        setDisabledSubmitButton(true);
+      }
+    }
+  }, [nickname, email, password, passwordConfirm, groupName, selectedRole]);
+
   return (
-    <>
-      <button>{"<"}</button>
-      <Wrapper>
+    <Wrapper>
+      <header>
+        <FontAwesomeIcon icon={faArrowLeftLong} onClick={goWelcomePage} />
+      </header>
+      <SignupForm>
         <h1>회원가입</h1>
-        <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="닉네임"
+          name="nickname"
+          onChange={(e) => handleChange(e)}
+          required
+        />
+        <div className="email-container">
           <input
-            type="text"
-            placeholder="닉네임"
-            name="nickname"
-            value={nickname}
-            onChange={handleInputs}
+            type="email"
+            placeholder="이메일"
+            name="email"
+            onChange={(e) => handleChange(e)}
             required
           />
-          <div className="email-container">
-            <input
-              type="email"
-              placeholder="이메일"
-              name="email"
-              value={email}
-              onChange={handleInputs}
-              required
-            />
-            <button onClick={() => setIsSending(true)}>중복확인</button>
-          </div>
-          <input
-            type="password"
-            placeholder="비밀번호"
-            name="password"
-            value={password}
-            onChange={handleInputs}
-            required
-          />
-          <input
-            type="password"
-            placeholder="비밀번호 확인"
-            name="passwordConfirm"
-            value={passwordConfirm}
-            onChange={handleInputs}
-            required
-          />
-          <p>숫자, 영문자 포함 8자 이상이어야 합니다.</p>
-          <div className="role-container">
-            <div className="info-toggle">
-              <span>권한</span>
-              <FontAwesomeIcon
-                onMouseOver={onHover}
-                onMouseLeave={onHover}
-                icon={faInfoCircle}
-              />
-            </div>
-            <div className="role">
-              <label htmlFor="member">member</label>
-              <input
-                id="member"
-                type="radio"
-                value="member"
-                name="role"
-                checked={selectedRole === "member"}
-                onChange={handleRole}
-              />
-              <label htmlFor="admin">admin</label>
-              <input
-                id="admin"
-                type="radio"
-                value="admin"
-                name="role"
-                checked={selectedRole === "admin"}
-                onChange={handleRole}
-              />
-            </div>
-          </div>
-        </form>
-        <div>
-          {message}
-          {nickname.length < 2 && "닉네임은 최소 2자 이상 입력해주세요"}
-          {(nickname || email || password || passwordConfirm) &&
-            "모든 값을 입력해주세요"}
-          {password !== passwordConfirm && "비밀번호가 일치하지 않습니다"}
-          {password.length < 8 && "숫자, 영문자 포함 8자 이상이어야 합니다."}
-          {hover && (
-            <div>
-              <p>
-                * member는 복수의 그룹에 참여할 수 있습니다.
-                <br />* admin은 하나의 그룹을 생성하고, 관리할 수 있습니다.
-              </p>
-            </div>
-          )}
+          <button onClick={checkDuplicateEmail}>중복 확인</button>
         </div>
-        {selectedRole === "admin" && (
-          <GroupName
-            groupName={groupName}
-            handleGroupName={handleGroupName}
-            onCheck={() => setIsSending(true)}
-          />
+        <input
+          type="password"
+          placeholder="비밀번호"
+          name="password"
+          onChange={(e) => handleChange(e)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="비밀번호 확인"
+          name="passwordConfirm"
+          onChange={(e) => handleChange(e)}
+          required
+        />
+        <div className="role-container">
+          <div
+            className="info-toggle tooltip"
+            data-html={true}
+            data-tooltip={`* member는 복수의 그룹에 참여할 수 있습니다. \n * admin은 하나의 그룹을 생성하고, 관리할 수 있습니다.`}
+          >
+            <span>권한</span>
+            <FontAwesomeIcon icon={faInfoCircle} />
+          </div>
+          <div className="role">
+            <label htmlFor="member">member</label>
+            <input
+              id="member"
+              type="radio"
+              value="MEMBER"
+              name="role"
+              checked={selectedRole === "MEMBER"}
+              onChange={handleRole}
+            />
+            <label htmlFor="admin">admin</label>
+            <input
+              id="admin"
+              type="radio"
+              value="ADMIN"
+              name="role"
+              checked={selectedRole === "ADMIN"}
+              onChange={handleRole}
+            />
+          </div>
+        </div>
+        {selectedRole === "ADMIN" && (
+          <div className="group-container">
+            <input
+              placeholder="그룹명"
+              type="text"
+              name="groupName"
+              onChange={(e) => handleChange(e)}
+            />
+            <button onClick={checkDuplicateGroupName}>중복 확인</button>
+          </div>
         )}
-        <button className="submit" onClick={() => setIsSending(true)}>
-          제출
-        </button>
-      </Wrapper>
-    </>
+        <div className="confirm-message">{confirmMessage}</div>
+        <input
+          className="submit-btn"
+          type="submit"
+          onClick={signup}
+          disabled={disabledSubmitButton}
+          value="회원 가입"
+        />
+      </SignupForm>
+      {isShowMessageModal && (
+        <MessageModal message={signupResultMessage} type="signup" />
+      )}
+    </Wrapper>
   );
 }
 
