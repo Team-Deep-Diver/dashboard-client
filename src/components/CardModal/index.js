@@ -18,6 +18,7 @@ function CardModal({ socket }) {
   const themeColors = ["#CDDAFD", "#BEE1E6", "#E2ECE9", "#FDE2E4", "#FFF1E6"];
 
   const [cardInput, setCardInput] = useState({
+    cardId: message ? message.cardId : "",
     snapshotId: message ? message.snapshotId : "",
     currentDate,
     createdBy: user_id,
@@ -38,13 +39,6 @@ function CardModal({ socket }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "startDate" || "endDate") {
-      return setCardInput({
-        ...cardInput,
-        [name]: value.toString("yyyy-MM-dd"),
-      });
-    }
 
     setCardInput({
       ...cardInput,

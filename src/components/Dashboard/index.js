@@ -6,6 +6,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { setModalOpen } from "../../store/slices/modalSlice";
 
+import { getCardInfo } from "../../utils/getCardInfo";
+import { setCardInput } from "../../utils/setCardInput";
+
 function Dashboard({ socket }) {
   const dispatch = useDispatch();
   const { user_id } = useParams();
@@ -16,54 +19,31 @@ function Dashboard({ socket }) {
   useEffect(() => {
     socket?.emit("searchMyCards", { user_id, currentDate });
     socket?.on("getMyCards", (data) => {
-      const cardInfoArr = data.map((card) => {
-        const { colorCode, period, snapshots } = card;
-        const cardContent = snapshots[0].value;
+      const cardInfo = getCardInfo(data);
 
-        const cardInfo = {
-          snapshotId: snapshots[0]._id,
-          colorCode,
-          period,
-          category: snapshots[0].category,
-          todo: cardContent.todos,
-          imgUrl: cardContent.imgUrl,
-          description: cardContent.description,
-        };
-
-        return cardInfo;
-      });
-
-      setCards(cardInfoArr);
+      setCards(cardInfo);
     });
-  }, [socket, currentDate, cards]);
+  }, [socket, currentDate]);
 
   useEffect(() => {
-    socket?.emit("modifyCard", { todoChange });
+    socket?.emit("modifyCard", { socketValue: todoChange });
+    socket?.on("getMyCards", (data) => {
+      const cardInfo = getCardInfo(data);
+
+      setCards(cardInfo);
+    });
   }, [todoChange]);
 
   const handleCheckbox = (e, card) => {
     const newcard = card.todo.map((item) => {
       return {
         text: item.text,
-        checked: (item.text === e.target.id) ? !item.checked : item.checked
-      }
+        checked:
+          item.text === e.target.textContent ? !item.checked : item.checked,
+      };
     });
 
-    const cardInput = {
-      snapshotId: card.snapshotId,
-      currentDate,
-      createdBy: user_id,
-      category: card.category,
-      startDate: card.period.startDate,
-      endDate: card.period.endDate,
-      colorCode: card.colorCode,
-      todos: newcard,
-      imgUrl: card.imgUrl,
-      description: card.description,
-      x: 0,
-      y: 0,
-    }
-
+    const cardInput = setCardInput(user_id, currentDate, card, newcard);
     setTodoChange(cardInput);
   };
 
@@ -75,7 +55,8 @@ function Dashboard({ socket }) {
           color={card.colorCode}
           onDoubleClick={(e) => {
             const parentElement = e.target.parentElement;
-            !(parentElement.id === "todo-item") && dispatch(setModalOpen({ type: "handleCard", message: card }))
+            !(parentElement.id === "todo-item") &&
+              dispatch(setModalOpen({ type: "handleCard", message: card }));
           }}
         >
           <div className="hash-tag" size={card.category.length}>
@@ -89,9 +70,17 @@ function Dashboard({ socket }) {
           </div>
           <div className="todo-box">
             {card.todo.map((item) => (
-              <div key={item._id} id="todo-item" onClick={(e) => handleCheckbox(e, card)}>
-                <input type="checkbox" id={item.text}/>
-                <label htmlFor={item.text} className="todo-text">
+              <div key={item._id} id="todo-item">
+                {item.checked ? (
+                  <input type="checkbox" id={item.text} defaultChecked={true} />
+                ) : (
+                  <input type="checkbox" id={item.text} />
+                )}
+                <label
+                  htmlFor={item.text}
+                  className="todo-text"
+                  onClick={(e) => handleCheckbox(e, card)}
+                >
                   {item.text}
                 </label>
               </div>

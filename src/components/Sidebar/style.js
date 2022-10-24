@@ -35,8 +35,11 @@ export const Wrapper = styled.div`
 `;
 
 export const NoticeWrapper = styled.ul`
+  height: 450px;
+  border: solid 1px;
   margin-top: 40px;
   padding: 10px;
+  overflow: scroll;
 
   & > li {
     border-radius: 10px;

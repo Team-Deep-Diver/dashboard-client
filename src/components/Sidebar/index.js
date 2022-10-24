@@ -4,37 +4,44 @@ import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { useParams } from "react-router-dom";
 
 import { Wrapper, NoticeWrapper } from "./style";
 import { setModalOpen } from "../../store/slices/modalSlice";
+import { getNoticeInfo } from "../../utils/getNoticeInfo";
 
-<<<<<<< HEAD
-function Sidebar({ setIsSidebarOpen, role }) {
-=======
-function Sidebar({ setIsSidebarOpen, role, socket, groups }) {
->>>>>>> 2382481 (feat: 공지읽기)
+function Sidebar({ setIsSidebarOpen, role, socket, groupList }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [noticeList, setNoticeList] = useState([
-    {
-      name: "hello",
-      colorCode: "#ffffff",
-      message: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    },
-  ]);
+  const { user_id } = useParams();
+  const [noticeList, setNoticeList] = useState([]);
 
   useEffect(() => {
-    groups?.map((group) => {
-      socket?.on(`group.groupName`, (data) => {
-        const { name, colorCode, newNotice } = data;
+    async function getGroupNotice() {
+      const res = await fetch(
+        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groupNotice`
+      );
 
-        setNoticeList((notices) => [
-          ...notices,
-          { name, colorCode, newNotice },
-        ]);
+      const result = await res.json();
+      const { groupName, colorCode, notice } = result;
+      const notices = getNoticeInfo(groupName, colorCode, notice);
+
+      setNoticeList(notices);
+    }
+
+    getGroupNotice();
+  }, []);
+
+  useEffect(() => {
+    groupList?.forEach((group) => {
+      socket?.on(group, (data) => {
+        const { groupName, colorCode, notice } = data;
+        const newNotice = getNoticeInfo(groupName, colorCode, notice);
+
+        setNoticeList([...noticeList, newNotice]);
       });
     });
-  }, [socket, noticeList]);
+  }, [socket, noticeList, groupList]);
 
   return (
     <Wrapper>
@@ -89,9 +96,15 @@ function Sidebar({ setIsSidebarOpen, role, socket, groups }) {
         </div>
       )}
       <NoticeWrapper>
-        {noticeList.map((notice) => (
-          <li style={{ background: notice.colorCode }}>
-            <strong>{notice.name}</strong>
+        {noticeList?.map((notice, idx) => (
+          <li
+            style={{ background: notice.colorCode, marginBottom: "10px" }}
+            key={notice.colorCode + idx}
+          >
+            <strong>{notice.groupName}</strong>
+            <p>
+              {notice.startDate} ~ {notice.endDate}
+            </p>
             <p>{notice.message}</p>
           </li>
         ))}
