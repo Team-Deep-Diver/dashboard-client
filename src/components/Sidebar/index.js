@@ -8,11 +8,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Wrapper, NoticeWrapper } from "./style";
 import { setModalOpen } from "../../store/slices/modalSlice";
 
-<<<<<<< HEAD
-function Sidebar({ setIsSidebarOpen, role }) {
-=======
 function Sidebar({ setIsSidebarOpen, role, socket, groups }) {
->>>>>>> 2382481 (feat: 공지읽기)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [noticeList, setNoticeList] = useState([

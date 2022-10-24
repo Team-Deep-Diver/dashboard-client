@@ -33,6 +33,7 @@ function Login() {
 
   const login = async (e) => {
     e.preventDefault();
+    console.log("로그인 눌림?");
 
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_REQUEST_HOST}/login`,
@@ -48,21 +49,16 @@ function Login() {
       }
     );
 
+    console.log("res :", res);
+
     if (res.status === 200) {
       const result = await res.json();
+      const token = result.token.split(" ")[1];
 
-      const res2 = await fetch(
-        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${result.user._id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: result.token,
-          },
-        }
-      );
+      console.log("result", result);
+      console.log("token", token);
 
-      if (res.status === 200) {
+      if (result.token) {
         navigate(`/users/${result.user._id}`);
       }
     } else {

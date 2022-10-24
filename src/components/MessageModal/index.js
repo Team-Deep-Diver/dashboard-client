@@ -24,14 +24,25 @@ function MessageModal({ message, type }) {
   return (
     <Wrapper>
       <div className="message">{message}</div>
-      {type === "logout" ? (
+      {type === "logout" && (
         <input
           type="submit"
           value="확인"
           className="close-button"
           onClick={logout}
         />
-      ) : (
+      )}
+
+      {type === "signup" && (
+        <input
+          type="submit"
+          value="확인"
+          className="close-button"
+          onClick={() => navigate("/login")}
+        />
+      )}
+
+      {type !== "signup" && type !== "logout" && (
         <input
           type="submit"
           value="닫기"

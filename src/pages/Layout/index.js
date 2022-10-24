@@ -20,7 +20,7 @@ import MyGroupListModal from "../../components/MyGroupListModal";
 function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [role, setRole] = useState(null);
-  const [groupList, setGroupList] = useState(null);
+  const [groupList, setGroupList] = useState([]);
   const { isModalOpen, modalType, message } = useSelector(
     (state) => state.modal
   );
@@ -35,11 +35,19 @@ function Layout() {
       }
 
       const res = await fetch(
-        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}`
+        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.jwt,
+          },
+        }
       );
 
       if (res.status === 200) {
         const userInfo = await res.json();
+
         setRole(userInfo.role);
         setGroupList(userInfo.groups?.map((group) => group.groupName));
       }
