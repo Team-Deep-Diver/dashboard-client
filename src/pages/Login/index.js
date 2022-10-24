@@ -50,19 +50,9 @@ function Login() {
 
     if (res.status === 200) {
       const result = await res.json();
+      const token = result.token.split(" ")[1];
 
-      const res2 = await fetch(
-        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${result.user._id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: result.token,
-          },
-        }
-      );
-
-      if (res.status === 200) {
+      if (token) {
         navigate(`/users/${result.user._id}`);
       }
     } else {

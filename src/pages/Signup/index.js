@@ -66,6 +66,8 @@ function Signup() {
       } catch (err) {
         console.log(err);
       }
+
+      isSending && onSubmit();
     };
 
     const onCheckGroupName = async () => {
@@ -96,7 +98,7 @@ function Signup() {
     const onCheckEmail = async () => {
       try {
         const result = await fetch(
-          `${process.env.REACT_APP_SERVER_REQUEST_HOST}signup/check-email`,
+          `${process.env.REACT_APP_SERVER_REQUEST_HOST}/signup/check-email`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -118,7 +120,6 @@ function Signup() {
       }
     };
 
-    isSending && onSubmit();
     isSending && onCheckEmail();
     isSending && onCheckGroupName();
   }, [isSending]);
