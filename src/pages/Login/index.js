@@ -53,6 +53,7 @@ function Login() {
       const token = result.token.split(" ")[1];
 
       if (token) {
+        localStorage.setItem("jwt", token);
         navigate(`/users/${result.user._id}`);
       }
     } else {
