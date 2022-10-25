@@ -1,26 +1,21 @@
 import styled from "styled-components";
 
+export const modal = {
+  hidden: { y: "250px", opacity: 0 },
+  visible: { y: "250px", opacity: 1, transition: { delay: 0.7 } },
+};
+
 export const Wrapper = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  margin-top: -90px;
-  margin-left: -175px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 350px;
-  height: 180px;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.5);
-
   .message {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 220px;
-    height: 120px;
+    margin-bottom: 15px;
+    width: 250px;
+    height: 50px;
     font-size: 23px;
     text-align: center;
   }

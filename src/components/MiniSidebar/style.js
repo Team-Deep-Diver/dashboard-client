@@ -6,22 +6,24 @@ export const Wrapper = styled.div`
   justify-content: space-between;
   padding: 10px;
   height: 100vh;
-  width: 50px;
-  background: #a3bded;
+  width: 70px;
+  background: rgb(242, 244, 242);
   text-align: center;
   box-sizing: border-box;
+  box-shadow: 5px 0 5px -5px #333;
+  z-index: 2;
 
   .bars {
+    margin-left: 2px;
     margin-top: 10px;
-    height: 40px;
-    color: #ffffff;
+    color: #777777;
     cursor: pointer;
   }
 
   .logout {
+    margin-left: 2px;
     margin-bottom: 10px;
-    height: 30px;
     cursor: pointer;
-    color: #ffffff;
+    color: #777777;
   }
 `;

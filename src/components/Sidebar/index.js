@@ -1,97 +1,142 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { HiArrowLeft } from "react-icons/hi2";
+import { useParams } from "react-router-dom";
+import { motion } from "framer-motion";
 
-import { Wrapper, NoticeWrapper } from "./style";
+import { option, Wrapper, NoticeWrapper, Notice } from "./style";
 import { setModalOpen } from "../../store/slices/modalSlice";
+import { getNoticeInfo } from "../../utils/getNoticeInfo";
 
-function Sidebar({ setIsSidebarOpen, role, socket, groups }) {
+function Sidebar({ setIsSidebarOpen, role, socket, groupList }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [noticeList, setNoticeList] = useState([
-    {
-      name: "hello",
-      colorCode: "#ffffff",
-      message: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    },
-  ]);
+  const { user_id } = useParams();
+  const [noticeList, setNoticeList] = useState([]);
+  const { isModalOpen } = useSelector((state) => state.modal);
 
   useEffect(() => {
-    groups?.map((group) => {
-      socket?.on(`group.groupName`, (data) => {
-        const { name, colorCode, newNotice } = data;
+    async function getGroupNotice() {
+      const res = await fetch(
+        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groupNotice`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.jwt,
+          },
+        }
+      );
+      const result = await res.json();
+      const { groupName, colorCode, notice } = result;
+      const notices = getNoticeInfo(groupName, colorCode, notice);
 
-        setNoticeList((notices) => [
-          ...notices,
-          { name, colorCode, newNotice },
-        ]);
+      setNoticeList(notices);
+    }
+
+    getGroupNotice();
+  }, [isModalOpen]);
+
+  useEffect(() => {
+    groupList?.forEach((group) => {
+      socket?.on(group, (data) => {
+        const { groupName, colorCode, notice } = data;
+        const newNotice = getNoticeInfo(groupName, colorCode, notice);
+
+        setNoticeList([...noticeList, newNotice]);
       });
     });
-  }, [socket, noticeList]);
+  }, [socket, noticeList, groupList]);
 
   return (
     <Wrapper>
-      <FontAwesomeIcon
-        icon={faArrowLeft}
+      <HiArrowLeft
+        size={40}
         className="arrow-left"
         onClick={() => setIsSidebarOpen(false)}
       />
       {role === "GUEST" && (
-        <div className="content1" onClick={() => navigate("/signup")}>
+        <motion.div
+          variants={option}
+          whileHover="hover"
+          transition="spring"
+          className="font"
+          onClick={() => navigate("/signup")}
+        >
+          <div className="icon">&#128587;</div>
           회원가입
-        </div>
+        </motion.div>
       )}
       {role === "MEMBER" && (
         <div>
-          <div
-            className="content1"
+          <motion.div
+            variants={option}
+            whileHover="hover"
+            transition="spring"
+            className="font"
             onClick={() =>
               dispatch(setModalOpen({ type: "joinGroup", message: "" }))
             }
           >
+            <div className="icon">&#128152;</div>
             그룹 참가하기
-          </div>
-          <div
-            className="content2"
+          </motion.div>
+          <motion.div
+            variants={option}
+            whileHover="hover"
+            transition="spring"
+            className="font"
             onClick={() =>
               dispatch(setModalOpen({ type: "myGroupList", message: "" }))
             }
           >
-            내 그룹 현황
-          </div>
+            <div className="icon">&#128450;</div>내 그룹 현황
+          </motion.div>
         </div>
       )}
       {role === "ADMIN" && (
         <div>
-          <div
-            className="content1"
+          <motion.div
+            variants={option}
+            whileHover="hover"
+            transition="spring"
+            className="font"
             onClick={() =>
               dispatch(setModalOpen({ type: "manageGroup", message: "" }))
             }
           >
+            <div className="icon">&#128450;</div>
             그룹 관리하기
-          </div>
-          <div
-            className="content2"
+          </motion.div>
+          <motion.div
+            variants={option}
+            whileHover="hover"
+            transition="spring"
+            className="font"
             onClick={() =>
               dispatch(setModalOpen({ type: "createNotice", message: "" }))
             }
           >
+            <div className="icon">&#128236;</div>
             그룹 공지 보내기
-          </div>
+          </motion.div>
         </div>
       )}
-      <NoticeWrapper>
-        {noticeList.map((notice) => (
-          <li style={{ background: notice.colorCode }}>
-            <strong>{notice.name}</strong>
-            <p>{notice.message}</p>
-          </li>
-        ))}
-      </NoticeWrapper>
+      {role !== "GUEST" && (
+        <NoticeWrapper>
+          {noticeList?.map((notice, idx) => (
+            <Notice colorCode={notice.colorCode} key={notice.colorCode + idx}>
+              <strong className="group-name">{notice.groupName}</strong>
+              <p className="font">
+                {notice.startDate} ~ {notice.endDate}
+              </p>
+              <p className="font">{notice.message}</p>
+            </Notice>
+          ))}
+        </NoticeWrapper>
+      )}
     </Wrapper>
   );
 }

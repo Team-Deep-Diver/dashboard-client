@@ -55,10 +55,8 @@ function Login() {
       const result = await res.json();
       const token = result.token.split(" ")[1];
 
-      console.log("result", result);
-      console.log("token", token);
-
-      if (result.token) {
+      if (token) {
+        localStorage.setItem("jwt", token);
         navigate(`/users/${result.user._id}`);
       }
     } else {

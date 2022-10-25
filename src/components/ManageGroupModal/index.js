@@ -26,11 +26,20 @@ function ManageGroupModal() {
       setIsLoading(true);
 
       const res = await fetch(
-        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups`
+        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.jwt,
+          },
+        }
       );
 
       if (res.status === 200) {
         const group = await res.json();
+
+        console.log("group", group);
 
         setGroupId(group.applicants._id);
         setApplicants(group.applicants.applicants);
@@ -42,18 +51,26 @@ function ManageGroupModal() {
     getGroupInfo();
   }, []);
 
-  async function acceptApplicant({ _id: applicant_id, name: applicant_name }) {
-    const res = await fetch(
+  async function acceptApplicant({
+    _id: applicant_id,
+    nickname: applicant_name,
+  }) {
+    debugger;
+    const result = await fetch(
       `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups/${group_id}/${applicant_id}`,
       {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.jwt,
+        },
         body: JSON.stringify({
           status: "PARTICIPATING",
         }),
       }
     );
 
-    if (res.status === 200) {
+    if (result.status === 201) {
       dispatch(
         setModalOpen({
           type: "message",
@@ -78,6 +95,10 @@ function ManageGroupModal() {
       `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups/${applicant_id}`,
       {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.jwt,
+        },
         body: JSON.stringify({
           status: "REJECTED",
         }),
@@ -109,22 +130,27 @@ function ManageGroupModal() {
         </ModalHeader>
         <ModalContents>
           <div className="members">
-            <strong>Members</strong>
+            <strong className="sub-title">Members</strong>
             <div className="contents-wrap">
               {isLoading ? "불러오는 중입니다..." : ""}
               <ul className="members-list">
-                {members.map((member) => (
+                {members?.map((member) => (
                   <li key={member._id}>{member.nickname}</li>
                 ))}
+                <li>
+                  {!isLoading &&
+                    members.length === 0 &&
+                    "그룹에 참가한 사람이 없습니다."}
+                </li>
               </ul>
             </div>
           </div>
           <div className="applicants">
-            <strong>Applicants</strong>
+            <strong className="sub-title">Applicants</strong>
             <div className="contents-wrap">
               {isLoading ? "불러오는 중입니다..." : ""}
               <ul className="applicants-list">
-                {applicants.map((applicant) => (
+                {applicants?.map((applicant) => (
                   <li key={applicant._id}>
                     <span className="name">{applicant.nickname}</span>
                     <div>
@@ -137,6 +163,11 @@ function ManageGroupModal() {
                     </div>
                   </li>
                 ))}
+                <li>
+                  {!isLoading &&
+                    applicants.length === 0 &&
+                    "그룹에 참가 신청한 사람이 없습니다."}
+                </li>
               </ul>
             </div>
           </div>

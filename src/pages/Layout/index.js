@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
 import Sidebar from "../../components/Sidebar";
 import MiniSidebar from "../../components/MiniSidebar";
@@ -18,14 +19,14 @@ import CardModal from "../../components/CardModal";
 import MyGroupListModal from "../../components/MyGroupListModal";
 
 function Layout() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { user_id } = useParams();
+  const [socket, setSocket] = useState(null);
   const [role, setRole] = useState(null);
   const [groupList, setGroupList] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isModalOpen, modalType, message } = useSelector(
     (state) => state.modal
   );
-  const { user_id } = useParams();
-  const [groups, setGroups] = useState([]);
 
   useEffect(() => {
     async function getUserInfo() {
@@ -56,12 +57,6 @@ function Layout() {
     getUserInfo();
   }, []);
 
-  const [socket, setSocket] = useState();
-
-  socket?.on(groupList[0], (data) => {
-    console.log(data);
-  });
-
   useEffect(() => {
     const socketIO = io.connect(process.env.REACT_APP_SERVER_REQUEST_HOST);
     setSocket(socketIO);
@@ -73,29 +68,13 @@ function Layout() {
 
   return (
     <>
-      {isModalOpen && (
-        <ShowModal>
-          {modalType === "joinGroup" && <JoinGroupModal />}
-          {modalType === "createNotice" && (
-            <NoticeModal
-              socket={socket}
-              adminId={user_id}
-              groupList={groupList}
-            />
-          )}
-          {modalType === "message" && <MessageModal message={message} />}
-          {modalType === "manageGroup" && <ManageGroupModal />}
-          {modalType === "handleCard" && <CardModal socket={socket} />}
-          {modalType === "myGroupList" && <MyGroupListModal />}
-        </ShowModal>
-      )}
       <Wrapper>
         {isSidebarOpen ? (
           <Sidebar
             setIsSidebarOpen={setIsSidebarOpen}
             role={role}
             socket={socket}
-            groups={groups}
+            groupList={groupList}
           />
         ) : (
           <MiniSidebar setIsSidebarOpen={setIsSidebarOpen} role={role} />
@@ -105,6 +84,24 @@ function Layout() {
           <Dashboard socket={socket} />
         </Content>
       </Wrapper>
+      <AnimatePresence mode="wait" initial={false}>
+        {isModalOpen && (
+          <ShowModal>
+            {modalType === "joinGroup" && <JoinGroupModal />}
+            {modalType === "createNotice" && (
+              <NoticeModal
+                socket={socket}
+                adminId={user_id}
+                groupList={groupList}
+              />
+            )}
+            {modalType === "message" && <MessageModal message={message} />}
+            {modalType === "manageGroup" && <ManageGroupModal />}
+            {modalType === "handleCard" && <CardModal socket={socket} />}
+            {modalType === "myGroupList" && <MyGroupListModal />}
+          </ShowModal>
+        )}
+      </AnimatePresence>
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { VscMenu } from "react-icons/vsc";
+import { CiLogout } from "react-icons/ci";
 
 import { Wrapper } from "./style";
 import MessageModal from "../MessageModal";
@@ -15,6 +15,10 @@ function MiniSidebar({ setIsSidebarOpen, role }) {
       `${process.env.REACT_APP_SERVER_REQUEST_HOST}/logout`,
       {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.jwt,
+        },
       }
     );
 
@@ -26,23 +30,22 @@ function MiniSidebar({ setIsSidebarOpen, role }) {
 
   return (
     <>
-      {showMessage && (
-        <MessageModal
-          message="로그아웃 되셨습니다. 메인페이지로 이동합니다."
-          type="logout"
-        />
-      )}
       <Wrapper>
-        <FontAwesomeIcon
-          icon={faBars}
+        <VscMenu
           className="bars"
+          size={40}
           onClick={() => setIsSidebarOpen(true)}
         />
         {role !== "GUEST" && (
-          <FontAwesomeIcon
-            icon={faRightFromBracket}
-            className="logout"
-            onClick={logout}
+          <CiLogout className="logout" size={40} onClick={logout} />
+        )}
+        {/* {role !== "GUEST" && (
+          <CiLogout className="logout" size={40} onClick={() => setShowMessage} />
+        )} */}
+        {showMessage && (
+          <MessageModal
+            message="로그아웃 되셨습니다. 메인페이지로 이동합니다."
+            type="logout"
           />
         )}
       </Wrapper>

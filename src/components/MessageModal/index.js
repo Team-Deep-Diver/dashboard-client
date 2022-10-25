@@ -1,7 +1,8 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import { motion } from "framer-motion";
 
-import { Wrapper } from "./style";
+import { modal, Wrapper } from "./style";
 import { setModalClose } from "../../store/slices/modalSlice";
 
 function MessageModal({ message, type }) {
@@ -13,6 +14,10 @@ function MessageModal({ message, type }) {
       `${process.env.REACT_APP_SERVER_REQUEST_HOST}/logout`,
       {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.jwt,
+        },
       }
     );
 
@@ -22,35 +27,43 @@ function MessageModal({ message, type }) {
   }
 
   return (
-    <Wrapper>
-      <div className="message">{message}</div>
-      {type === "logout" && (
-        <input
-          type="submit"
-          value="확인"
-          className="close-button"
-          onClick={logout}
-        />
-      )}
+    <motion.div
+      className="confirm-modal"
+      variants={modal}
+      initial="hidden"
+      animate="visible"
+    >
+      <Wrapper>
+        <div className="message">{message}</div>
 
-      {type === "signup" && (
-        <input
-          type="submit"
-          value="확인"
-          className="close-button"
-          onClick={() => navigate("/login")}
-        />
-      )}
+        {type === "logout" && (
+          <input
+            type="submit"
+            value="확인"
+            className="close-button"
+            onClick={logout}
+          />
+        )}
 
-      {type !== "signup" && type !== "logout" && (
-        <input
-          type="submit"
-          value="닫기"
-          className="close-button"
-          onClick={() => dispatch(setModalClose())}
-        />
-      )}
-    </Wrapper>
+        {type === "signup" && (
+          <input
+            type="submit"
+            value="확인"
+            className="close-button"
+            onClick={() => navigate("/login")}
+          />
+        )}
+
+        {type !== "signup" && type !== "logout" && (
+          <input
+            type="submit"
+            value="닫기"
+            className="close-button"
+            onClick={() => dispatch(setModalClose())}
+          />
+        )}
+      </Wrapper>
+    </motion.div>
   );
 }
 

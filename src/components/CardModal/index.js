@@ -18,6 +18,7 @@ function CardModal({ socket }) {
   const themeColors = ["#CDDAFD", "#BEE1E6", "#E2ECE9", "#FDE2E4", "#FFF1E6"];
 
   const [cardInput, setCardInput] = useState({
+    cardId: message ? message.cardId : "",
     snapshotId: message ? message.snapshotId : "",
     currentDate,
     createdBy: user_id,
@@ -38,13 +39,6 @@ function CardModal({ socket }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "startDate" || "endDate") {
-      return setCardInput({
-        ...cardInput,
-        [name]: value.toString("yyyy-MM-dd"),
-      });
-    }
 
     setCardInput({
       ...cardInput,
@@ -84,32 +78,6 @@ function CardModal({ socket }) {
 
   return (
     <>
-      {showConfirmMessage &&
-        (message ? (
-          <ConfirmMessageModal
-            socket={socket}
-            socketType={socketType}
-            socketValue={cardInput}
-            confirmMessage={
-              socketType === "modifyCard"
-                ? "카드를 수정하시겠습니까?"
-                : "카드를 삭제하시겠습니까?"
-            }
-            endMessage={
-              socketType === "modifyCard"
-                ? "카드가 수정되었습니다."
-                : "카드가 삭제되었습니다."
-            }
-          />
-        ) : (
-          <ConfirmMessageModal
-            socket={socket}
-            socketType="createCard"
-            socketValue={cardInput}
-            confirmMessage="카드를 생성하시겠습니까?"
-            endMessage="카드가 생성되었습니다."
-          />
-        ))}
       <Wrapper>
         <div className="title">
           {message ? "카드 수정하기" : "카드 생성하기"}
@@ -227,6 +195,32 @@ function CardModal({ socket }) {
           )}
         </div>
       </Wrapper>
+      {showConfirmMessage &&
+        (message ? (
+          <ConfirmMessageModal
+            socket={socket}
+            socketType={socketType}
+            socketValue={cardInput}
+            confirmMessage={
+              socketType === "modifyCard"
+                ? "카드를 수정하시겠습니까?"
+                : "카드를 삭제하시겠습니까?"
+            }
+            endMessage={
+              socketType === "modifyCard"
+                ? "카드가 수정되었습니다."
+                : "카드가 삭제되었습니다."
+            }
+          />
+        ) : (
+          <ConfirmMessageModal
+            socket={socket}
+            socketType="createCard"
+            socketValue={cardInput}
+            confirmMessage="카드를 생성하시겠습니까?"
+            endMessage="카드가 생성되었습니다."
+          />
+        ))}
     </>
   );
 }

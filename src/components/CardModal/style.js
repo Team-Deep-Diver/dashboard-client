@@ -4,8 +4,7 @@ export const Wrapper = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
-  margin-top: -290px;
-  margin-left: -325px;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
