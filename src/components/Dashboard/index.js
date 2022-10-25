@@ -1,6 +1,8 @@
 import { Wrapper, Content } from "./style";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { motion } from "framer-motion";
+
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -39,7 +41,9 @@ function Dashboard({ socket }) {
       return {
         text: item.text,
         checked:
-          item.text === e.target.textContent ? !item.checked : item.checked,
+          item.text === e.target.textContent || item.text === e.target.id
+            ? !item.checked
+            : item.checked,
       };
     });
 
@@ -48,60 +52,67 @@ function Dashboard({ socket }) {
   };
 
   return (
-    <Wrapper>
-      {cards?.map((card, idx) => (
-        <Content
-          key={idx}
-          color={card.colorCode}
-          onDoubleClick={(e) => {
-            const parentElement = e.target.parentElement;
-            !(parentElement.id === "todo-item") &&
-              dispatch(setModalOpen({ type: "handleCard", message: card }));
-          }}
-        >
-          <div className="hash-tag" size={card.category.length}>
-            #{card.category}
-          </div>
-          <div className="layout">
-            <div className="date-line"></div>
-            <div className="text">{card.period.startDate.split("T")[0]}</div>
-            <div className="date-hyphen">~</div>
-            <div className="text">{card.period.endDate.split("T")[0]}</div>
-          </div>
-          <div className="todo-box">
-            {card.todo.map((item) => (
-              <div key={item._id} id="todo-item">
-                {item.checked ? (
-                  <input type="checkbox" id={item.text} defaultChecked={true} />
-                ) : (
-                  <input type="checkbox" id={item.text} />
-                )}
-                <label
-                  htmlFor={item.text}
-                  className="todo-text"
-                  onClick={(e) => handleCheckbox(e, card)}
-                >
-                  {item.text}
-                </label>
+    <>
+      <Wrapper>
+        {cards?.map((card, idx) => (
+          <motion.div
+            key={idx}
+            layoutId={card.cardId}
+            onDoubleClick={(e) => {
+              const parentElement = e.target.parentElement;
+              !(parentElement.id === "todo-item") &&
+                dispatch(setModalOpen({ type: "handleCard", message: card }));
+            }}
+          >
+            <Content color={card.colorCode}>
+              <div className="hash-tag" size={card.category.length}>
+                #{card.category}
               </div>
-            ))}
-          </div>
-          <div className="text-box">{card.description}</div>
-          <div className="img-box">
-            {card.imgUrl && (
-              <input className="img" type="image" src={card.imgUrl} />
-            )}
-          </div>
-        </Content>
-      ))}
-      <FontAwesomeIcon
-        icon={faCirclePlus}
-        className="plus-icon"
-        onClick={() =>
-          dispatch(setModalOpen({ type: "handleCard", message: "" }))
-        }
-      />
-    </Wrapper>
+              <div className="layout">
+                <div className="date-line"></div>
+                <div className="text">
+                  {card.period.startDate.split("T")[0]}
+                </div>
+                <div className="date-hyphen">~</div>
+                <div className="text">{card.period.endDate.split("T")[0]}</div>
+              </div>
+              <div className="todo-box">
+                {card.todo.map((item) => (
+                  <div key={item._id} id="todo-item">
+                    <input
+                      type="checkbox"
+                      id={item.text}
+                      defaultChecked={item.checked}
+                      onClick={(e) => handleCheckbox(e, card)}
+                    />
+                    <label
+                      htmlFor={item.text}
+                      className="todo-text"
+                      onClick={(e) => handleCheckbox(e, card)}
+                    >
+                      {item.text}
+                    </label>
+                  </div>
+                ))}
+              </div>
+              <div className="text-box">{card.description}</div>
+              <div className="img-box">
+                {card.imgUrl && (
+                  <input className="img" type="image" src={card.imgUrl} />
+                )}
+              </div>
+            </Content>
+          </motion.div>
+        ))}
+        <FontAwesomeIcon
+          icon={faCirclePlus}
+          className="plus-icon"
+          onClick={() =>
+            dispatch(setModalOpen({ type: "handleCard", message: "" }))
+          }
+        />
+      </Wrapper>
+    </>
   );
 }
 

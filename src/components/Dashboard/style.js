@@ -24,7 +24,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Content = styled.div`
-  width: 400px;
+  width: 300px;
   max-height: 400px;
   padding: 20px;
   margin: 20px;
@@ -38,6 +38,7 @@ export const Content = styled.div`
   }
 
   & .hash-tag {
+    width: ${props => props.size}
     height: 20px;
     padding: 2px;
     margin-bottom: 10px;

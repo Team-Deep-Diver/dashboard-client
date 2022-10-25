@@ -1,37 +1,55 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
+export const ModalWrapper = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
-  margin-top: -200px;
-  margin-left: -275px;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  height: 400px;
+  padding: 10px 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 550px;
-  height: 400px;
+  border-radius: 10px;
   background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.5);
+`;
+
+export const ModalHeader = styled.header`
+  & h3 {
+    font-size: 24px;
+    color: #414141;
+    text-align: center;
+    font-weight: 700;
+  }
+`;
+
+export const ModalContents = styled.div`
+  & .sub-title {
+    color: #414141;
+  }
 
   & .layout {
-    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
     display: flex;
     width: 430px;
   }
 
   .title {
+    margin-top: 10px;
     padding-top: 20px;
     font-size: 2em;
-    color: #a3bded;
+    color: #414141;
   }
 
   .search-result {
-    width: 410px;
+    width: 411px;
     height: 130px;
+    margin-left: 8px;
     border-radius: 10px;
-    border: 3px solid #a3bded;
+    border: 1px solid #878787;
     overflow: scroll;
   }
 
@@ -56,7 +74,6 @@ export const Wrapper = styled.div`
     border-radius: 4px;
     color: #000000;
     cursor: pointer;
-    font-family: "GangwonEdu_OTFBoldA";
     text-align: center;
   }
 
@@ -72,36 +89,54 @@ export const Wrapper = styled.div`
     margin: 0 auto 20px;
     padding-left: 10px;
     border-radius: 10px;
-    border: 3px solid #a3bded;
+    border: 1px solid #878787;
   }
 
   & .search-button {
     display: block;
     width: 80px;
     background: #a3bded;
-    margin-top: 5px;
+    border: #af69ee;
     padding: 10px;
-    border-radius: 4px;
+    border-radius: 10px;
     color: #ffffff;
     cursor: pointer;
-    font-family: "GangwonEdu_OTFBoldA";
+  }
+
+  & .search-button:hover {
+    background: #a3bded;
+    color: #ffffff;
+    font-weight: bold;
   }
 
   & .search-button:disabled {
-    background: #f3f3f3;
-    border: 3px solid #f3f3f3;
+    background: #e3e3e3;
+    border: 3px solid #e3e3e3;
     color: #000000;
   }
+`;
 
-  & .close-button {
-    display: block;
-    width: 80px;
-    background: #a3bded;
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 4px;
-    color: #ffffff;
+export const ModalFooter = styled.footer`
+  text-align: center;
+  padding-bottom: 40px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  & button {
+    border: none;
+    background: #e3e3e3;
+    border-radius: 10px;
+    color: #000000;
+    padding: 10px 25px;
     cursor: pointer;
-    font-family: "GangwonEdu_OTFBoldA";
+    transition: all 0.2s linear;
+  }
+
+  & button:hover {
+    background: #a3bded;
+    color: #ffffff;
+    font-weight: bold;
   }
 `;

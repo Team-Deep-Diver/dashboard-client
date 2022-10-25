@@ -4,27 +4,25 @@ export const Wrapper = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
-  margin-top: -200px;
-  margin-left: -275px;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 550px;
+  width: 450px;
   height: 400px;
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 10px;
   box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.5);
 
   & .title {
-    padding-top: 20px;
-    font-size: 2em;
-    color: #a3bded;
+    font-size: 24px;
+    color: #414141;
   }
 
   & .layout-period {
     display: flex;
     align-items: center;
-    margin-top: 30px;
+    margin-top: 20px;
   }
 
   & .layout-text {
@@ -42,11 +40,13 @@ export const Wrapper = styled.div`
   }
 
   & .period {
+    color: #414141;
     font-size: 20px;
     margin-right: 10px;
   }
 
   & .notice-title {
+    color: #414141;
     font-size: 20px;
     margin-right: 10px;
   }
@@ -55,26 +55,33 @@ export const Wrapper = styled.div`
     width: 305px;
     height: 140px;
     font-size: 18px;
+    border-radius: 10px;
+    padding: 10px;
   }
 
   & .error-message {
     display: flex;
     align-items: center;
-    height: 50px;
-    color: #7fc6d7;
+    height: 40px;
+    color: #FF6F61;
   }
 
-  & .close-button {
-    display: block;
-    width: 80px;
-    background: #a3bded;
+  & .button {
+    border: none;
+    width: 70px;
     margin-left: 30px;
     margin-right: 30px;
-    padding: 10px;
-    border-radius: 4px;
-    border: none;
-    color: #ffffff;
+    background: #e3e3e3;
+    border-radius: 10px;
+    color: #000000;
+    padding: 10px 25px;
     cursor: pointer;
-    font-family: "GangwonEdu_OTFBoldA";
+    transition: all 0.2s linear;
+  }
+
+  & .button:hover {
+    background: #a3bded;
+    color: #ffffff;
+    font-weight: bold;
   }
 `;

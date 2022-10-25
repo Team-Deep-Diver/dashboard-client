@@ -1,7 +1,8 @@
-import { Wrapper } from "./style";
+import { modal, Wrapper } from "./style";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setModalOpen, setModalClose } from "../../store/slices/modalSlice";
+import { motion } from "framer-motion";
 
 function DeleteModal({ confirmMessage, fetchedValue }) {
   const dispatch = useDispatch();
@@ -30,23 +31,23 @@ function DeleteModal({ confirmMessage, fetchedValue }) {
   }, [targetedGroupId, isFetching]);
 
   return (
-    <Wrapper>
-      <div className="message">{confirmMessage}</div>
-      <div className="layout">
-        <input
-          type="submit"
-          value="취소"
-          className="button"
-          onClick={() => dispatch(setModalClose())}
-        />
-        <input
-          type="submit"
-          value="확인"
-          className="button"
-          onClick={() => setIsFetching(true)}
-        />
-      </div>
-    </Wrapper>
+    <>
+      <motion.div
+        className="delete-modal"
+        variants={modal}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+      >
+        <Wrapper>
+          <div className="message">{confirmMessage}</div>
+          <div className="layout">
+            <button onClick={() => dispatch(setModalClose())}>취소</button>
+            <button onClick={() => setIsFetching(true)}>확인</button>
+          </div>
+        </Wrapper>
+      </motion.div>
+    </>
   );
 }
 

@@ -1,6 +1,5 @@
 import { Wrapper } from "./style";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAnglesLeft,faAnglesRight } from "@fortawesome/free-solid-svg-icons";
+import { TfiAngleDoubleLeft, TfiAngleDoubleRight } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
 import { getDate } from "../../utils/getDate";
 import { showNextDay, showPrevDay } from "../../store/slices/calendarSlice";
@@ -12,15 +11,15 @@ function CalendarDate() {
 
   return (
     <Wrapper>
-      <FontAwesomeIcon
-        icon={faAnglesLeft}
-        className="left-arrow"
+      <TfiAngleDoubleLeft
+        size={35}
+        className="arrow"
         onClick={() => dispatch(showPrevDay())}
       />
       <div className="font">{`${year}-${month}-${date}`}</div>
-      <FontAwesomeIcon
-        icon={faAnglesRight}
-        className="right-arrow"
+      <TfiAngleDoubleRight
+        size={35}
+        className="arrow"
         onClick={() => dispatch(showNextDay())}
       />
     </Wrapper>

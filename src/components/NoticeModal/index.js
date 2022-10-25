@@ -40,25 +40,16 @@ function NoticeModal({ socket, adminId, groupList }) {
 
   return (
     <>
-      {showConfirmMessage && (
-        <ConfirmMessageModal
-          socket={socket}
-          socketType="sendNotice"
-          socketValue={notice}
-          confirmMessage="공지를 생성하시겠습니까?"
-          endMessage="공지가 생성되었습니다."
-        />
-      )}
       <Wrapper>
-        <div className="title">그룹 메시지</div>
+        <h3 className="title">그룹 메시지</h3>
         <div className="layout-period">
-          <div className="period">기간</div>
+          <strong className="period">기간</strong>
           <input type="date" name="startDate" onChange={handleChange} />
           <div className="date-hyphen">-</div>
           <input type="date" name="endDate" onChange={handleChange} />
         </div>
         <div className="layout-text">
-          <div className="notice-title">내용</div>
+          <strong className="notice-title">내용</strong>
           <textarea
             className="notice"
             name="groupNotice"
@@ -70,17 +61,26 @@ function NoticeModal({ socket, adminId, groupList }) {
           <input
             type="submit"
             value="취소"
-            className="close-button"
+            className="button"
             onClick={() => dispatch(setModalClose())}
           />
           <input
             type="submit"
             value="전송"
-            className="close-button"
+            className="button"
             onClick={validationCheck}
           />
         </div>
       </Wrapper>
+      {showConfirmMessage && (
+        <ConfirmMessageModal
+          socket={socket}
+          socketType="sendNotice"
+          socketValue={notice}
+          confirmMessage="공지를 생성하시겠습니까?"
+          endMessage="공지가 생성되었습니다."
+        />
+      )}
     </>
   );
 }

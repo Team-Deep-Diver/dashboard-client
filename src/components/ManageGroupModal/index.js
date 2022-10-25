@@ -109,7 +109,7 @@ function ManageGroupModal() {
         </ModalHeader>
         <ModalContents>
           <div className="members">
-            <strong>Members</strong>
+            <strong className="sub-title">Members</strong>
             <div className="contents-wrap">
               {isLoading ? "불러오는 중입니다..." : ""}
               <ul className="members-list">
@@ -120,7 +120,7 @@ function ManageGroupModal() {
             </div>
           </div>
           <div className="applicants">
-            <strong>Applicants</strong>
+            <strong className="sub-title">Applicants</strong>
             <div className="contents-wrap">
               {isLoading ? "불러오는 중입니다..." : ""}
               <ul className="applicants-list">

@@ -1,5 +1,4 @@
 export function getCardInfo(data) {
-  console.log(data);
   const cardInfoArr = [];
   data?.map((card) => {
     const { _id, colorCode, period, snapshots } = card;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Wrapper } from "./style";
+import { ModalWrapper, ModalHeader, ModalContents, ModalFooter } from "./style";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { setModalOpen, setModalClose } from "../../store/slices/modalSlice";
@@ -11,6 +11,7 @@ function JoinGroupModal() {
   const [search, setSearch] = useState(false);
   const [groupName, setGroupName] = useState("");
   const [groupId, setGroupId] = useState(false);
+  console.log(result);
 
   const handleInput = (e) => {
     setResult([]);
@@ -26,6 +27,7 @@ function JoinGroupModal() {
 
       if (res.status === 200) {
         const groups = await res.json();
+        console.log("groups", groups);
         setResult(groups);
       }
     }
@@ -63,52 +65,55 @@ function JoinGroupModal() {
   }, [groupId]);
 
   return (
-    <Wrapper>
-      <div className="title">그룹 참가하기</div>
-      <div className="layout">
-        <input
-          type="text"
-          id="groupName"
-          name="groupName"
-          placeholder="그룹명"
-          className="input-value"
-          value={groupName}
-          onChange={handleInput}
-        />
-        <input
-          type="submit"
-          value="검색"
-          className="search-button"
-          disabled={groupName === "" ? true : false}
-          onClick={(e) => setSearch(true)}
-        />
-      </div>
-      <div className="search-result">
-        {search && result.length === 0 ? (
-          <div className="message">
-            '{groupName}'에 대한 검색 결과가 없습니다.
+    <>
+      <ModalWrapper>
+        <ModalHeader>
+          <h3>그룹 참가하기</h3>
+        </ModalHeader>
+        <ModalContents>
+          <div className="layout">
+            <input
+              type="text"
+              id="groupName"
+              name="groupName"
+              placeholder="그룹명"
+              className="input-value"
+              value={groupName}
+              onChange={handleInput}
+            />
+            <input
+              type="submit"
+              value="검색"
+              className="search-button"
+              disabled={groupName === "" ? true : false}
+              onClick={(e) => setSearch(true)}
+            />
           </div>
-        ) : (
-          result?.map((item) => (
-            <div className="list-item" key={item.group_id}>
-              <div className="item-value">{item.name}</div>
-              <input
-                type="submit"
-                value="신청"
-                className="item-button"
-                onClick={() => setGroupId(item.group_id)}
-              />
-            </div>
-          ))
-        )}
-      </div>
-      <input
-        type="submit"
-        value="닫기"
-        className="close-button"
-        onClick={() => dispatch(setModalClose())}
-      />
-    </Wrapper>
+          <div className="search-result">
+            {search && result.length === 0 ? (
+              <div className="message">
+                '{groupName}'에 대한 검색 결과가 없습니다.
+              </div>
+            ) : (
+              result?.map((item) => (
+                <div className="list-item" key={item.group_id}>
+                  <div className="item-value">{item.name}</div>
+                  <input
+                    type="submit"
+                    value="신청"
+                    className="item-button"
+                    onClick={() => setGroupId(item.group_id)}
+                  />
+                </div>
+              ))
+            )}
+          </div>
+        </ModalContents>
+        <ModalFooter>
+          <button onClick={() => dispatch(setModalClose())}>닫기</button>
+        </ModalFooter>
+      </ModalWrapper>
+    </>
   );
 }
 

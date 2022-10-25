@@ -1,13 +1,12 @@
 import styled from "styled-components";
 export const ModalWrapper = styled.div`
-  position: absolute;
-  top: 10%;
+  position: fixed;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 400px;
+  transform: translate(-50%, -50%);
+  width: 550px;
   height: 500px;
   padding: 10px 30px;
-  border: 5px solid #a3bded;
   border-radius: 10px;
   background: #ffffff;
 `;
@@ -15,13 +14,17 @@ export const ModalWrapper = styled.div`
 export const ModalHeader = styled.header`
   & h3 {
     font-size: 24px;
-    color: #a3bded;
+    color: #414141;
     text-align: center;
     font-weight: 700;
   }
 `;
 
 export const ModalContents = styled.div`
+  & .sub-title {
+    color: #414141;
+  }
+
   & .members {
     margin-bottom: 20px;
   }
@@ -35,7 +38,7 @@ export const ModalContents = styled.div`
 
   & .contents-wrap {
     height: 100px;
-    border: 3px solid #a3bded;
+    border: 1px solid #878787;
     border-radius: 10px;
     padding: 10px;
     box-sizing: border-box;
@@ -81,7 +84,6 @@ export const ModalFooter = styled.footer`
     background: #e3e3e3;
     border-radius: 10px;
     color: #000000;
-    font-weight: bold;
     padding: 10px 25px;
     cursor: pointer;
     transition: all 0.2s linear;
@@ -90,5 +92,6 @@ export const ModalFooter = styled.footer`
   & button:hover {
     background: #a3bded;
     color: #ffffff;
+    font-weight: bold;
   }
 `;

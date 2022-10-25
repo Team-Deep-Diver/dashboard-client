@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { VscMenu } from "react-icons/vsc";
+import { CiLogout } from "react-icons/ci";
 
 import { Wrapper } from "./style";
 import MessageModal from "../MessageModal";
@@ -33,17 +33,13 @@ function MiniSidebar({ setIsSidebarOpen, role }) {
         />
       )}
       <Wrapper>
-        <FontAwesomeIcon
-          icon={faBars}
+        <VscMenu
           className="bars"
+          size={40}
           onClick={() => setIsSidebarOpen(true)}
         />
         {role !== "GUEST" && (
-          <FontAwesomeIcon
-            icon={faRightFromBracket}
-            className="logout"
-            onClick={logout}
-          />
+          <CiLogout className="logout" size={40} />
         )}
       </Wrapper>
     </>

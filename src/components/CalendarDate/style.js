@@ -7,21 +7,17 @@ export const Wrapper = styled.div`
   width: 100%;
   height: 60px;
   background: #ffffff;
-  border-bottom: solid #a3bded;
+  box-shadow: 0 5px 5px -5px #333;
+  margin: 1px;
   .font {
-    font-family: "GangwonEdu_OTFBoldA";
+    font-family: "Pretendard-Regular";
     font-size: 35px;
+    color: #414141;
   }
-  .left-arrow {
-    height: 40px;
-    margin-right: 40px;
+  .arrow {
+    margin-left: 20px;
+    margin-right: 20px;
     cursor: pointer;
-    color: #a3bded;
-  }
-  .right-arrow {
-    height: 40px;
-    margin-left: 40px;
-    cursor: pointer;
-    color: #a3bded;
+    color: #777777;
   }
 `;

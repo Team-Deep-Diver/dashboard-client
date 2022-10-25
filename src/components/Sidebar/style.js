@@ -1,60 +1,74 @@
 import styled from "styled-components";
 
+export const option = {
+  hover: { scale: 1.1, originX: 0, color: "#414141" },
+  spring: { type: "spring", stiffness: 300 },
+};
+
 export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100vh;
-  width: 300px;
-  background: #a3bded;
-  text: center;
+  width: 400px;
+  padding: 15px;
+  background: rgb(242, 244, 242);
   box-sizing: border-box;
+  box-shadow: 5px 0 5px -5px #333;
+  z-index: 1;
+  .font {
+    display: flex;
+    cursor: pointer;
+    font-family: "Pretendard-Slim";
+    font-size: 25px;
+    color: #58595b;
+    margin-bottom: 10px;
+  }
   .arrow-left {
-    float: right;
+    align-self: end;
     margin-top: 10px;
-    margin-right: 15px;
+    margin-bottom: 20px;
+    margin-right: 5px;
     height: 50px;
     cursor: pointer;
-    color: #ffffff;
+    color: #414141;
   }
-  .content1 {
-    margin-top: 100px;
-    border-top: solid white;
-    border-bottom: solid white;
-    padding: 10px;
-    font-family: "GangwonEdu_OTFBoldA";
-    font-size: 25px;
-    cursor: pointer;
-    color: #ffffff;
-  }
-  .content2 {
-    border-bottom: solid white;
-    padding: 10px;
-    font-family: "GangwonEdu_OTFBoldA";
-    font-size: 25px;
-    cursor: pointer;
-    color: #ffffff;
+  .icon {
+    margin-right: 5px;
   }
 `;
 
 export const NoticeWrapper = styled.ul`
-  height: 450px;
-  border: solid 1px;
-  margin-top: 40px;
+  height: 500px;
+  background: #ffffff;
+  border-radius: 10px;
+  margin-top: 30px;
   padding: 10px;
   overflow: scroll;
+  box-shadow: 0 0 5px #333;
+`;
 
-  & > li {
-    border-radius: 10px;
-    padding: 5px;
-  }
+export const Notice = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: solid 3px ${(props) => props.colorCode};
+  box-shadow: 0 0 3px #333;
 
-  & > li strong {
-    font-size: 20px;
+  & .group-name {
+    font-size: 17px;
     display: block;
-    margin-bottom: 4px;
+    font-family: "Pretendard-Slim";
   }
 
-  & > li p {
+  & .font {
+    margin-top: 2px;
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
+    font-family: "Pretendard-Slim";
+    font-size: 15px;
   }
 `;

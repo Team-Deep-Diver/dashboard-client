@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
 import Sidebar from "../../components/Sidebar";
 import MiniSidebar from "../../components/MiniSidebar";
@@ -20,7 +21,7 @@ import MyGroupListModal from "../../components/MyGroupListModal";
 function Layout() {
   const { user_id } = useParams();
   const [socket, setSocket] = useState(null);
-  const [role, setRole] = useState(null);
+  const [role, setRole] = useState("MEMBER");
   const [groupList, setGroupList] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isModalOpen, modalType, message } = useSelector(
@@ -40,7 +41,7 @@ function Layout() {
 
       if (res.status === 200) {
         const userInfo = await res.json();
-        setRole(userInfo.role);
+        // setRole(userInfo.role);
         setGroupList(userInfo.groups?.map((group) => group.groupName));
       }
     }
@@ -59,22 +60,6 @@ function Layout() {
 
   return (
     <>
-      {isModalOpen && (
-        <ShowModal>
-          {modalType === "joinGroup" && <JoinGroupModal />}
-          {modalType === "createNotice" && (
-            <NoticeModal
-              socket={socket}
-              adminId={user_id}
-              groupList={groupList}
-            />
-          )}
-          {modalType === "message" && <MessageModal message={message} />}
-          {modalType === "manageGroup" && <ManageGroupModal />}
-          {modalType === "handleCard" && <CardModal socket={socket} />}
-          {modalType === "myGroupList" && <MyGroupListModal />}
-        </ShowModal>
-      )}
       <Wrapper>
         {isSidebarOpen ? (
           <Sidebar
@@ -91,6 +76,24 @@ function Layout() {
           <Dashboard socket={socket} />
         </Content>
       </Wrapper>
+      <AnimatePresence mode="wait" initial={false}>
+        {isModalOpen && (
+          <ShowModal>
+            {modalType === "joinGroup" && <JoinGroupModal />}
+            {modalType === "createNotice" && (
+              <NoticeModal
+                socket={socket}
+                adminId={user_id}
+                groupList={groupList}
+              />
+            )}
+            {modalType === "message" && <MessageModal message={message} />}
+            {modalType === "manageGroup" && <ManageGroupModal />}
+            {modalType === "handleCard" && <CardModal socket={socket} />}
+            {modalType === "myGroupList" && <MyGroupListModal />}
+          </ShowModal>
+        )}
+      </AnimatePresence>
     </>
   );
 }

@@ -1,7 +1,8 @@
-import { Wrapper } from "./style";
+import { modal } from "./style";
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { setModalClose } from "../../store/slices/modalSlice";
+import { motion } from "framer-motion";
 
 function ShowModal({ children }) {
   const modalOutside = useRef();
@@ -14,10 +15,17 @@ function ShowModal({ children }) {
   };
 
   return (
-    <Wrapper ref={modalOutside} onClick={handleModal}>
+    <motion.div
+      className="backdrop"
+      variants={modal}
+      inital="hidden"
+      animate="visible"
+      exit="hidden"
+      ref={modalOutside} onClick={handleModal}
+    >
       {children}
-    </Wrapper>
-  );
+    </motion.div>
+ );
 }
 
 export default ShowModal;
