@@ -9,11 +9,19 @@ export const Wrapper = styled.div`
   background: #ffffff;
   box-shadow: 0 5px 5px -5px #333;
   margin: 1px;
+
   .font {
     font-family: "Pretendard-Regular";
     font-size: 35px;
     color: #414141;
   }
+
+  .disabled-arrow {
+    margin-left: 20px;
+    margin-right: 20px;
+    color: #EBECF0;
+  }
+
   .arrow {
     margin-left: 20px;
     margin-right: 20px;

@@ -33,7 +33,6 @@ function Login() {
 
   const login = async (e) => {
     e.preventDefault();
-    console.log("로그인 눌림?");
 
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_REQUEST_HOST}/login`,
@@ -48,8 +47,6 @@ function Login() {
         }),
       }
     );
-
-    console.log("res :", res);
 
     if (res.status === 200) {
       const result = await res.json();
