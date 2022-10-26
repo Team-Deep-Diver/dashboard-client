@@ -1,121 +1,123 @@
-import { Wrapper, Content } from "./style";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { Wrapper, GridLayer, Cell } from "./style.js";
+import { useDispatch, useSelector } from "react-redux";
 
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
-import { setModalOpen } from "../../store/slices/modalSlice";
+import {
+  addItem,
+  moveItem,
+  dragStarted,
+  dragMoved,
+  dragEnded,
+  animationEnded,
+} from "../../store/slices/moveSlice.js";
 
-import { getCardInfo } from "../../utils/getCardInfo";
-import { setCardInput } from "../../utils/setCardInput";
+import { cards } from "./cards";
 
-function Dashboard({ socket }) {
+function Dashboard() {
   const dispatch = useDispatch();
-  const { user_id } = useParams();
-  const [cards, setCards] = useState([]);
-  const [todoChange, setTodoChange] = useState(null);
-  const { currentDate } = useSelector((state) => state.calendar);
+  const { items, cells, dragging } = useSelector((state) => state.move);
 
   useEffect(() => {
-    socket?.emit("searchMyCards", { user_id, currentDate });
-    socket?.on("getMyCards", (data) => {
-      const cardInfo = getCardInfo(data);
+    for (const card of cards) {
+      dispatch(addItem({ item: card }));
+    }
+  }, []);
 
-      setCards(cardInfo);
-    });
-  }, [socket, currentDate]);
-
-  // useEffect(() => {
-  //   socket?.emit("modifyCard", { socketValue: todoChange });
-  //   socket?.on("getMyCards", (data) => {
-  //     const cardInfo = getCardInfo(data);
-
-  //     setCards(cardInfo);
-  //   });
-  // }, [todoChange]);
-
-  const handleCheckbox = (e, card) => {
-    const newcard = card.todo.map((item) => {
-      return {
-        text: item.text,
-        checked:
-          item.text === e.target.textContent || item.text === e.target.id
-            ? !item.checked
-            : item.checked,
-      };
-    });
-
-    const cardInput = setCardInput(user_id, currentDate, card, newcard);
-    setTodoChange(cardInput);
-  };
+  const draggingItem = items.find((i) => i.snapshotId === dragging?.snapshotId);
 
   return (
-    <>
-      <Wrapper>
-        {cards?.map((card, idx) => (
+    <Wrapper>
+      <GridLayer>
+        {cells.map((row, y) => row.map((_, x) => <Cell key={`${y}_${x}`} />))}
+      </GridLayer>
+      {dragging && draggingItem && (
+        <>
           <motion.div
-            key={idx}
-            layoutId={card.cardId}
-            onDoubleClick={(e) => {
-              const parentElement = e.target.parentElement;
-              !(parentElement.id === "todo-item") &&
-                dispatch(setModalOpen({ type: "handleCard", message: card }));
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              backgroundColor: "rgba(239, 239, 239, .8)",
+              x: dragging.initialPoint.x * 70,
+              y: dragging.initialPoint.y * 70,
+              width: draggingItem.width * 70 - 2,
+              height: draggingItem.height * 70 - 2,
+            }}
+          />
+          <motion.div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              border: "1px solid #000",
+              backgroundColor: dragging.valid
+                ? "rgb(152, 195, 121)"
+                : "rgb(224, 109, 118)",
+              x: dragging.nextPoint.x * 70,
+              y: dragging.nextPoint.y * 70,
+              width: draggingItem.width * 70 - 2,
+              height: draggingItem.height * 70 - 2,
+            }}
+          />
+        </>
+      )}
+      {items.map((item, idx) => {
+        const x = item.x * 70;
+        const y = item.y * 70;
+        const width = item.width * 70 - 2;
+        const height = item.height * 70 - 2;
+        const isDragging = item.snapshotId === dragging?.snapshotId;
+
+        return (
+          <motion.div
+            key={item.snapshotId + idx}
+            drag
+            dragMomentum={false}
+            onDragStart={() => dispatch(dragStarted({ item }))}
+            onDragEnd={() => dispatch(dragEnded({ item }))}
+            onDrag={(_, info) => {
+              const point = {
+                x: Math.min(
+                  Math.max(Math.round((x + info.point.x) / 70), 0),
+                  100 - item.width
+                ),
+                y: Math.min(
+                  Math.max(Math.round((y + info.point.y) / 70), 0),
+                  100 - item.height
+                ),
+              };
+
+              if (dragging) {
+                const { nextPoint } = dragging;
+                if (point.x !== nextPoint.x || point.y !== nextPoint.y) {
+                  console.log("$$$$$");
+                  dispatch(dragMoved({ item, point }));
+                }
+              }
+            }}
+            onAnimationComplete={() => dispatch(animationEnded())}
+            initial={false}
+            animate={!isDragging}
+            style={{
+              position: "absolute",
+              top: y,
+              left: x,
+              width,
+              height,
+              border: "1px solid #000",
+              backgroundColor: "#efefef",
+              fontSize: 10,
+              textAlign: "center",
+              padding: "2px 4px",
+              zIndex: isDragging ? 99 : 1,
             }}
           >
-            <Content color={card.colorCode}>
-              <div className="hash-tag" size={card.category.length}>
-                #{card.category}
-              </div>
-              <div className="layout">
-                <div className="date-line"></div>
-                <div className="text">
-                  {card.period.startDate.split("T")[0]}
-                </div>
-                <div className="date-hyphen">~</div>
-                <div className="text">{card.period.endDate.split("T")[0]}</div>
-              </div>
-              <div className="todo-box">
-                {card.todo.map((item) => (
-                  <div key={item._id} id="todo-item">
-                    <input
-                      type="checkbox"
-                      id={item.text}
-                      defaultChecked={item.checked}
-                      onClick={(e) => handleCheckbox(e, card)}
-                    />
-                    <label
-                      htmlFor={item.text}
-                      className="todo-text"
-                      onClick={(e) => handleCheckbox(e, card)}
-                    >
-                      {item.text}
-                    </label>
-                  </div>
-                ))}
-              </div>
-              <div className="text-box">{card.description}</div>
-              <div className="img-box">
-                {card.imgUrl && (
-                  <input className="img" type="image" src={card.imgUrl} />
-                )}
-              </div>
-            </Content>
+            {item.category}
           </motion.div>
-        ))}
-        {new Date(currentDate).toLocaleDateString() ===
-          new Date().toLocaleDateString() && (
-          <FontAwesomeIcon
-            icon={faCirclePlus}
-            className="plus-icon"
-            onClick={() =>
-              dispatch(setModalOpen({ type: "handleCard", message: "" }))
-            }
-          />
-        )}
-      </Wrapper>
-    </>
+        );
+      })}
+    </Wrapper>
   );
 }
 
