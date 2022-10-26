@@ -27,6 +27,10 @@ function itemWillFit(item, point, cells) {
   for (let y = 0; y < item.height; y++) {
     for (let x = 0; x < item.width; x++) {
       const cell = cells[y + point.y][x + point.x];
+<<<<<<< HEAD
+=======
+
+>>>>>>> 09360de (feat: dnd 테스트 진행중)
       if (cell !== "none" && cell !== item.id) {
         return false;
       }
@@ -46,7 +50,11 @@ const initialState = {
     //   width: 0
     // }
   ],
+<<<<<<< HEAD
   cells: range(20).map((y) => range(20).map((x) => "none")),
+=======
+  cells: range(100).map((y) => range(100).map((x) => "none")),
+>>>>>>> 09360de (feat: dnd 테스트 진행중)
   dragging: {
     snapshotId: "",
     initialPoint: { x: 1, y: 1 },
@@ -59,9 +67,12 @@ const moveSlice = createSlice({
   name: "move",
   initialState,
   reducers: {
+<<<<<<< HEAD
     resetItem(state) {
       state.items = [];
     },
+=======
+>>>>>>> 09360de (feat: dnd 테스트 진행중)
     addItem(state, action) {
       const { item } = action.payload;
 
@@ -127,7 +138,10 @@ const moveSlice = createSlice({
 });
 
 export const {
+<<<<<<< HEAD
   resetItem,
+=======
+>>>>>>> 09360de (feat: dnd 테스트 진행중)
   addItem,
   moveItem,
   dragStarted,
