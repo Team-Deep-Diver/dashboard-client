@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
   width: 100%;
   height: calc(100% - 60px);
   padding: 10px;
-  background: #FFFFFF;
+  background: #ffffff;
   background-size: 40px 40px;
   background-image: linear-gradient(to right, lightgrey 1px, transparent 1px),
     linear-gradient(to bottom, lightgrey 1px, transparent 1px);
@@ -16,7 +16,7 @@ export const Wrapper = styled.div`
     bottom: 0px;
     margin: 30px;
     height: 55px;
-    color: #A3BDED;
+    color: #a3bded;
     border-radius: 50%;
     box-shadow: 2px 2px 2px 2px grey;
     cursor: pointer;
@@ -28,7 +28,7 @@ export const Content = styled.div`
   max-height: 400px;
   padding: 20px;
   margin: 20px;
-  border: solid 5px ${props => props.color};
+  border: solid 5px ${(props) => props.color};
   border-radius: 10px;
   background-color: #FFFFFF;
 
@@ -38,20 +38,20 @@ export const Content = styled.div`
   }
 
   & .hash-tag {
-    width: ${props => props.size}
+    width: ${(props) => props.size}
     height: 20px;
     padding: 2px;
     margin-bottom: 10px;
     text-align: center;
     font-size: 20px;
-    background-color: ${props => props.color};
+    background-color: ${(props) => props.color};
   }
 
   & .date-line {
     width: 5px;
     height: 25px;
     margin-right: 10px;
-    background-color: ${props => props.color};
+    background-color: ${(props) => props.color};
   }
 
   & .date-hyphen {

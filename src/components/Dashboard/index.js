@@ -57,6 +57,7 @@ function Dashboard({ socket }) {
         {cards?.map((card, idx) => (
           <motion.div
             key={idx}
+            drag
             layoutId={card.cardId}
             onDoubleClick={(e) => {
               const parentElement = e.target.parentElement;

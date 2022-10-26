@@ -8,7 +8,9 @@ import { AnimatePresence } from "framer-motion";
 import Sidebar from "../../components/Sidebar";
 import MiniSidebar from "../../components/MiniSidebar";
 import CalendarDate from "../../components/CalendarDate";
-import Dashboard from "../../components/Dashboard";
+// import Dashboard from "../../components/Dashboard"; // dnd 적용해보려고 잠시 닫아 놓음
+// import Dashboard from "../../components/Dashboard_ar";
+import Dashboard from "../../components/Dashboard_ar2";
 
 import ShowModal from "../../components/ShowModal";
 import JoinGroupModal from "../../components/JoinGroupModal";
