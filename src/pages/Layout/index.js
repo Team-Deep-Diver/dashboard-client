@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
 import Sidebar from "../../components/Sidebar";
-import MiniSidebar from "../../components/MiniSidebar";
 import CalendarDate from "../../components/CalendarDate";
 import Dashboard from "../../components/Dashboard";
 
@@ -22,8 +21,8 @@ function Layout() {
   const { user_id } = useParams();
   const [socket, setSocket] = useState(null);
   const [role, setRole] = useState(null);
+  const [username, setUsername] = useState(null);
   const [groupList, setGroupList] = useState([]);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isModalOpen, modalType, message } = useSelector(
     (state) => state.modal
   );
@@ -50,6 +49,7 @@ function Layout() {
         const userInfo = await res.json();
 
         setRole(userInfo.role);
+        setUsername(userInfo.nickname);
         setGroupList(userInfo.groups?.map((group) => group.groupName));
       }
     }
@@ -69,16 +69,12 @@ function Layout() {
   return (
     <>
       <Wrapper>
-        {isSidebarOpen ? (
-          <Sidebar
-            setIsSidebarOpen={setIsSidebarOpen}
-            role={role}
-            socket={socket}
-            groupList={groupList}
-          />
-        ) : (
-          <MiniSidebar setIsSidebarOpen={setIsSidebarOpen} role={role} />
-        )}
+        <Sidebar
+          role={role}
+          username={username}
+          socket={socket}
+          groupList={groupList}
+        />
         <Content>
           <CalendarDate />
           <Dashboard socket={socket} />

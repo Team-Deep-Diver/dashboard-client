@@ -54,7 +54,7 @@ export const LoginForm = styled.form`
     margin: 10px auto 0;
     background: #a3bded;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 10px;
     color: #ffffff;
     cursor: pointer;
     font-family: "GangwonEdu_OTFBoldA";
