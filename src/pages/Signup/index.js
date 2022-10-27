@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,29 +8,33 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import MessageModal from "../../components/MessageModal";
 
 import { Wrapper, SignupForm } from "./style";
-import { validateEmail } from "../../utils";
+import { validateSignupForm } from "../../utils/validateSignupForm";
 
 function Signup() {
   const navigate = useNavigate();
   const [signupValues, setSignupValues] = useState("");
   const [selectedRole, setSelectedRole] = useState("MEMBER");
   const [confirmMessage, setConfirmMessage] = useState("");
-  const [disabledSubmitButton, setDisabledSubmitButton] = useState(true);
+  const [duplicationCheckCount, setDuplicationCheckCount] = useState(0);
   const [isShowMessageModal, setIsShowMessageModal] = useState(false);
-  const [signupResultMessage, setSignupResultMessage] = useState("");
 
   const { nickname, email, password, passwordConfirm, groupName } =
     signupValues;
 
-  const goWelcomePage = () => {
-    navigate("/");
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setSignupValues({
+      ...signupValues,
+      [name]: value,
+    });
   };
 
   const checkDuplicateEmail = async (e) => {
     e.preventDefault();
 
     try {
-      const result = await fetch(
+      const res = await fetch(
         `${process.env.REACT_APP_SERVER_REQUEST_HOST}/signup/check-email`,
         {
           method: "POST",
@@ -41,13 +45,12 @@ function Signup() {
         }
       );
 
-      const res = await result.json();
+      (res.status === 200) && setDuplicationCheckCount(duplicationCheckCount + 1);
 
-      if (res) {
-        setConfirmMessage("사용 불가능한 이메일입니다.");
-      }
+      const data = await res.json();
+      setConfirmMessage(data.message);
     } catch (err) {
-      setConfirmMessage("사용 가능한 이메일입니다.");
+      console.error(err);
     }
   };
 
@@ -55,7 +58,7 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const result = await fetch(
+      const res = await fetch(
         `${process.env.REACT_APP_SERVER_REQUEST_HOST}/signup/check-group-name`,
         {
           method: "POST",
@@ -66,64 +69,29 @@ function Signup() {
         }
       );
 
-      const res = await result.json();
+      (res.status === 200) && setDuplicationCheckCount(duplicationCheckCount + 1);
 
-      if (res) {
-        setConfirmMessage("사용 불가능한 그룹명입니다.");
-      }
+      const data = await res.json();
+      setConfirmMessage(data.message);
     } catch (err) {
-      setConfirmMessage("사용 가능한 그룹명입니다.");
+      console.error(err);
     }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    if (name === "nickname") {
-      setConfirmMessage(
-        value.length > 2 ? "" : "* 닉네임은 최소 2자 이상 입력해주세요."
-      );
-    }
-
-    if (name === "email") {
-      setConfirmMessage(
-        validateEmail(value) ? "" : "* 이메일 형식에 맞지 않습니다."
-      );
-    }
-
-    if (name === "password") {
-      setConfirmMessage(
-        value.length > 8 ? "" : "* 숫자, 영문자 포함 8자 이상이어야 합니다."
-      );
-    }
-
-    if (name === "passwordConfirm") {
-      setConfirmMessage(
-        value === password ? "" : "* 비밀번호가 일치하지 않습니다."
-      );
-    }
-
-    if (name === "groupName") {
-      setConfirmMessage(
-        value.length > 2 ? "" : "* 그룹명은 최소 2자 이상 입력해주세요."
-      );
-    }
-
-    setSignupValues({
-      ...signupValues,
-      [name]: value,
-    });
-  };
-
-  const handleRole = (e) => {
-    setSelectedRole(e.target.value);
   };
 
   const signup = async (e) => {
     e.preventDefault();
+    const errors = validateSignupForm(
+      signupValues,
+      selectedRole,
+      duplicationCheckCount
+    );
+
+    if (errors.length > 0) {
+      return setConfirmMessage(errors[0].message);
+    }
 
     try {
-      const result = await fetch(
+      const res = await fetch(
         `${process.env.REACT_APP_SERVER_REQUEST_HOST}/signup`,
         {
           method: "POST",
@@ -139,42 +107,25 @@ function Signup() {
         }
       );
 
-      if (result.status === 201) {
-        setSignupResultMessage(
-          "회원 가입 되셨습니다. \n 로그인페이지로 이동합니다."
-        );
-        setIsShowMessageModal(true);
-      } else {
-        setSignupResultMessage(
-          "회원 가입에 실패하셨습니다. 다시 입력해주시길 바랍니다."
-        );
-        setIsShowMessageModal(true);
+      if (res.status === 400) {
+        const data = await res.json();
+        return setConfirmMessage(data.message);
       }
+
+      setIsShowMessageModal(true);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
-
-  useEffect(() => {
-    if (selectedRole === "MEMBER") {
-      if (Object.keys(signupValues).length === 4 && confirmMessage === "") {
-        setDisabledSubmitButton(false);
-      } else {
-        setDisabledSubmitButton(true);
-      }
-    } else if (selectedRole === "ADMIN") {
-      if (Object.keys(signupValues).length === 5 && confirmMessage === "") {
-        setDisabledSubmitButton(false);
-      } else {
-        setDisabledSubmitButton(true);
-      }
-    }
-  }, [nickname, email, password, passwordConfirm, groupName, selectedRole]);
 
   return (
     <Wrapper>
       <header>
-        <FontAwesomeIcon icon={faArrowLeftLong} onClick={goWelcomePage} />
+        <FontAwesomeIcon
+          icon={faArrowLeftLong}
+          size="2x"
+          onClick={() => navigate("/")}
+        />
       </header>
       <SignupForm>
         <h1>회원가입</h1>
@@ -226,7 +177,7 @@ function Signup() {
               value="MEMBER"
               name="role"
               checked={selectedRole === "MEMBER"}
-              onChange={handleRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
             />
             <label htmlFor="admin">admin</label>
             <input
@@ -235,7 +186,7 @@ function Signup() {
               value="ADMIN"
               name="role"
               checked={selectedRole === "ADMIN"}
-              onChange={handleRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
             />
           </div>
         </div>
@@ -255,12 +206,14 @@ function Signup() {
           className="submit-btn"
           type="submit"
           onClick={signup}
-          disabled={disabledSubmitButton}
           value="회원 가입"
         />
       </SignupForm>
       {isShowMessageModal && (
-        <MessageModal message={signupResultMessage} type="signup" />
+        <MessageModal
+          message={`회원 가입 되셨습니다. \n 로그인페이지로 이동합니다.`}
+          type="signup"
+        />
       )}
     </Wrapper>
   );

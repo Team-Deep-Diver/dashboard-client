@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
 import { Wrapper, LoginForm } from "./style";
-import { validateEmail } from "../../utils";
+import { validateEmail } from "../../utils/validateEmail";
 
 function Login() {
   const navigate = useNavigate();
@@ -19,6 +19,10 @@ function Login() {
 
     if (name === "email") {
       setMessage(validateEmail(value) ? "" : "* 이메일 형식에 맞지 않습니다.");
+    }
+
+    if (name === "email" && e.target.value.length === 0) {
+      setMessage("");
     }
 
     setLoginValues({
@@ -72,7 +76,7 @@ function Login() {
   return (
     <Wrapper>
       <header>
-        <FontAwesomeIcon icon={faArrowLeftLong} onClick={handleHistory} />
+        <FontAwesomeIcon icon={faArrowLeftLong} size="2x" onClick={() => navigate("/")} />
       </header>
       <LoginForm>
         <h1>로그인</h1>

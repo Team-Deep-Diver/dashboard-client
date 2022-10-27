@@ -13,11 +13,12 @@ export const Wrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 15px;
-    width: 250px;
+    margin-bottom: 25px;
+    width: 300px;
     height: 50px;
     font-size: 23px;
     text-align: center;
+    white-space: pre-wrap;
   }
 
   & .close-button {
@@ -29,6 +30,5 @@ export const Wrapper = styled.div`
     border: none;
     color: #ffffff;
     cursor: pointer;
-    font-family: "GangwonEdu_OTFBoldA";
   }
 `;
