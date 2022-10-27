@@ -1,30 +1,69 @@
-import { useEffect } from "react";
-import { motion } from "framer-motion";
-import { Wrapper, GridLayer, Cell } from "./style.js";
+import { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
+import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+
+import { setModalOpen } from "../../store/slices/modalSlice";
 import {
   addItem,
-  moveItem,
+  resetItem,
   dragStarted,
   dragMoved,
   dragEnded,
   animationEnded,
 } from "../../store/slices/moveSlice.js";
 
-import { cards } from "./cards";
+import { getCardInfo } from "../../utils/getCardInfo";
+import { setCardInput } from "../../utils/setCardInput";
 
-function Dashboard() {
+import { Wrapper, GridLayer, Cell, Content } from "./style.js";
+
+function Dashboard({ socket }) {
+  const { user_id } = useParams();
+  const [cards, setCards] = useState([]);
+  const [todoChange, setTodoChange] = useState(null);
+
   const dispatch = useDispatch();
+  const { currentDate } = useSelector((state) => state.calendar);
   const { items, cells, dragging } = useSelector((state) => state.move);
 
   useEffect(() => {
-    for (const card of cards) {
-      dispatch(addItem({ item: card }));
-    }
-  }, []);
+    socket?.emit("searchMyCards", { user_id, currentDate });
 
-  const draggingItem = items.find((i) => i.snapshotId === dragging?.snapshotId);
+    socket?.on("getMyCards", (data) => {
+      const cardInfo = getCardInfo(data);
+
+      setCards(cardInfo);
+    });
+  }, [socket, currentDate]);
+
+  useEffect(() => {
+    socket?.emit("modifyCard", { socketValue: todoChange });
+
+    socket?.on("getMyCards", (data) => {
+      const cardInfo = getCardInfo(data);
+
+      setCards(cardInfo);
+    });
+  }, [todoChange]);
+
+  const handleCheckbox = (e, card) => {
+    const newcard = card.todo.map((item) => {
+      return {
+        text: item.text,
+        checked:
+          item.text === e.target.textContent || item.text === e.target.id
+            ? !item.checked
+            : item.checked,
+      };
+    });
+
+    const cardInput = setCardInput(user_id, currentDate, card, newcard);
+    setTodoChange(cardInput);
+  };
 
   const saveMovedCard = (item) => {
     const cardInput = setCardInput(user_id, currentDate, item, item.todo);
@@ -53,7 +92,7 @@ function Dashboard() {
               position: "absolute",
               top: 0,
               left: 0,
-              backgroundColor: "rgba(239, 239, 239, .8)",
+              backgroundColor: "#ffffff",
               x: dragging.initialPoint.x * 70,
               y: dragging.initialPoint.y * 70,
               width: draggingItem.width * 70 - 2,
@@ -77,7 +116,7 @@ function Dashboard() {
           />
         </>
       )}
-      {items.map((item, idx) => {
+      {items?.map((item, idx) => {
         const x = item.x * 70;
         const y = item.y * 70;
         const width = item.width * 70 - 2;
@@ -95,11 +134,11 @@ function Dashboard() {
               const point = {
                 x: Math.min(
                   Math.max(Math.round((x + info.point.x) / 70), 0),
-                  100 - item.width
+                  20 - item.width
                 ),
                 y: Math.min(
                   Math.max(Math.round((y + info.point.y) / 70), 0),
-                  100 - item.height
+                  20 - item.height
                 ),
               };
 
@@ -110,7 +149,10 @@ function Dashboard() {
                 }
               }
             }}
-            onAnimationComplete={() => dispatch(animationEnded())}
+            onAnimationComplete={() => {
+              saveMovedCard(item);
+              dispatch(animationEnded());
+            }}
             initial={false}
             animate={!isDragging}
             style={{
@@ -119,18 +161,73 @@ function Dashboard() {
               left: x,
               width,
               height,
-              border: "1px solid #000",
-              backgroundColor: "#efefef",
+              backgroundColor: "#ffffff",
               fontSize: 10,
               textAlign: "center",
-              padding: "2px 4px",
+              border: `5px solid ${item.colorCode}`,
+              borderRadius: "10px",
               zIndex: isDragging ? 99 : 1,
             }}
+            onDoubleClick={(e) => {
+              const parentElement = e.target.parentElement;
+              !(parentElement.id === "todo-item") &&
+                dispatch(setModalOpen({ type: "handleCard", message: item }));
+            }}
           >
-            {item.category}
+            <Content color={item.colorCode}>
+              <div className="hash-tag" size={item.category.length}>
+                #{item.category}
+              </div>
+              <div className="layout">
+                <div className="date-line"></div>
+                <div className="text">
+                  {item.period.startDate.split("T")[0]}
+                </div>
+                <div className="date-hyphen">~</div>
+                <div className="text">{item.period.endDate.split("T")[0]}</div>
+              </div>
+              <div className="todo-box">
+                {item.todo?.map((it) => (
+                  <div key={it._id} id="todo-item">
+                    <input
+                      type="checkbox"
+                      id={it.text}
+                      defaultChecked={it.checked}
+                      onClick={(e) => handleCheckbox(e, item)}
+                    />
+                    <label
+                      htmlFor={it.text}
+                      className="todo-text"
+                      onClick={(e) => handleCheckbox(e, item)}
+                    >
+                      {it.text}
+                    </label>
+                  </div>
+                ))}
+              </div>
+              <div className="text-box">{item.description}</div>
+              <div className="img-box">
+                {item.imgUrl && (
+                  <input className="img" type="image" src={item.imgUrl} />
+                )}
+              </div>
+            </Content>
           </motion.div>
         );
       })}
+      <FontAwesomeIcon
+        icon={faCirclePlus}
+        className="plus-icon"
+        onClick={() =>
+          dispatch(
+            setModalOpen({
+              type: "handleCard",
+              message: "",
+              cardsLength: cards.length,
+            })
+          )
+        }
+      />
     </Wrapper>
   );
 }
