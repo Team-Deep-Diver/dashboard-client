@@ -11,10 +11,11 @@ const modalSlice = createSlice({
   initialState,
   reducers: {
     setModalOpen(state, action) {
-      const { type, message } = action.payload;
+      const { type, message, cardsLength } = action.payload;
       state.modalType = type;
       state.isModalOpen = true;
       state.message = message;
+      state.cardsLength = cardsLength;
     },
     setModalClose(state) {
       state.isModalOpen = false;

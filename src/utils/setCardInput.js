@@ -10,7 +10,7 @@ export function setCardInput(user_id, currentDate, card, newcard) {
     todos: newcard,
     imgUrl: card.imgUrl,
     description: card.description,
-    x: 0,
-    y: 0,
+    x: card.x,
+    y: card.y,
   };
 }

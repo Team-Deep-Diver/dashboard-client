@@ -1,17 +1,14 @@
-import { Wrapper, Content } from "./style";
-import { io } from "socket.io-client";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+
 import { AnimatePresence } from "framer-motion";
+import { io } from "socket.io-client";
 
 import Sidebar from "../../components/Sidebar";
 import MiniSidebar from "../../components/MiniSidebar";
 import CalendarDate from "../../components/CalendarDate";
-// import Dashboard from "../../components/Dashboard"; // dnd 적용해보려고 잠시 닫아 놓음
-// import Dashboard from "../../components/Dashboard_ar";
-import Dashboard from "../../components/Dashboard_ar2";
-
+import Dashboard from "../../components/Dashboard";
 import ShowModal from "../../components/ShowModal";
 import JoinGroupModal from "../../components/JoinGroupModal";
 import ManageGroupModal from "../../components/ManageGroupModal";
@@ -20,12 +17,16 @@ import NoticeModal from "../../components/NoticeModal";
 import CardModal from "../../components/CardModal";
 import MyGroupListModal from "../../components/MyGroupListModal";
 
+import { Wrapper, Content } from "./style";
+
 function Layout() {
   const { user_id } = useParams();
+
   const [socket, setSocket] = useState(null);
   const [role, setRole] = useState(null);
   const [groupList, setGroupList] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const { isModalOpen, modalType, message } = useSelector(
     (state) => state.modal
   );

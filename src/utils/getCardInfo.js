@@ -15,6 +15,10 @@ export function getCardInfo(data) {
         todo: cardContent.todos,
         imgUrl: cardContent.imgUrl,
         description: cardContent.description,
+        x: snapshots[0].coordinate.x,
+        y: snapshots[0].coordinate.y,
+        width: 5,
+        height: 3,
       };
 
       cardInfoArr.push(cardInfo);

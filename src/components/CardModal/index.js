@@ -9,13 +9,26 @@ import ConfirmMessageModal from "../ConfirmMessageModal";
 function CardModal({ socket }) {
   const dispatch = useDispatch();
   const { user_id } = useParams();
-  const { message } = useSelector((state) => state.modal);
+  const { message, cardsLength } = useSelector((state) => state.modal);
   const { currentDate } = useSelector((state) => state.calendar);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [socketType, setSocketType] = useState(null);
   const [showConfirmMessage, setShowConfirmMessage] = useState(false);
   const themeColors = ["#CDDAFD", "#BEE1E6", "#E2ECE9", "#FDE2E4", "#FFF1E6"];
+
+  let cardX;
+  let cardY;
+
+  if (cardsLength % 3 === 0) {
+    cardX = 1;
+  } else if (cardsLength % 3 === 1) {
+    cardX = 7;
+  } else {
+    cardX = 13;
+  }
+
+  cardY = parseInt(cardsLength / 3) * 4 + 1;
 
   const [cardInput, setCardInput] = useState({
     cardId: message ? message.cardId : "",
@@ -33,8 +46,8 @@ function CardModal({ socket }) {
       : [],
     imgUrl: message ? message.imgUrl : "",
     description: message ? message.description : "",
-    x: 0,
-    y: 0,
+    x: message ? message.x : cardX,
+    y: message ? message.y : cardY,
   });
 
   const handleChange = (e) => {
@@ -67,6 +80,7 @@ function CardModal({ socket }) {
     }
 
     message ? setSocketType("modifyCard") : setSocketType("createCard");
+
     setShowConfirmMessage(true);
   };
 

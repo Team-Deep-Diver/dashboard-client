@@ -1,14 +1,14 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 export const Wrapper = styled.div`
+  position: relative;
+  width: calc(100vw - 60px);
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  border: 1px solid #ccc;
   display: flex;
-  width: 100%;
-  height: calc(100% - 60px);
-  padding: 10px;
-  background: #ffffff;
-  background-size: 40px 40px;
-  background-image: linear-gradient(to right, lightgrey 1px, transparent 1px),
-    linear-gradient(to bottom, lightgrey 1px, transparent 1px);
+  align-items: center;
+  justify-content: center;
 
   & .plus-icon {
     position: absolute;
@@ -23,12 +23,24 @@ export const Wrapper = styled.div`
   }
 `;
 
+export const GridLayer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  grid-gap: 2px;
+  grid-auto-rows: 68px;
+  grid-template-columns: repeat(auto-fit, 68px);
+  width: 100vw;
+  height: 100vh;
+`;
+
+export const Cell = styled.div`
+  border: 1px solid #ccc;
+`;
+
 export const Content = styled.div`
-  width: 300px;
-  max-height: 400px;
   padding: 20px;
-  margin: 20px;
-  border: solid 5px ${(props) => props.color};
   border-radius: 10px;
   background-color: #FFFFFF;
 
