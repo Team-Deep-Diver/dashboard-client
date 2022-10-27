@@ -39,8 +39,6 @@ function ManageGroupModal() {
       if (res.status === 200) {
         const group = await res.json();
 
-        console.log("group", group);
-
         setGroupId(group.applicants._id);
         setApplicants(group.applicants.applicants);
         setMembers(group.members.members);
@@ -55,7 +53,6 @@ function ManageGroupModal() {
     _id: applicant_id,
     nickname: applicant_name,
   }) {
-    debugger;
     const result = await fetch(
       `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups/${group_id}/${applicant_id}`,
       {
@@ -91,7 +88,7 @@ function ManageGroupModal() {
     _id: applicant_id,
     nickname: applicant_name,
   }) {
-    const result = await fetch(
+    const res = await fetch(
       `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups/${group_id}/${applicant_id}`,
       {
         method: "POST",
@@ -104,8 +101,6 @@ function ManageGroupModal() {
         }),
       }
     );
-
-    const res = await result.json();
 
     if (res.status === 201) {
       dispatch(

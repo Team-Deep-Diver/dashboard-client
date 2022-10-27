@@ -40,15 +40,14 @@ function Dashboard({ socket }) {
     });
   }, [socket, currentDate]);
 
-  useEffect(() => {
-    socket?.emit("modifyCard", { socketValue: todoChange });
+  // useEffect(() => {
+  //   socket?.emit("modifyCard", { socketValue: todoChange });
+  //   socket?.on("getMyCards", (data) => {
+  //     const cardInfo = getCardInfo(data);
 
-    socket?.on("getMyCards", (data) => {
-      const cardInfo = getCardInfo(data);
-
-      setCards(cardInfo);
-    });
-  }, [todoChange]);
+  //     setCards(cardInfo);
+  //   });
+  // }, [todoChange]);
 
   const handleCheckbox = (e, card) => {
     const newcard = card.todo.map((item) => {
@@ -213,22 +212,19 @@ function Dashboard({ socket }) {
               </div>
             </Content>
           </motion.div>
-        );
-      })}
-      <FontAwesomeIcon
-        icon={faCirclePlus}
-        className="plus-icon"
-        onClick={() =>
-          dispatch(
-            setModalOpen({
-              type: "handleCard",
-              message: "",
-              cardsLength: cards.length,
-            })
-          )
-        }
-      />
-    </Wrapper>
+        ))}
+        {new Date(currentDate).toLocaleDateString() ===
+          new Date().toLocaleDateString() && (
+          <FontAwesomeIcon
+            icon={faCirclePlus}
+            className="plus-icon"
+            onClick={() =>
+              dispatch(setModalOpen({ type: "handleCard", message: "" }))
+            }
+          />
+        )}
+      </Wrapper>
+    </>
   );
 }
 

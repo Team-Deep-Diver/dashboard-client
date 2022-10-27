@@ -6,7 +6,7 @@ import { showNextDay, showPrevDay } from "../../store/slices/calendarSlice";
 
 function CalendarDate() {
   const dispatch = useDispatch();
-  const { currentDate } = useSelector(state => state.calendar);
+  const { currentDate } = useSelector((state) => state.calendar);
   const { year, month, date } = getDate(currentDate);
 
   return (
@@ -17,11 +17,18 @@ function CalendarDate() {
         onClick={() => dispatch(showPrevDay())}
       />
       <div className="font">{`${year}-${month}-${date}`}</div>
+      {(new Date(currentDate).toLocaleDateString() === new
+      Date().toLocaleDateString()) ?
+      <TfiAngleDoubleRight
+        size={35}
+        className="disabled-arrow"
+      />
+      :
       <TfiAngleDoubleRight
         size={35}
         className="arrow"
         onClick={() => dispatch(showNextDay())}
-      />
+      />}
     </Wrapper>
   );
 }
