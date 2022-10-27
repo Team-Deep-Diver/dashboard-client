@@ -23,6 +23,7 @@ function MiniSidebar({ setIsSidebarOpen, role }) {
     );
 
     if (res.status === 200) {
+      localStorage.removeItem("jwt");
       setShowMessage(true);
       navigate("/");
     }
