@@ -14,7 +14,7 @@ function Signup() {
   const navigate = useNavigate();
   const [signupValues, setSignupValues] = useState("");
   const [selectedRole, setSelectedRole] = useState("MEMBER");
-  const [confirmMessage, setConfirmMessage] = useState("");
+  const [message, setMessage] = useState("");
   const [duplicationCheckCount, setDuplicationCheckCount] = useState(0);
   const [isShowMessageModal, setIsShowMessageModal] = useState(false);
 
@@ -48,7 +48,7 @@ function Signup() {
       (res.status === 200) && setDuplicationCheckCount(duplicationCheckCount + 1);
 
       const data = await res.json();
-      setConfirmMessage(data.message);
+      setMessage(data.message);
     } catch (err) {
       console.error(err);
     }
@@ -72,7 +72,7 @@ function Signup() {
       (res.status === 200) && setDuplicationCheckCount(duplicationCheckCount + 1);
 
       const data = await res.json();
-      setConfirmMessage(data.message);
+      setMessage(data.message);
     } catch (err) {
       console.error(err);
     }
@@ -87,7 +87,7 @@ function Signup() {
     );
 
     if (errors.length > 0) {
-      return setConfirmMessage(errors[0].message);
+      return setMessage(errors[0].message);
     }
 
     try {
@@ -109,7 +109,7 @@ function Signup() {
 
       if (res.status === 400) {
         const data = await res.json();
-        return setConfirmMessage(data.message);
+        return setMessage(data.message);
       }
 
       setIsShowMessageModal(true);
@@ -201,7 +201,7 @@ function Signup() {
             <button onClick={checkDuplicateGroupName}>중복 확인</button>
           </div>
         )}
-        <div className="confirm-message">{confirmMessage}</div>
+        <div className="confirm-message">{message}</div>
         <input
           className="submit-btn"
           type="submit"
