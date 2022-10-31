@@ -62,7 +62,7 @@ export const ModalContents = styled.div`
   }
 
   & .contents-wrap li button:hover {
-    background: #a3bded;
+    background: rgb(0, 7, 61);
     color: #ffffff;
   }
 
@@ -94,42 +94,8 @@ export const ModalFooter = styled.footer`
   }
 
   & button:hover {
-    background: #a3bded;
+    background: rgb(0, 7, 61);
     color: #ffffff;
     font-weight: bold;
   }
 `;
-
-// export const Wrapper = styled.div`
-//   position: fixed;
-//   top: 50%;
-//   left: 50%;
-//   margin-top: -250px;
-//   margin-left: -275px;
-//   display: flex;
-//   flex-direction: column;
-
-//   width: 550px;
-//   height: 500px;
-//   background: #ffffff;
-//   border-radius: 10px;
-//   box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.5);
-
-//   .title {
-//     margin-top: 40px;
-//     font-size: 24px;
-//     color: #414141;
-//     text-align: center;
-//     font-weight: 700;
-//   }
-
-//   & .sub-title {
-//     color: #414141;
-//   }
-// `;
-
-// export const EntryBox = styled.div`
-//   width: 300px;
-//   border: 5px solid black;
-//   height: 100px;
-// `;

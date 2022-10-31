@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   & > header {
     font-size: 20px;
     padding: 20px;
-    color: #a3bded;
+    color: rgb(0, 7, 61);
   }
 
   & > header > svg {
@@ -16,12 +16,12 @@ export const Wrapper = styled.div`
 
   & button {
     height: 40px;
-    border-radius: 10px;
+    border-radius: 5px;
     transition: all 0.2s linear;
   }
 
   & button:hover {
-    background: #a3bded;
+    background: rgb(0, 7, 61);
     color: #ffffff;
   }
 
@@ -32,7 +32,7 @@ export const Wrapper = styled.div`
     margin: 0 auto 20px;
     padding-left: 10px;
     border-radius: 10px;
-    border: 3px solid #a3bded;
+    border: 1px solid rgb(0, 7, 61);
     box-sizing: border-box;
   }
 
@@ -50,7 +50,8 @@ export const Wrapper = styled.div`
     margin: 0 0 20px;
   }
 
-  & .group-container > button {
+  & .email-container > button,
+  .group-container > button {
     width: calc(100% - 220px);
   }
 
@@ -86,25 +87,27 @@ export const Wrapper = styled.div`
 
 export const SignupForm = styled.form`
   width: 500px;
-  height: 500px;
+  height: 550px;
   margin: 0 auto;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #a3bded;
+  color: rgb(0, 7, 61);
   text-align: center;
 
   & h1 {
     text-align: center;
     margin-bottom: 30px;
+    color: #414141;
   }
 
   & .confirm-message {
+    font-size: 14px;
     line-height: 20px;
     height: 20px;
     margin-bottom: 20px;
-    color: #ff0000;
+    color: #ff2700;
   }
 
   & .tooltip {
@@ -166,8 +169,17 @@ export const SignupForm = styled.form`
   }
 
   .submit-btn {
-    background: #a3bded;
-    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    background: #efefef;
+    color: #000000;
     cursor: pointer;
+  }
+
+  .submit-btn:hover {
+    border: rgb(0, 7, 61);
+    background: rgb(0, 7, 61);
+    color: #ffffff;
+    font-weight: bold;
   }
 `;

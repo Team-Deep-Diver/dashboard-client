@@ -1,25 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
 import { Wrapper, LoginForm } from "./style";
-import { validateEmail } from "../../utils";
+import { validateLoginForm } from "../../utils/validateLoginForm";
 
 function Login() {
   const navigate = useNavigate();
   const [loginValues, setLoginValues] = useState("");
-  const [disabled, setDisabled] = useState(true);
   const [message, setMessage] = useState("");
-
   const { email, password } = loginValues;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "email") {
-      setMessage(validateEmail(value) ? "" : "* 이메일 형식에 맞지 않습니다.");
-    }
 
     setLoginValues({
       ...loginValues,
@@ -27,55 +21,55 @@ function Login() {
     });
   };
 
-  const handleHistory = (e) => {
-    navigate(-1);
-  };
-
   const login = async (e) => {
     e.preventDefault();
-    console.log("로그인 눌림?");
 
-    const res = await fetch(
-      `${process.env.REACT_APP_SERVER_REQUEST_HOST}/login`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+    const errors = validateLoginForm(loginValues);
+
+    if (errors.length > 0) {
+      return setMessage(errors[0].message);
+    }
+
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.status === 400) {
+        return setMessage(data.message);
       }
-    );
 
-    console.log("res :", res);
-
-    if (res.status === 200) {
-      const result = await res.json();
-      const token = result.token.split(" ")[1];
+      const token = data.token.split(" ")[1];
 
       if (token) {
         localStorage.setItem("jwt", token);
-        navigate(`/users/${result.user._id}`);
+        navigate(`/users/${data.user._id}`);
       }
-    } else {
-      setMessage(res.message);
+    } catch (err) {
+      console.error(err);
     }
   };
-
-  useEffect(() => {
-    if (validateEmail(email) && password) {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
-    }
-  }, [email, password]);
 
   return (
     <Wrapper>
       <header>
-        <FontAwesomeIcon icon={faArrowLeftLong} onClick={handleHistory} />
+        <FontAwesomeIcon
+          icon={faArrowLeftLong}
+          size="2x"
+          onClick={() => navigate("/")}
+        />
       </header>
       <LoginForm>
         <h1>로그인</h1>
@@ -102,7 +96,6 @@ function Login() {
           type="submit"
           value="로그인"
           className="login-button"
-          disabled={disabled}
           onClick={login}
         />
       </LoginForm>

@@ -1,19 +1,26 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { FaBars } from "react-icons/fa";
+import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
-import { HiArrowLeft } from "react-icons/hi2";
-import { useParams } from "react-router-dom";
-import { motion } from "framer-motion";
-
-import { option, Wrapper, NoticeWrapper, Notice } from "./style";
-import { setModalOpen } from "../../store/slices/modalSlice";
+import { modals } from "./sidebarOption";
 import { getNoticeInfo } from "../../utils/getNoticeInfo";
+import { setModalOpen } from "../../store/slices/modalSlice";
+import {
+  Wrapper,
+  NoticeWrapper,
+  Notice,
+  inputAnimation,
+  showAnimation,
+} from "./style";
 
-function Sidebar({ setIsSidebarOpen, role, socket, groupList }) {
+function Sidebar({ role, username, socket, groupList }) {
+  const optionList = modals[role];
+  const { user_id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user_id } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
   const [noticeList, setNoticeList] = useState([]);
   const { isModalOpen } = useSelector((state) => state.modal);
 
@@ -30,17 +37,28 @@ function Sidebar({ setIsSidebarOpen, role, socket, groupList }) {
         }
       );
       const result = await res.json();
-      const { groupName, colorCode, notice } = result;
-      const notices = getNoticeInfo(groupName, colorCode, notice);
 
-      setNoticeList(notices);
+      const newNoticeList = [];
+      result.map((item) => {
+        for (const notice of item.notices) {
+          newNoticeList.push({
+            groupName: item.name,
+            colorCode: item.colorCode,
+            startDate: notice.period.startDate,
+            endDate: notice.period.endDate,
+            message: notice.message,
+          });
+        }
+      });
+
+      setNoticeList([...newNoticeList]);
     }
 
     getGroupNotice();
-  }, [isModalOpen]);
+  }, [isModalOpen, isOpen]);
 
   useEffect(() => {
-    groupList?.forEach((group) => {
+    groupList?.map((group) => {
       socket?.on(group, (data) => {
         const { groupName, colorCode, notice } = data;
         const newNotice = getNoticeInfo(groupName, colorCode, notice);
@@ -50,93 +68,124 @@ function Sidebar({ setIsSidebarOpen, role, socket, groupList }) {
     });
   }, [socket, noticeList, groupList]);
 
+  const logout = async () => {
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_REQUEST_HOST}/logout`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.jwt,
+        },
+      }
+    );
+
+    if (res.status === 200) {
+      localStorage.removeItem("jwt");
+      navigate("/");
+    }
+  };
+
   return (
     <Wrapper>
-      <HiArrowLeft
-        size={40}
-        className="arrow-left"
-        onClick={() => setIsSidebarOpen(false)}
-      />
-      {role === "GUEST" && (
+      <div className="main-container">
         <motion.div
-          variants={option}
-          whileHover="hover"
-          transition="spring"
-          className="font"
-          onClick={() => navigate("/signup")}
+          animate={{
+            width: isOpen ? "250px" : "50px",
+            transition: {
+              duration: 0.5,
+              type: "spring",
+              damping: 11,
+            },
+          }}
+          className="sidebar"
         >
-          <div className="icon">&#128587;</div>
-          회원가입
+          <div className="top_section">
+            {isOpen && (
+              <motion.h1
+                initial="hidden"
+                animate="show"
+                exit="hidden"
+                variants={showAnimation}
+                className="name"
+              >
+                {role === "GUEST" ? "GUEST 님" : `${username} 님`}
+              </motion.h1>
+            )}
+            <div className="bars">
+              <FaBars
+                onClick={() => setIsOpen(!isOpen)}
+                size="30"
+                className="pointer"
+              />
+            </div>
+          </div>
+          <section className="routes">
+            {optionList?.map((option) => (
+              <div
+                key={option.type}
+                className="modal"
+                onClick={() => {
+                  if (option.type === "home") {
+                    navigate("/");
+                  } else if (option.type === "signup") {
+                    navigate("/signup");
+                  } else if (option.type === "logout") {
+                    // dispatch(setModalOpen({ type: option.type, message: "" }));
+                    logout();
+                  } else {
+                    dispatch(setModalOpen({ type: option.type, message: "" }));
+                  }
+                }}
+              >
+                <div>{option.icon}</div>
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      initial="hidden"
+                      animate="show"
+                      exit="hidden"
+                      variants={showAnimation}
+                      className="link-text"
+                    >
+                      {option.name}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </section>
+          <div className="notice">
+            <AnimatePresence>
+              {isOpen && role !== "GUEST" && (
+                <motion.div
+                  initial="hidden"
+                  animate="show"
+                  exit="hidden"
+                  variants={inputAnimation}
+                >
+                  <NoticeWrapper>
+                    {noticeList?.map((notice, idx) => (
+                      <Notice
+                        colorCode={notice.colorCode}
+                        key={notice.colorCode + idx}
+                      >
+                        <strong className="group-name">
+                          {notice.groupName}
+                        </strong>
+                        <p className="font">
+                          {notice.startDate} ~ {notice.endDate}
+                        </p>
+                        <p className="font">{notice.message}</p>
+                      </Notice>
+                    ))}
+                  </NoticeWrapper>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </motion.div>
-      )}
-      {role === "MEMBER" && (
-        <div>
-          <motion.div
-            variants={option}
-            whileHover="hover"
-            transition="spring"
-            className="font"
-            onClick={() =>
-              dispatch(setModalOpen({ type: "joinGroup", message: "" }))
-            }
-          >
-            <div className="icon">&#128152;</div>
-            그룹 참가하기
-          </motion.div>
-          <motion.div
-            variants={option}
-            whileHover="hover"
-            transition="spring"
-            className="font"
-            onClick={() =>
-              dispatch(setModalOpen({ type: "myGroupList", message: "" }))
-            }
-          >
-            <div className="icon">&#128450;</div>내 그룹 현황
-          </motion.div>
-        </div>
-      )}
-      {role === "ADMIN" && (
-        <div>
-          <motion.div
-            variants={option}
-            whileHover="hover"
-            transition="spring"
-            className="font"
-            onClick={() =>
-              dispatch(setModalOpen({ type: "manageGroup", message: "" }))
-            }
-          >
-            <div className="icon">&#128450;</div>
-            그룹 관리하기
-          </motion.div>
-          <motion.div
-            variants={option}
-            whileHover="hover"
-            transition="spring"
-            className="font"
-            onClick={() =>
-              dispatch(setModalOpen({ type: "createNotice", message: "" }))
-            }
-          >
-            <div className="icon">&#128236;</div>
-            그룹 공지 보내기
-          </motion.div>
-        </div>
-      )}
-      {role !== "GUEST" && (
-        <NoticeWrapper>
-          {noticeList?.map((notice, idx) => (
-            <Notice colorCode={notice.colorCode} key={notice.colorCode + idx}>
-              <strong className="group-name">{notice.groupName}</strong>
-              <p className="font">
-                {notice.startDate} ~ {notice.endDate}
-              </p>
-              <p className="font">{notice.message}</p>
-            </Notice>
-          ))}
-        </NoticeWrapper>
-      )}
+      </div>
     </Wrapper>
   );
 }

@@ -31,7 +31,7 @@ export const Wrapper = styled.div`
     margin-right: 20px;
     width: 80px;
     height: 35px;
-    background: #a3bded;
+    background: rgb(0, 7, 61);
     border-radius: 3px;
     border: none;
     color: #ffffff;

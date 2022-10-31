@@ -1,4 +1,4 @@
-import { Wrapper } from "./style";
+import { ModalWrapper, ModalHeader, ModalContents, ModalFooter } from "./style";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setModalClose } from "../../store/slices/modalSlice";
@@ -40,38 +40,42 @@ function NoticeModal({ socket, adminId, groupList }) {
 
   return (
     <>
-      <Wrapper>
-        <h3 className="title">그룹 메시지</h3>
-        <div className="layout-period">
-          <strong className="period">기간</strong>
-          <input type="date" name="startDate" onChange={handleChange} />
-          <div className="date-hyphen">-</div>
-          <input type="date" name="endDate" onChange={handleChange} />
-        </div>
-        <div className="layout-text">
-          <strong className="notice-title">내용</strong>
-          <textarea
-            className="notice"
-            name="groupNotice"
-            onChange={handleChange}
-          ></textarea>
-        </div>
-        <div className="error-message">{errorMessage}</div>
-        <div className="layout-button">
-          <input
+      <ModalWrapper>
+        <ModalHeader>
+          <h3 className="title">그룹 공지</h3>
+        </ModalHeader>
+        <ModalContents>
+          <div className="layout-period">
+            <strong className="sub-title">기간</strong>
+            <div className="period">
+              <input type="date" name="startDate" onChange={handleChange} />
+              <div className="date-hyphen">-</div>
+              <input type="date" name="endDate" onChange={handleChange} />
+            </div>
+          </div>
+          <div className="layout-text">
+            <strong className="sub-title notice-title">내용</strong>
+            <textarea
+              className="notice"
+              name="groupNotice"
+              onChange={handleChange}
+            ></textarea>
+          </div>
+          <div className="error-message">{errorMessage}</div>
+        </ModalContents>
+        <ModalFooter>
+          <button
             type="submit"
-            value="취소"
             className="button"
             onClick={() => dispatch(setModalClose())}
-          />
-          <input
-            type="submit"
-            value="전송"
-            className="button"
-            onClick={validationCheck}
-          />
-        </div>
-      </Wrapper>
+          >
+            취소
+          </button>
+          <button type="submit" className="button" onClick={validationCheck}>
+            전송
+          </button>
+        </ModalFooter>
+      </ModalWrapper>
       {showConfirmMessage && (
         <ConfirmMessageModal
           socket={socket}
