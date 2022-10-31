@@ -1,14 +1,15 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-
 import { motion } from "framer-motion";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 
 import { setModalOpen } from "../../store/slices/modalSlice";
 import {
   addItem,
+  moveItem,
   dragStarted,
   dragMoved,
   dragEnded,
@@ -20,30 +21,27 @@ import { setCardInput } from "../../utils/setCardInput";
 
 import { Wrapper, GridLayer, Cell, Content } from "./style.js";
 
+// import { cards } from "./cards";
+
 function Dashboard({ socket }) {
+  const dispatch = useDispatch();
   const { user_id } = useParams();
   const [cards, setCards] = useState([]);
   const [todoChange, setTodoChange] = useState(null);
-
-  const dispatch = useDispatch();
   const { currentDate } = useSelector((state) => state.calendar);
   const { items, cells, dragging } = useSelector((state) => state.move);
 
   useEffect(() => {
     socket?.emit("searchMyCards", { user_id, currentDate });
-
     socket?.on("getMyCards", (data) => {
       const cardInfo = getCardInfo(data);
 
       setCards(cardInfo);
     });
-
-    console.log("cards::::", cards);
   }, [socket, currentDate]);
 
   useEffect(() => {
     socket?.emit("modifyCard", { socketValue: todoChange });
-
     socket?.on("getMyCards", (data) => {
       const cardInfo = getCardInfo(data);
 
@@ -66,14 +64,11 @@ function Dashboard({ socket }) {
     setTodoChange(cardInput);
   };
 
-  const saveMovedCard = (item) => {
-    const cardInput = setCardInput(user_id, currentDate, item, item.todo);
-    setTodoChange(cardInput);
-  };
-
   useEffect(() => {
-    dispatch(addItem({ item: cards }));
-  }, [cards]);
+    for (const card of cards) {
+      dispatch(addItem({ item: card }));
+    }
+  }, []);
 
   const draggingItem = cards.find((i) => i.snapshotId === dragging?.snapshotId);
 
@@ -89,7 +84,7 @@ function Dashboard({ socket }) {
               position: "absolute",
               top: 0,
               left: 0,
-              backgroundColor: "#efefef",
+              backgroundColor: "#ffffff",
               x: dragging.initialPoint.x * 70,
               y: dragging.initialPoint.y * 70,
               width: draggingItem.width * 70 - 2,
@@ -101,7 +96,10 @@ function Dashboard({ socket }) {
               position: "absolute",
               top: 0,
               left: 0,
-              backgroundColor: "#efefef",
+              border: "1px solid #000",
+              backgroundColor: dragging.valid
+                ? "rgb(152, 195, 121)"
+                : "rgb(224, 109, 118)",
               x: dragging.nextPoint.x * 70,
               y: dragging.nextPoint.y * 70,
               width: draggingItem.width * 70 - 2,
@@ -110,7 +108,7 @@ function Dashboard({ socket }) {
           />
         </>
       )}
-      {items?.map((item, idx) => {
+      {cards?.map((item, idx) => {
         const x = item.x * 70;
         const y = item.y * 70;
         const width = item.width * 70 - 2;
@@ -143,10 +141,7 @@ function Dashboard({ socket }) {
                 }
               }
             }}
-            onAnimationComplete={() => {
-              saveMovedCard(item);
-              dispatch(animationEnded());
-            }}
+            onAnimationComplete={() => dispatch(animationEnded())}
             initial={false}
             animate={!isDragging}
             style={{
@@ -158,10 +153,9 @@ function Dashboard({ socket }) {
               backgroundColor: "#ffffff",
               fontSize: 10,
               textAlign: "center",
-              borderTop: `15px solid ${item.colorCode}`,
+              border: `5px solid ${item.colorCode}`,
               borderRadius: "10px",
               zIndex: isDragging ? 99 : 1,
-              borderBottom: `2px solid ${item.colorCode}`,
             }}
             onDoubleClick={(e) => {
               const parentElement = e.target.parentElement;
@@ -210,22 +204,6 @@ function Dashboard({ socket }) {
           </motion.div>
         );
       })}
-      {new Date(currentDate).toLocaleDateString() ===
-        new Date().toLocaleDateString() && (
-        <FontAwesomeIcon
-          icon={faCirclePlus}
-          className="plus-icon"
-          onClick={() =>
-            dispatch(
-              setModalOpen({
-                type: "handleCard",
-                message: "",
-                cardsLength: cards.length,
-              })
-            )
-          }
-        />
-      )}
       <FontAwesomeIcon
         icon={faCirclePlus}
         className="plus-icon"

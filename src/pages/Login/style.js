@@ -99,5 +99,4 @@ export const UserTypeWrapper = styled.div`
 
 export const User = styled.div`
   width: 300px;
-  background: yellowgreen;
 `;

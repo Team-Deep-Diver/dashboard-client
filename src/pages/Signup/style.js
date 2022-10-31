@@ -174,7 +174,6 @@ export const SignupForm = styled.form`
     background: #efefef;
     color: #000000;
     cursor: pointer;
-  }
 
   .submit-btn:hover {
     border: rgb(0, 7, 61);

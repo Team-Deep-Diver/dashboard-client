@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 
 export const Wrapper = styled.div`
   position: relative;
+  width: calc(100vw - 60px);
   height: calc(100vh - 60px);
   overflow: hidden;
   border: 1px solid #ccc;
@@ -32,7 +33,7 @@ export const GridLayer = styled.div`
   grid-auto-rows: 68px;
   grid-template-columns: repeat(auto-fit, 68px);
   width: 100vw;
-  height: 100vh;
+  /* height: 100vh; */
 `;
 
 export const Cell = styled.div`
