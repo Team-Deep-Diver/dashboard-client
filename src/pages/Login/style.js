@@ -52,7 +52,11 @@ export const LoginForm = styled.form`
     width: 80px;
     text-align: center;
     margin: 10px auto 0;
+<<<<<<< HEAD
     background: rgb(0, 7, 61);
+=======
+    background: #a3bded;
+>>>>>>> d588d991260800fb0e252ce97be77ef322be6839
     padding: 10px;
     border-radius: 10px;
     color: #ffffff;
@@ -67,8 +71,13 @@ export const LoginForm = styled.form`
   }
 
   & .login-button:hover {
+<<<<<<< HEAD
     border: rgb(0, 7, 61);
     background: rgb(0, 7, 61);
+=======
+    border: #a3bded;
+    background: #a3bded;
+>>>>>>> d588d991260800fb0e252ce97be77ef322be6839
     color: #ffffff;
     font-weight: bold;
   }

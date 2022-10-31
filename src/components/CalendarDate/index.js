@@ -17,6 +17,7 @@ function CalendarDate() {
         onClick={() => dispatch(showPrevDay())}
       />
       <div className="font">{`${year}-${month}-${date}`}</div>
+<<<<<<< HEAD
       {new Date(currentDate).toLocaleDateString() ===
       new Date().toLocaleDateString() ? (
         <TfiAngleDoubleRight size={35} className="disabled-arrow" />
@@ -27,6 +28,20 @@ function CalendarDate() {
           onClick={() => dispatch(showNextDay())}
         />
       )}
+=======
+      {(new Date(currentDate).toLocaleDateString() === new
+      Date().toLocaleDateString()) ?
+      <TfiAngleDoubleRight
+        size={35}
+        className="disabled-arrow"
+      />
+      :
+      <TfiAngleDoubleRight
+        size={35}
+        className="arrow"
+        onClick={() => dispatch(showNextDay())}
+      />}
+>>>>>>> d588d991260800fb0e252ce97be77ef322be6839
     </Wrapper>
   );
 }

@@ -30,6 +30,19 @@ function CardModal({ socket }) {
 
   cardY = parseInt(cardsLength / 3) * 4 + 1;
 
+  let cardX;
+  let cardY;
+
+  if (cardsLength % 3 === 0) {
+    cardX = 1;
+  } else if (cardsLength % 3 === 1) {
+    cardX = 7;
+  } else {
+    cardX = 13;
+  }
+
+  cardY = parseInt(cardsLength / 3) * 4 + 1;
+
   const [cardInput, setCardInput] = useState({
     cardId: message ? message.cardId : "",
     snapshotId: message ? message.snapshotId : "",

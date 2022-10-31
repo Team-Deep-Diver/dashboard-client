@@ -5,6 +5,7 @@ import moveReducer from "./slices/moveSlice";
 
 const reducer = {
   calendar: calendarReducer,
+  move: moveReducer,
   modal: modalReducer,
   move: moveReducer,
 };

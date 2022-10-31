@@ -131,7 +131,10 @@ function Sidebar({ role, username, socket, groupList }) {
                   } else if (option.type === "signup") {
                     navigate("/signup");
                   } else if (option.type === "logout") {
+<<<<<<< HEAD
                     // dispatch(setModalOpen({ type: option.type, message: "" }));
+=======
+>>>>>>> d588d991260800fb0e252ce97be77ef322be6839
                     logout();
                   } else {
                     dispatch(setModalOpen({ type: option.type, message: "" }));

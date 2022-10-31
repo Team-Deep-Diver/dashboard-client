@@ -47,6 +47,7 @@ export const Wrapper = styled.div`
     padding: 5px 10ps;
     border-right: 4px solid transparent;
     transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+<<<<<<< HEAD
   }
 
   & .modal:hover {
@@ -55,6 +56,16 @@ export const Wrapper = styled.div`
     background: rgb(45, 51, 89);
   }
 
+=======
+  }
+
+  & .modal:hover {
+    border-right: 4px solid white;
+    transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    background: rgb(45, 51, 89);
+  }
+
+>>>>>>> d588d991260800fb0e252ce97be77ef322be6839
   & .link-text {
     white-space: nowrap;
     font-size: 18px;
@@ -69,10 +80,17 @@ export const inputAnimation = {
     opacity: 0,
   },
   show: {
+<<<<<<< HEAD
     width: "100%",
     opacity: 1,
     transition: {
       duration: 0.01,
+=======
+    width: "140px",
+    opacity: 1,
+    transition: {
+      duration: 0.2,
+>>>>>>> d588d991260800fb0e252ce97be77ef322be6839
     },
   },
 };
@@ -95,7 +113,11 @@ export const showAnimation = {
 };
 
 export const NoticeWrapper = styled.ul`
+<<<<<<< HEAD
   width: 100%;
+=======
+  width: 210px;
+>>>>>>> d588d991260800fb0e252ce97be77ef322be6839
   height: 400px;
   padding: 10px;
   margin-top: 20px;

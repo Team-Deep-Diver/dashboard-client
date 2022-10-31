@@ -72,7 +72,8 @@ input[type="radio"] {
 }
 
 .confirm-modal {
-  max-width: 300px;
+  width: 350px;
+  height: 180px;
   margin: 0 auto;
   padding: 40px 10px;
   background: white;
