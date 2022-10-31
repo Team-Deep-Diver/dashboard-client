@@ -34,7 +34,7 @@ export const Wrapper = styled.div`
     display: flex;
   }
 
-  & button {
+  & .layout button {
     border: none;
     background: #e3e3e3;
     border-radius: 10px;
@@ -46,8 +46,8 @@ export const Wrapper = styled.div`
     transition: all 0.2s linear;
   }
 
-  & button:hover {
-    background: #a3bded;
+  & .layout button:hover {
+    background: rgb(0, 7, 61);
     color: #ffffff;
     font-weight: bold;
   }

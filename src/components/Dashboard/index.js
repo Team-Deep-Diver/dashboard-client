@@ -9,7 +9,6 @@ import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { setModalOpen } from "../../store/slices/modalSlice";
 import {
   addItem,
-  resetItem,
   dragStarted,
   dragMoved,
   dragEnded,
@@ -38,6 +37,8 @@ function Dashboard({ socket }) {
 
       setCards(cardInfo);
     });
+
+    console.log("cards::::", cards);
   }, [socket, currentDate]);
 
   useEffect(() => {
@@ -70,12 +71,8 @@ function Dashboard({ socket }) {
     setTodoChange(cardInput);
   };
 
-  useMemo(() => {
-    dispatch(resetItem());
-
-    for (const card of cards) {
-      dispatch(addItem({ item: card }));
-    }
+  useEffect(() => {
+    dispatch(addItem({ item: cards }));
   }, [cards]);
 
   const draggingItem = cards.find((i) => i.snapshotId === dragging?.snapshotId);
@@ -92,7 +89,7 @@ function Dashboard({ socket }) {
               position: "absolute",
               top: 0,
               left: 0,
-              backgroundColor: "#ffffff",
+              backgroundColor: "#efefef",
               x: dragging.initialPoint.x * 70,
               y: dragging.initialPoint.y * 70,
               width: draggingItem.width * 70 - 2,
@@ -104,10 +101,7 @@ function Dashboard({ socket }) {
               position: "absolute",
               top: 0,
               left: 0,
-              border: "1px solid #000",
-              backgroundColor: dragging.valid
-                ? "rgb(152, 195, 121)"
-                : "rgb(224, 109, 118)",
+              backgroundColor: "#efefef",
               x: dragging.nextPoint.x * 70,
               y: dragging.nextPoint.y * 70,
               width: draggingItem.width * 70 - 2,
@@ -164,9 +158,10 @@ function Dashboard({ socket }) {
               backgroundColor: "#ffffff",
               fontSize: 10,
               textAlign: "center",
-              border: `5px solid ${item.colorCode}`,
+              borderTop: `15px solid ${item.colorCode}`,
               borderRadius: "10px",
               zIndex: isDragging ? 99 : 1,
+              borderBottom: `2px solid ${item.colorCode}`,
             }}
             onDoubleClick={(e) => {
               const parentElement = e.target.parentElement;
@@ -215,19 +210,22 @@ function Dashboard({ socket }) {
           </motion.div>
         );
       })}
-      <FontAwesomeIcon
-        icon={faCirclePlus}
-        className="plus-icon"
-        onClick={() =>
-          dispatch(
-            setModalOpen({
-              type: "handleCard",
-              message: "",
-              cardsLength: cards.length,
-            })
-          )
-        }
-      />
+      {new Date(currentDate).toLocaleDateString() ===
+        new Date().toLocaleDateString() && (
+        <FontAwesomeIcon
+          icon={faCirclePlus}
+          className="plus-icon"
+          onClick={() =>
+            dispatch(
+              setModalOpen({
+                type: "handleCard",
+                message: "",
+                cardsLength: cards.length,
+              })
+            )
+          }
+        />
+      )}
     </Wrapper>
   );
 }

@@ -1,6 +1,13 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
-import { Wrapper, Header, Content, UserTypeWrapper, User } from "./style";
+import {
+  Wrapper,
+  Header,
+  Content,
+  UserTypeWrapper,
+  User,
+  FontBackGround,
+} from "./style";
 
 export const MyComponent = () => (
   <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} />
@@ -27,6 +34,9 @@ function Welcome() {
         <button onClick={goToSignUpPage}>회원가입</button>
       </Header>
       <Content>
+        <FontBackGround>
+          <strong>Hello</strong>
+        </FontBackGround>
         <UserTypeWrapper>
           <motion.div
             whileHover={{

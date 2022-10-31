@@ -67,7 +67,7 @@ export const ModalContents = styled.div`
   }
 
   & .contents-wrap li button:hover {
-    background: #a3bded;
+    background: rgb(0, 7, 61);
     color: #ffffff;
   }
 `;
@@ -91,7 +91,7 @@ export const ModalFooter = styled.footer`
   }
 
   & button:hover {
-    background: #a3bded;
+    background: rgb(0, 7, 61);
     color: #ffffff;
     font-weight: bold;
   }

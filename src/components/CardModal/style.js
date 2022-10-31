@@ -5,129 +5,132 @@ export const Wrapper = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 650px;
-  height: 580px;
+  width: 500px;
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 10px;
+  padding: 10px 30px 30px;
   box-shadow: 0px 3px 9px rgba(0, 0, 0, 0.5);
 
-  & .layout-top {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    height: 25px;
+  & .title {
+    font-size: 24px;
+    color: #414141;
+    text-align: center;
+    font-weight: 700;
   }
 
-  & .layout-todo-show {
+  & .layout {
+    margin-bottom: 10px;
+  }
+
+  & .layout .category-name {
+    color: #414141;
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  & .layout .category-name em {
+    font-style: normal;
+    color: red;
+    vertical-align: -3px;
+  }
+
+  & .layout input {
+    display: block;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 10px;
+    border: 1px solid #878787;
+    padding: 4px;
+  }
+
+  & .layout .category-date {
     display: flex;
-    margin-top: 4px;
-    margin-bottom: 4px;
+    justify-content: space-between;
+  }
+
+  & .layout .category-date > input {
+    width: 200px;
+    display: block;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+
+  & .category-colors {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  & .category-color input {
+    height: 20px;
+    margin-bottom: 5px;
+  }
+
+  & .todo {
+    height: 50px;
+    border: 1px solid #878787;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    padding: 5px;
+    overflow: scroll;
   }
 
   & .layout-todo {
     display: flex;
+    justify-content: space-between;
   }
 
-  & .layout-bottom {
+  & .layout-todo-show {
     display: flex;
-    margin-top: 8px;
-    margin-bottom: 8px;
+  }
+
+  & .layout-todo .todo-input,
+  & .layout-todo .todo-submit {
+    height: 30px;
+    line-height: 22px;
+  }
+
+  & .layout-todo input:first-child {
+    width: 300px;
+  }
+
+  & .layout-todo .todo-submit {
+    width: 100px;
+  }
+
+  & textarea {
+    width: 100%;
+    border-radius: 10px;
+    height: 50px;
+    border: 1px solid #878787;
+    resize: none;
+    padding: 4px;
   }
 
   & .layout-buttons {
+    width: 300px;
+    margin: 0 auto;
     display: flex;
-  }
-
-  & .title {
-    display: flex;
-    align-items: center;
-    height: 70px;
-    font-size: 30px;
-  }
-
-  & .category-name {
-    width: 100px;
-    margin-left: 10px;
-    font-size: 23px;
-  }
-
-  & .category-input {
-    width: 330px;
-    height: 25px;
-  }
-
-  & .category-text {
-    width: 330px;
-    height: 70px;
-  }
-
-  & .category-date {
-    display: flex;
-    align-items: center;
     justify-content: space-between;
-    width: 340px;
   }
 
-  & .date-hyphen {
-    margin-left: 4px;
-    margin-right: 4px;
-  }
-
-  & .category-color {
-    display: flex;
-    margin-left; 9px;
-    margin-right: 9px;
-  }
-
-  & .date-input {
-    height: 23px;
-  }
-
-  & .todo {
-    width: 330px;
-    height: 90px;
-    border: solid 1px;
-    overflow: scroll;
-  }
-
-  & .todo-input {
-    width: 270px;
-    height: 20px;
-  }
-
-  & .todo-item {
-    margin-left: 10px;
-    font-size: 18px;
-  }
-
-  & .todo-submit {
-    width: 55px;
-    cursor: pointer;
-  }
-
-  & .error-message {
-    display: flex;
-    align-items: center;
-    height: 35px;
-    color: #7fc6d7;
-  }
-
-  & .button {
-    display: block;
-    width: 80px;
-    height: 35px;
-    margin-left: 30px;
-    margin-right: 30px;
-    background: #a3bded;
-    border-radius: 3px;
+  & .layout-buttons .button {
     border: none;
-    color: #ffffff;
+    background: #e3e3e3;
+    border-radius: 10px;
+    color: #000000;
+    padding: 10px 25px;
     cursor: pointer;
-    font-family: "GangwonEdu_OTFBoldA";
+    -webkit-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+  }
+
+  & .layout-buttons .button:hover {
+    background: rgb(0, 7, 61);
+    color: #ffffff;
+    font-weight: bold;
   }
 `;
 

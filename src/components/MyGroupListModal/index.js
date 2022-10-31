@@ -71,6 +71,11 @@ function MyGroupListModal() {
                   </li>
                 ))}
               </ul>
+              <li>
+                {!isLoading &&
+                  groups.length === 0 &&
+                  "그룹에 참가 신청한 사람이 없습니다."}
+              </li>
             </div>
           </div>
           <div className="application">
@@ -80,11 +85,12 @@ function MyGroupListModal() {
               <ul className="members-list">
                 {groups?.map((group) => (
                   <li key={group._id}>
-                    {group.status !== "PENDING" ? (
+                    {group.status === "PENDING" && (
                       <div className="rejected-list">
                         <div className="name">{group.groupName}: 대기중</div>
                       </div>
-                    ) : (
+                    )}
+                    {group.status === "REJECTED" && (
                       <div className="rejected-list">
                         <div className="name">{group.groupName}: 거절</div>
                         <button onClick={(e) => handleClick(group, e)}>
@@ -95,6 +101,11 @@ function MyGroupListModal() {
                   </li>
                 ))}
               </ul>
+              <li>
+                {!isLoading &&
+                  groups.length === 0 &&
+                  "그룹에 참가 신청한 사람이 없습니다."}
+              </li>
             </div>
           </div>
         </ModalContents>

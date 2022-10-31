@@ -55,17 +55,16 @@ export const ModalContents = styled.div`
   .list-item {
     display: flex;
     align-items: center;
+    justify-content: space-evenly;
     height: 50px;
   }
 
   .item-value {
-    padding-left: 10px;
     width: 310px;
     font-size: 20px;
   }
 
   .item-button {
-    margin-top: 20px;
     padding-left: 5px;
     width: 60px;
     height: 30px;
@@ -93,8 +92,8 @@ export const ModalContents = styled.div`
   & .search-button {
     display: block;
     width: 80px;
-    background: #a3bded;
-    border: #af69ee;
+    background: rgb(0, 7, 61);
+    border: rgb(0, 7, 61);
     padding: 10px;
     border-radius: 10px;
     color: #ffffff;
@@ -102,7 +101,7 @@ export const ModalContents = styled.div`
   }
 
   & .search-button:hover {
-    background: #a3bded;
+    background: rgb(0, 7, 61);
     color: #ffffff;
     font-weight: bold;
   }
@@ -133,7 +132,7 @@ export const ModalFooter = styled.footer`
   }
 
   & button:hover {
-    background: #a3bded;
+    background: rgb(0, 7, 61);
     color: #ffffff;
     font-weight: bold;
   }

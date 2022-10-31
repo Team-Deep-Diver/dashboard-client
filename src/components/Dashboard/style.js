@@ -2,13 +2,13 @@ import styled from "@emotion/styled";
 
 export const Wrapper = styled.div`
   position: relative;
-  width: calc(100vw - 60px);
   height: calc(100vh - 60px);
   overflow: hidden;
   border: 1px solid #ccc;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #efefef;
 
   & .plus-icon {
     position: absolute;
@@ -16,7 +16,7 @@ export const Wrapper = styled.div`
     bottom: 0px;
     margin: 30px;
     height: 55px;
-    color: #a3bded;
+    color: rgb(0, 7, 61);
     border-radius: 50%;
     box-shadow: 2px 2px 2px 2px grey;
     cursor: pointer;
@@ -73,8 +73,9 @@ export const Content = styled.div`
 
   & .todo-box {
     max-height: 80px;
-    margin-top: 15px;
-    overFlow: scroll;
+    margin-top: 10px;
+    text-align: left;
+    /* overFlow: scroll; */
   }
 
   & .img-box {
@@ -92,13 +93,14 @@ export const Content = styled.div`
   }
 
   & .img {
-    max-width: 150px;
+    max-width: 100%;
   }
 
   & .text-box {
     max-height: 70px;
-    margin-top: 15px;
+    margin-top: 10px;
+    text-align: left;
     font-size: 18px;
-    overFlow: scroll;
+    /* overFlow: scroll; */
   }
 `;

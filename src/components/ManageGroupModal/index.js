@@ -55,7 +55,6 @@ function ManageGroupModal() {
     _id: applicant_id,
     nickname: applicant_name,
   }) {
-    debugger;
     const result = await fetch(
       `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups/${group_id}/${applicant_id}`,
       {
@@ -91,8 +90,8 @@ function ManageGroupModal() {
     _id: applicant_id,
     nickname: applicant_name,
   }) {
-    const result = await fetch(
-      `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups/${group_id}/${applicant_id}`,
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups/${applicant_id}`,
       {
         method: "POST",
         headers: {
@@ -105,9 +104,7 @@ function ManageGroupModal() {
       }
     );
 
-    const res = await result.json();
-
-    if (res.status === 201) {
+    if (res.status === 200) {
       dispatch(
         setModalOpen({
           type: "message",
@@ -118,7 +115,7 @@ function ManageGroupModal() {
       dispatch(
         setModalOpen({
           type: "message",
-          message: result.message,
+          message: "오류가 발생했습니다. 다시 한 번 시도해 주세요.",
         })
       );
     }
