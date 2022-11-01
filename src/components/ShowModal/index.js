@@ -18,14 +18,15 @@ function ShowModal({ children }) {
     <motion.div
       className="backdrop"
       variants={modal}
-      inital="hidden"
+      initial="hidden"
       animate="visible"
       exit="hidden"
-      ref={modalOutside} onClick={handleModal}
+      ref={modalOutside}
+      onClick={handleModal}
     >
       {children}
     </motion.div>
- );
+  );
 }
 
 export default ShowModal;

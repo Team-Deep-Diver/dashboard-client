@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
@@ -37,8 +37,6 @@ function Dashboard({ socket }) {
 
       setCards(cardInfo);
     });
-
-    console.log("cards::::", cards);
   }, [socket, currentDate]);
 
   useEffect(() => {
@@ -75,7 +73,9 @@ function Dashboard({ socket }) {
     dispatch(addItem({ item: cards }));
   }, [cards]);
 
-  const draggingItem = cards.find((i) => i.snapshotId === dragging?.snapshotId);
+  const draggingItem = cards.find(
+    (item) => item.snapshotId === dragging?.snapshotId
+  );
 
   return (
     <Wrapper>

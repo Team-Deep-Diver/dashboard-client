@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { ModalWrapper, ModalHeader, ModalContents, ModalFooter } from "./style";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+
 import { setModalOpen, setModalClose } from "../../store/slices/modalSlice";
+
+import { ModalWrapper, ModalHeader, ModalContents, ModalFooter } from "./style";
 
 function JoinGroupModal() {
   const dispatch = useDispatch();
@@ -80,54 +82,6 @@ function JoinGroupModal() {
   }, [groupId]);
 
   return (
-    // <>
-    // <ModalWrapper>
-    //   <ModalHeader>그룹 참가하기</ModalHeader>
-    //   <div className="layout">
-    //     <input
-    //       type="text"
-    //       id="groupName"
-    //       name="groupName"
-    //       placeholder="그룹명"
-    //       className="input-value"
-    //       value={groupName}
-    //       onChange={handleInput}
-    //     />
-    //     <input
-    //       type="submit"
-    //       value="검색"
-    //       className="search-button"
-    //       disabled={groupName === "" ? true : false}
-    //       onClick={() => findGroupByName()}
-    //     />
-    //   </div>
-    //   <div className="search-result">
-    //     {isLoading && <div className="message">{resultMessage}</div>}
-    //     {!isLoading && result.length === 0 ? (
-    //       <div className="message">{resultMessage}</div>
-    //     ) : (
-    //       result?.map((item) => (
-    //         <div className="list-item" key={item.group_id}>
-    //           <div className="item-value">{item.name}</div>
-    //           <input
-    //             type="submit"
-    //             value="신청"
-    //             className="item-button"
-    //             onClick={() => setGroupId(item.group_id)}
-    //           />
-    //         </div>
-    //       ))
-    //     )}
-    //   </div>
-    //   <input
-    //     type="submit"
-    //     value="닫기"
-    //     className="close-button"
-    //     onClick={() => dispatch(setModalClose())}
-    //   />
-    // </ModalWrapper>
-    // </>
-
     <>
       <ModalWrapper>
         <ModalHeader>

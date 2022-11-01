@@ -17,18 +17,8 @@ function CardModal({ socket }) {
   const [showConfirmMessage, setShowConfirmMessage] = useState(false);
   const themeColors = ["#62FCAF", "#9300FE", "#11ffee", "#034EFD", "#fcf434"];
 
-  let cardX;
-  let cardY;
-
-  if (cardsLength % 3 === 0) {
-    cardX = 1;
-  } else if (cardsLength % 3 === 1) {
-    cardX = 7;
-  } else {
-    cardX = 13;
-  }
-
-  cardY = parseInt(cardsLength / 3) * 4 + 1;
+  const cardX = (cardsLength % 3) * 6 + 1;
+  const cardY = parseInt(cardsLength / 3) * 4 + 1;
 
   const [cardInput, setCardInput] = useState({
     cardId: message ? message.cardId : "",
@@ -93,7 +83,9 @@ function CardModal({ socket }) {
   return (
     <>
       <Wrapper>
-        <h3 className="title">{message ? "카드 수정하기" : "카드 생성하기"}</h3>
+        <h3 className="title">
+          {cardInput.cardId ? "카드 수정하기" : "카드 생성하기"}
+        </h3>
         <div className="layout">
           <div className="category-name">
             카테고리 <em>*</em>
@@ -216,7 +208,7 @@ function CardModal({ socket }) {
         </div>
       </Wrapper>
       {showConfirmMessage &&
-        (message ? (
+        (cardInput.cardId ? (
           <ConfirmMessageModal
             socket={socket}
             socketType={socketType}

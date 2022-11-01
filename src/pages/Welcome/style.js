@@ -65,5 +65,4 @@ export const User = styled.div`
   box-shadow: rgba(50, 50, 93, 1) 0px 50px 100px -20px,
     rgba(255, 0, 0, 1) 0px 30px 60px -30px,
     rgba(10, 37, , 0.35) 0px -2px 6px 0px;
-  /* background: linear-gradient(135deg, rgba(0, 7, 61), rgba(78, 28, 183)); */
 `;

@@ -1,4 +1,4 @@
-import styled from "@emotion/styled";
+import styled from "styled-components";
 
 export const Wrapper = styled.div`
   position: relative;
@@ -33,7 +33,7 @@ export const GridLayer = styled.div`
   grid-auto-rows: 68px;
   grid-template-columns: repeat(auto-fit, 68px);
   width: 100vw;
-  /* height: 100vh; */
+  height: 100vh;
 `;
 
 export const Cell = styled.div`
@@ -76,7 +76,6 @@ export const Content = styled.div`
     max-height: 80px;
     margin-top: 10px;
     text-align: left;
-    /* overFlow: scroll; */
   }
 
   & .img-box {
@@ -102,6 +101,5 @@ export const Content = styled.div`
     margin-top: 10px;
     text-align: left;
     font-size: 18px;
-    /* overFlow: scroll; */
   }
 `;

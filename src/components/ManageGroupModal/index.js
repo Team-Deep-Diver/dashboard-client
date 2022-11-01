@@ -4,13 +4,7 @@ import { useParams } from "react-router-dom";
 
 import { setModalOpen, setModalClose } from "../../store/slices/modalSlice";
 
-import {
-  Wrapper,
-  ModalWrapper,
-  ModalHeader,
-  ModalContents,
-  ModalFooter,
-} from "./style";
+import { ModalWrapper, ModalHeader, ModalContents, ModalFooter } from "./style";
 
 function ManageGroupModal() {
   const dispatch = useDispatch();
@@ -38,8 +32,6 @@ function ManageGroupModal() {
 
       if (res.status === 200) {
         const group = await res.json();
-
-        console.log("group", group);
 
         setGroupId(group.applicants._id);
         setApplicants(group.applicants.applicants);
