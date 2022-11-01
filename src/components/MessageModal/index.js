@@ -1,13 +1,14 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
 
 import { modal, Wrapper } from "./style";
 import { setModalClose } from "../../store/slices/modalSlice";
 
-function MessageModal({ message, type }) {
+function MessageModal() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { message, messageType } = useSelector((state) => state.modal);
 
   async function logout() {
     const res = await fetch(
@@ -36,7 +37,7 @@ function MessageModal({ message, type }) {
       <Wrapper>
         <div className="message">{message}</div>
 
-        {type === "logout" && (
+        {messageType === "logout" && (
           <input
             type="submit"
             value="확인"
@@ -45,7 +46,7 @@ function MessageModal({ message, type }) {
           />
         )}
 
-        {type === "signup" && (
+        {messageType === "signup" && (
           <input
             type="submit"
             value="확인"
@@ -54,7 +55,7 @@ function MessageModal({ message, type }) {
           />
         )}
 
-        {type !== "signup" && type !== "logout" && (
+        {messageType !== "signup" && messageType !== "logout" && (
           <input
             type="submit"
             value="닫기"

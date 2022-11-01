@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
@@ -8,15 +9,19 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import MessageModal from "../../components/MessageModal";
 
 import { Wrapper, SignupForm } from "./style";
+import { setModalOpen } from "../../store/slices/modalSlice";
 import { validateSignupForm } from "../../utils/validateSignupForm";
 
 function Signup() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [message, setMessage] = useState("");
   const [signupValues, setSignupValues] = useState("");
   const [selectedRole, setSelectedRole] = useState("MEMBER");
-  const [message, setMessage] = useState("");
   const [duplicationCheckCount, setDuplicationCheckCount] = useState(0);
-  const [isShowMessageModal, setIsShowMessageModal] = useState(false);
+
+  const { isModalOpen } = useSelector((state) => state.modal);
 
   const { nickname, email, password, passwordConfirm, groupName } =
     signupValues;
@@ -45,7 +50,7 @@ function Signup() {
         }
       );
 
-      (res.status === 200) && setDuplicationCheckCount(duplicationCheckCount + 1);
+      res.status === 200 && setDuplicationCheckCount(duplicationCheckCount + 1);
 
       const data = await res.json();
       setMessage(data.message);
@@ -69,7 +74,7 @@ function Signup() {
         }
       );
 
-      (res.status === 200) && setDuplicationCheckCount(duplicationCheckCount + 1);
+      res.status === 200 && setDuplicationCheckCount(duplicationCheckCount + 1);
 
       const data = await res.json();
       setMessage(data.message);
@@ -112,7 +117,12 @@ function Signup() {
         return setMessage(data.message);
       }
 
-      setIsShowMessageModal(true);
+      dispatch(
+        setModalOpen({
+          messageType: "signup",
+          message: `회원 가입 되셨습니다. \n 로그인페이지로 이동합니다.`,
+        })
+      );
     } catch (err) {
       console.error(err);
     }
@@ -209,12 +219,7 @@ function Signup() {
           value="회원 가입"
         />
       </SignupForm>
-      {isShowMessageModal && (
-        <MessageModal
-          message={`회원 가입 되셨습니다. \n 로그인페이지로 이동합니다.`}
-          type="signup"
-        />
-      )}
+      {isModalOpen && <MessageModal />}
     </Wrapper>
   );
 }

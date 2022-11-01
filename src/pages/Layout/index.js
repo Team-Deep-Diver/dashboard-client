@@ -25,9 +25,7 @@ function Layout() {
   const [role, setRole] = useState(null);
   const [username, setUsername] = useState(null);
   const [groupList, setGroupList] = useState([]);
-  const { isModalOpen, modalType, message } = useSelector(
-    (state) => state.modal
-  );
+  const { isModalOpen, modalType } = useSelector((state) => state.modal);
 
   useEffect(() => {
     async function getUserInfo() {
@@ -93,7 +91,7 @@ function Layout() {
                 groupList={groupList}
               />
             )}
-            {modalType === "message" && <MessageModal message={message} />}
+            {modalType === "message" && <MessageModal />}
             {modalType === "manageGroup" && <ManageGroupModal />}
             {modalType === "handleCard" && <CardModal socket={socket} />}
             {modalType === "myGroupList" && <MyGroupListModal />}
