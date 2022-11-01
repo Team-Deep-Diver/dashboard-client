@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
+
+import { ImArrowLeft2 } from "react-icons/im";
+
+import { validateLoginForm } from "../../services/validateLoginForm";
 
 import { Wrapper, LoginForm } from "./style";
-import { validateLoginForm } from "../../utils/validateLoginForm";
 
 function Login() {
   const navigate = useNavigate();
@@ -45,12 +46,11 @@ function Login() {
         }
       );
 
-      const data = await res.json();
-
       if (res.status === 400) {
         return setMessage(data.message);
       }
 
+      const data = await res.json();
       const token = data.token.split(" ")[1];
 
       if (token) {
@@ -65,31 +65,25 @@ function Login() {
   return (
     <Wrapper>
       <header>
-        <FontAwesomeIcon
-          icon={faArrowLeftLong}
-          size="2x"
-          onClick={() => navigate("/")}
-        />
+        <ImArrowLeft2 size="40" onClick={() => navigate("/")} />
       </header>
       <LoginForm>
         <h1>로그인</h1>
         <input
           type="email"
-          id="email"
           name="email"
           placeholder="이메일"
-          required
           value={email || ""}
           onChange={(e) => handleChange(e)}
+          required
         />
         <input
           type="password"
-          id="password"
           name="password"
           placeholder="비밀번호"
-          required
           value={password || ""}
           onChange={(e) => handleChange(e)}
+          required
         />
         <div className="validation-message">{message}</div>
         <input
