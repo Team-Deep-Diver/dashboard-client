@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { modals } from "./sidebarOption";
+import { fetchData } from "../../utils/fetchData";
 import { getNoticeInfo } from "../../utils/getNoticeInfo";
 import { setModalOpen } from "../../store/slices/modalSlice";
 import {
@@ -69,20 +70,23 @@ function Sidebar({ role, username, socket, groupList }) {
   }, [socket, noticeList, groupList]);
 
   const logout = async () => {
-    const res = await fetch(
-      `${process.env.REACT_APP_SERVER_REQUEST_HOST}/logout`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.jwt,
-        },
-      }
-    );
+    const res = await fetchData("/logout", "POST");
 
     if (res.status === 200) {
       localStorage.removeItem("jwt");
-      navigate("/");
+
+      dispatch(
+        setModalOpen({
+          type: "message",
+          messageType: "logout",
+          message: "로그아웃 되셨습니다.",
+        })
+      );
+    }
+
+    if (res.status === 400) {
+      const data = await res.json();
+      console.error(data.message);
     }
   };
 
@@ -131,7 +135,6 @@ function Sidebar({ role, username, socket, groupList }) {
                   } else if (option.type === "signup") {
                     navigate("/signup");
                   } else if (option.type === "logout") {
-                    // dispatch(setModalOpen({ type: option.type, message: "" }));
                     logout();
                   } else {
                     dispatch(setModalOpen({ type: option.type, message: "" }));
