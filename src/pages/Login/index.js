@@ -46,11 +46,12 @@ function Login() {
         }
       );
 
+      const data = await res.json();
+
       if (res.status === 400) {
         return setMessage(data.message);
       }
 
-      const data = await res.json();
       const token = data.token.split(" ")[1];
 
       if (token) {

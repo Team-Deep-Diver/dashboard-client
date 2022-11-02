@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import { motion } from "framer-motion";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { FaPlusCircle } from "react-icons/fa";
 
 import { setModalOpen } from "../../store/slices/modalSlice";
 import {
@@ -15,41 +14,21 @@ import {
   animationEnded,
 } from "../../store/slices/moveSlice.js";
 
-import { getCardInfo } from "../../utils/getCardInfo";
-import { setCardInput } from "../../utils/setCardInput";
+import { getCardInfo } from "../../services/getCardInfo";
+import { setCardInput } from "../../services/setCardInput";
 
-import { Wrapper, GridLayer, Cell, Content } from "./style.js";
+import { Wrapper, GridLayer, Cell, Content } from "./style";
 
 function Dashboard({ socket }) {
+  const dispatch = useDispatch();
   let { user_id } = useParams();
   user_id = user_id ? user_id : "guest";
 
-  const [cards, setCards] = useState([]);
-  const [todoChange, setTodoChange] = useState(null);
-
-  const dispatch = useDispatch();
   const { currentDate } = useSelector((state) => state.calendar);
   const { items, cells, dragging } = useSelector((state) => state.move);
 
-  useEffect(() => {
-    socket?.emit("searchMyCards", { user_id, currentDate });
-
-    socket?.on("getMyCards", (data) => {
-      const cardInfo = getCardInfo(data);
-
-      setCards(cardInfo);
-    });
-  }, [socket, currentDate]);
-
-  useEffect(() => {
-    socket?.emit("modifyCard", { socketValue: todoChange });
-
-    socket?.on("getMyCards", (data) => {
-      const cardInfo = getCardInfo(data);
-
-      setCards(cardInfo);
-    });
-  }, [todoChange]);
+  const [cards, setCards] = useState([]);
+  const [todoChange, setTodoChange] = useState(null);
 
   const handleCheckbox = (e, card) => {
     const newcard = card.todo.map((item) => {
@@ -71,13 +50,33 @@ function Dashboard({ socket }) {
     setTodoChange(cardInput);
   };
 
-  useEffect(() => {
-    dispatch(addItem({ item: cards }));
-  }, [cards]);
-
   const draggingItem = cards.find(
     (item) => item.snapshotId === dragging?.snapshotId
   );
+
+  useEffect(() => {
+    socket?.emit("searchMyCards", { user_id, currentDate });
+
+    socket?.on("getMyCards", (data) => {
+      const cardInfo = getCardInfo(data);
+
+      setCards(cardInfo);
+    });
+  }, [socket, currentDate]);
+
+  useEffect(() => {
+    socket?.emit("modifyCard", { socketValue: todoChange });
+
+    socket?.on("getMyCards", (data) => {
+      const cardInfo = getCardInfo(data);
+
+      setCards(cardInfo);
+    });
+  }, [todoChange]);
+
+  useEffect(() => {
+    dispatch(addItem({ item: cards }));
+  }, [cards]);
 
   return (
     <Wrapper>
@@ -214,8 +213,7 @@ function Dashboard({ socket }) {
       })}
       {new Date(currentDate).toLocaleDateString() ===
         new Date().toLocaleDateString() && (
-        <FontAwesomeIcon
-          icon={faCirclePlus}
+        <FaPlusCircle
           className="plus-icon"
           onClick={() =>
             dispatch(
@@ -228,19 +226,6 @@ function Dashboard({ socket }) {
           }
         />
       )}
-      <FontAwesomeIcon
-        icon={faCirclePlus}
-        className="plus-icon"
-        onClick={() =>
-          dispatch(
-            setModalOpen({
-              type: "handleCard",
-              message: "",
-              cardsLength: cards.length,
-            })
-          )
-        }
-      />
     </Wrapper>
   );
 }

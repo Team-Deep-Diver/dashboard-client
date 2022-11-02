@@ -16,7 +16,8 @@ export const Wrapper = styled.div`
     right: 0px;
     bottom: 0px;
     margin: 30px;
-    height: 55px;
+    width: 60px;
+    height: 60px;
     color: rgb(0, 7, 61);
     border-radius: 50%;
     box-shadow: 2px 2px 2px 2px grey;
