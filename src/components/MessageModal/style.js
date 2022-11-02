@@ -22,6 +22,12 @@ export const Wrapper = styled.div`
     white-space: pre-wrap;
   }
 
+  .layout {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+  }
+
   & .close-button {
     display: block;
     width: 80px;

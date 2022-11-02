@@ -1,17 +1,25 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+
 import { motion } from "framer-motion";
 
-import { modal, Wrapper } from "./style";
 import { setModalClose } from "../../store/slices/modalSlice";
 
-function MessageModal() {
+import { modal, Wrapper } from "./style";
+
+function MessageModal({ socket }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { message, messageType } = useSelector((state) => state.modal);
 
   const logout = () => {
+    dispatch(setModalClose());
+    navigate("/");
+  };
+
+  const home = async () => {
+    socket.emit("resetGuestCards", { socketValue: "guest" });
     dispatch(setModalClose());
     navigate("/");
   };
@@ -26,32 +34,43 @@ function MessageModal() {
       <Wrapper>
         <div className="message">{message}</div>
 
-        {messageType === "logout" && (
-          <input
-            type="submit"
-            value="확인"
-            className="close-button"
-            onClick={logout}
-          />
-        )}
+        <div className="layout">
+          {messageType === "logout" && (
+            <input
+              type="submit"
+              value="확인"
+              className="close-button"
+              onClick={logout}
+            />
+          )}
 
-        {messageType === "signup" && (
-          <input
-            type="submit"
-            value="확인"
-            className="close-button"
-            onClick={() => navigate("/login")}
-          />
-        )}
+          {messageType === "signup" && (
+            <input
+              type="submit"
+              value="확인"
+              className="close-button"
+              onClick={() => navigate("/login")}
+            />
+          )}
 
-        {messageType !== "signup" && messageType !== "logout" && (
-          <input
-            type="submit"
-            value="닫기"
-            className="close-button"
-            onClick={() => dispatch(setModalClose())}
-          />
-        )}
+          {messageType !== "signup" && messageType !== "logout" && (
+            <input
+              type="submit"
+              value={messageType === "home" ? "취소" : "닫기"}
+              className="close-button"
+              onClick={() => dispatch(setModalClose())}
+            />
+          )}
+
+          {messageType === "home" && (
+            <input
+              type="submit"
+              value="확인"
+              className="close-button"
+              onClick={home}
+            />
+          )}
+        </div>
       </Wrapper>
     </motion.div>
   );
