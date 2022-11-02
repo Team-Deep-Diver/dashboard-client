@@ -7,7 +7,7 @@ import {
   FaRegUserCircle,
 } from "react-icons/fa";
 
-export const modals = {
+export const options = {
   GUEST: [
     {
       name: "Home",

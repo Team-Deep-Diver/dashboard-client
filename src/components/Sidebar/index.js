@@ -1,12 +1,13 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { FaBars } from "react-icons/fa";
-import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
 
-import { modals } from "./sidebarOption";
+import { FaBars } from "react-icons/fa";
+import { AnimatePresence, motion } from "framer-motion";
+
+import { options } from "./sidebarOptions";
 import { fetchData } from "../../utils/fetchData";
-import { getNoticeInfo } from "../../utils/getNoticeInfo";
+import { getNoticeInfo } from "../../services/getNoticeInfo";
 import { setModalOpen } from "../../store/slices/modalSlice";
 import {
   Wrapper,
@@ -17,42 +18,26 @@ import {
 } from "./style";
 
 function Sidebar({ role, username, socket, groupList }) {
-  const optionList = modals[role];
-  const { user_id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user_id } = useParams();
+
+  const optionList = options[role];
   const [isOpen, setIsOpen] = useState(false);
   const [noticeList, setNoticeList] = useState([]);
   const { isModalOpen } = useSelector((state) => state.modal);
 
   useEffect(() => {
     async function getGroupNotice() {
-      const res = await fetch(
-        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groupNotice`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.jwt,
-          },
-        }
-      );
-      const result = await res.json();
+      const res = await fetchData(`/users/${user_id}/groupNotice`, "GET");
 
-      const newNoticeList = [];
-      result.map((item) => {
-        for (const notice of item.notices) {
-          newNoticeList.push({
-            groupName: item.name,
-            colorCode: item.colorCode,
-            startDate: notice.period.startDate,
-            endDate: notice.period.endDate,
-            message: notice.message,
-          });
-        }
-      });
+      if (res.status === 400) {
+        const { message } = await res.json();
+        return console.error(message);
+      }
 
-      setNoticeList([...newNoticeList]);
+      const { myGroupList } = await res.json();
+      setNoticeList([...myGroupList]);
     }
 
     getGroupNotice();
@@ -72,22 +57,20 @@ function Sidebar({ role, username, socket, groupList }) {
   const logout = async () => {
     const res = await fetchData("/logout", "POST");
 
-    if (res.status === 200) {
-      localStorage.removeItem("jwt");
-
-      dispatch(
-        setModalOpen({
-          type: "message",
-          messageType: "logout",
-          message: "로그아웃 되셨습니다.",
-        })
-      );
-    }
-
     if (res.status === 400) {
-      const data = await res.json();
-      console.error(data.message);
+      const { message } = await res.json();
+      return console.error(message);
     }
+
+    localStorage.removeItem("jwt");
+
+    dispatch(
+      setModalOpen({
+        type: "message",
+        messageType: "logout",
+        message: "로그아웃 되셨습니다.",
+      })
+    );
   };
 
   return (
