@@ -1,8 +1,11 @@
-import { modal } from "./style";
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
-import { setModalClose } from "../../store/slices/modalSlice";
+
 import { motion } from "framer-motion";
+
+import { setModalClose } from "../../store/slices/modalSlice";
+
+import { modal } from "./style";
 
 function ShowModal({ children }) {
   const modalOutside = useRef();
