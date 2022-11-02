@@ -21,7 +21,7 @@ function Welcome() {
   }
 
   function goToGuestPage() {
-    navigate("/users/guest");
+    navigate("/guest");
   }
 
   function goToLoginPage() {

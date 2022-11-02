@@ -1,21 +1,25 @@
-import { Wrapper, Content } from "./style";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { setModalClose } from "../../store/slices/modalSlice";
-import { validateCardForm } from "../../utils/validateCardForm";
+import { useDispatch, useSelector } from "react-redux";
+
 import ConfirmMessageModal from "../ConfirmMessageModal";
+
+import { setModalClose } from "../../store/slices/modalSlice";
+import { validateCardForm } from "../../services/validateCardForm";
+
+import { Wrapper, Content } from "./style";
 
 function CardModal({ socket }) {
   const dispatch = useDispatch();
   const { user_id } = useParams();
-  const { message, cardsLength } = useSelector((state) => state.modal);
-  const { currentDate } = useSelector((state) => state.calendar);
 
+  const [cardColors, setCardColors] = useState([]);
+  const [socketType, setSocketType] = useState("deleteCard");
   const [errorMessage, setErrorMessage] = useState("");
-  const [socketType, setSocketType] = useState(null);
   const [showConfirmMessage, setShowConfirmMessage] = useState(false);
-  const themeColors = ["#62FCAF", "#9300FE", "#11ffee", "#034EFD", "#fcf434"];
+
+  const { currentDate } = useSelector((state) => state.calendar);
+  const { message, cardsLength } = useSelector((state) => state.modal);
 
   const cardX = (cardsLength % 3) * 6 + 1;
   const cardY = parseInt(cardsLength / 3) * 4 + 1;
@@ -24,7 +28,7 @@ function CardModal({ socket }) {
     cardId: message ? message.cardId : "",
     snapshotId: message ? message.snapshotId : "",
     currentDate,
-    createdBy: user_id,
+    createdBy: user_id ? user_id : "guest",
     category: message ? message.category : "",
     startDate: message ? message.startDate : "",
     endDate: message ? message.endDate : "",
@@ -39,6 +43,19 @@ function CardModal({ socket }) {
     x: message ? message.x : cardX,
     y: message ? message.y : cardY,
   });
+
+  useEffect(() => {
+    async function getCardColorList() {
+      const res = await fetch(
+        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/card-color-list`
+      );
+      const { colorList } = await res.json();
+
+      setCardColors([...colorList]);
+    }
+
+    getCardColorList();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,9 +76,8 @@ function CardModal({ socket }) {
     });
   };
 
-  const validationCheck = (e) => {
-    e.preventDefault();
-    const type = message ? "modify" : "create";
+  const validationCheck = () => {
+    const type = cardInput.cardId ? "modify" : "create";
     const errors = validateCardForm(cardInput, type);
 
     if (errors.length > 0) {
@@ -69,13 +85,11 @@ function CardModal({ socket }) {
       return setErrorMessage(message);
     }
 
-    message ? setSocketType("modifyCard") : setSocketType("createCard");
-
+    setSocketType(`${type}Card`);
     setShowConfirmMessage(true);
   };
 
-  const deleteCard = (e) => {
-    e.preventDefault();
+  const deleteCard = () => {
     setSocketType("deleteCard");
     setShowConfirmMessage(true);
   };
@@ -124,7 +138,7 @@ function CardModal({ socket }) {
                 테마 <em>*</em>
               </div>
               <div className="category-colors">
-                {themeColors.map((color) => (
+                {cardColors.map((color) => (
                   <div className="category-color" key={color}>
                     <input
                       type="radio"
@@ -207,32 +221,27 @@ function CardModal({ socket }) {
           )}
         </div>
       </Wrapper>
-      {showConfirmMessage &&
-        (cardInput.cardId ? (
-          <ConfirmMessageModal
-            socket={socket}
-            socketType={socketType}
-            socketValue={cardInput}
-            confirmMessage={
-              socketType === "modifyCard"
-                ? "카드를 수정하시겠습니까?"
-                : "카드를 삭제하시겠습니까?"
-            }
-            endMessage={
-              socketType === "modifyCard"
-                ? "카드가 수정되었습니다."
-                : "카드가 삭제되었습니다."
-            }
-          />
-        ) : (
-          <ConfirmMessageModal
-            socket={socket}
-            socketType="createCard"
-            socketValue={cardInput}
-            confirmMessage="카드를 생성하시겠습니까?"
-            endMessage="카드가 생성되었습니다."
-          />
-        ))}
+      {showConfirmMessage && (
+        <ConfirmMessageModal
+          socket={socket}
+          socketType={socketType}
+          socketValue={cardInput}
+          confirmMessage={
+            socketType === "modifyCard"
+              ? "카드를 수정하시겠습니까?"
+              : socketType === "deleteCard"
+              ? "카드를 삭제하시겠습니까?"
+              : "카드를 생성하시겠습니까?"
+          }
+          endMessage={
+            socketType === "modifyCard"
+              ? "카드가 수정되었습니다."
+              : socketType === "deleteCard"
+              ? "카드가 삭제되었습니다."
+              : "카드가 생성되었습니다."
+          }
+        />
+      )}
     </>
   );
 }

@@ -132,6 +132,12 @@ export const Wrapper = styled.div`
     color: #ffffff;
     font-weight: bold;
   }
+
+  & .error-message {
+    margin-bottom: 10px;
+    text-align: center;
+    color: #ff2700;
+  }
 `;
 
 export const Content = styled.div`

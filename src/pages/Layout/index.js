@@ -5,9 +5,6 @@ import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { AnimatePresence } from "framer-motion";
 
-import { Wrapper, Content } from "./style";
-import { fetchData } from "../../utils/fetchData";
-
 import Sidebar from "../../components/Sidebar";
 import Dashboard from "../../components/Dashboard";
 import CalendarDate from "../../components/CalendarDate";
@@ -20,20 +17,23 @@ import JoinGroupModal from "../../components/JoinGroupModal";
 import ManageGroupModal from "../../components/ManageGroupModal";
 import MyGroupListModal from "../../components/MyGroupListModal";
 
+import { fetchData } from "../../utils/fetchData";
+
+import { Wrapper, Content } from "./style";
+
 function Layout() {
   const { user_id } = useParams();
   const { isModalOpen, modalType } = useSelector((state) => state.modal);
 
   const [role, setRole] = useState(null);
   const [socket, setSocket] = useState(null);
-  const [groupList, setGroupList] = useState([]);
   const [username, setUsername] = useState(null);
+  const [groupList, setGroupList] = useState([]);
 
   useEffect(() => {
     async function getUserInfo() {
-      if (user_id === "guest") {
-        setRole("GUEST");
-        return;
+      if (!user_id) {
+        return setRole("GUEST");
       }
 
       const res = await fetchData(`/users/${user_id}`, "GET");

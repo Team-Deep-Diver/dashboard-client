@@ -19,6 +19,10 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
+    path: "/guest",
+    element: <Layout />,
+  },
+  {
     path: "/users/:user_id",
     element: <Layout />,
   },

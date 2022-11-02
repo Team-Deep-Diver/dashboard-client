@@ -21,7 +21,9 @@ import { setCardInput } from "../../utils/setCardInput";
 import { Wrapper, GridLayer, Cell, Content } from "./style.js";
 
 function Dashboard({ socket }) {
-  const { user_id } = useParams();
+  let { user_id } = useParams();
+  user_id = user_id ? user_id : "guest";
+
   const [cards, setCards] = useState([]);
   const [todoChange, setTodoChange] = useState(null);
 

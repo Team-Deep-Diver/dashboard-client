@@ -5,10 +5,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { options } from "./sidebarOptions";
 import { fetchData } from "../../utils/fetchData";
 import { getNoticeInfo } from "../../services/getNoticeInfo";
 import { setModalOpen } from "../../store/slices/modalSlice";
+
+import { options } from "./sidebarOptions";
 import {
   Wrapper,
   NoticeWrapper,
@@ -27,32 +28,10 @@ function Sidebar({ role, username, socket, groupList }) {
   const [noticeList, setNoticeList] = useState([]);
   const { isModalOpen } = useSelector((state) => state.modal);
 
-  useEffect(() => {
-    async function getGroupNotice() {
-      const res = await fetchData(`/users/${user_id}/groupNotice`, "GET");
-
-      if (res.status === 400) {
-        const { message } = await res.json();
-        return console.error(message);
-      }
-
-      const { myGroupList } = await res.json();
-      setNoticeList([...myGroupList]);
-    }
-
-    (role !== "GUEST") && getGroupNotice();
-  }, [isModalOpen, isOpen]);
-
-  useEffect(() => {
-    groupList?.map((group) => {
-      socket?.on(group, (data) => {
-        const { groupName, colorCode, notice } = data;
-        const newNotice = getNoticeInfo(groupName, colorCode, notice);
-
-        setNoticeList([...noticeList, newNotice]);
-      });
-    });
-  }, [socket, noticeList, groupList]);
+  const home = async () => {
+    socket.emit("resetGuestCards", { socketValue: "guest" });
+    navigate("/");
+  };
 
   const logout = async () => {
     const res = await fetchData("/logout", "POST");
@@ -72,6 +51,33 @@ function Sidebar({ role, username, socket, groupList }) {
       })
     );
   };
+
+  useEffect(() => {
+    async function getGroupNotice() {
+      const res = await fetchData(`/users/${user_id}/groupNotice`, "GET");
+
+      if (res.status === 400) {
+        const { message } = await res.json();
+        return console.error(message);
+      }
+
+      const { myGroupList } = await res.json();
+      setNoticeList([...myGroupList]);
+    }
+
+    !!user_id && getGroupNotice();
+  }, [isModalOpen, isOpen]);
+
+  useEffect(() => {
+    groupList?.map((group) => {
+      socket?.on(group, (data) => {
+        const { groupName, colorCode, notice } = data;
+        const newNotice = getNoticeInfo(groupName, colorCode, notice);
+
+        setNoticeList([...noticeList, newNotice]);
+      });
+    });
+  }, [socket, noticeList, groupList]);
 
   return (
     <Wrapper>
@@ -114,7 +120,7 @@ function Sidebar({ role, username, socket, groupList }) {
                 className="modal"
                 onClick={() => {
                   if (option.type === "home") {
-                    navigate("/");
+                    home();
                   } else if (option.type === "signup") {
                     navigate("/signup");
                   } else if (option.type === "logout") {

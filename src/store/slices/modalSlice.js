@@ -5,6 +5,7 @@ const initialState = {
   modalType: "",
   messageType: "",
   message: "",
+  cardsLength: 0,
 };
 
 const modalSlice = createSlice({

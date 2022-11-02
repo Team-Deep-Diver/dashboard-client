@@ -1,7 +1,10 @@
-import { modal, Wrapper } from "./style";
 import { useDispatch } from "react-redux";
-import { setModalOpen, setModalClose } from "../../store/slices/modalSlice";
+
 import { motion } from "framer-motion";
+
+import { setModalOpen, setModalClose } from "../../store/slices/modalSlice";
+
+import { modal, Wrapper } from "./style";
 
 function ConfirmMessageModal({
   socket,
