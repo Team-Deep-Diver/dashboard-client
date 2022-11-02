@@ -16,11 +16,10 @@ function ManageGroupModal() {
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
-    try {
-      const getGroupInfo = async () => {
-        setIsLoading(true);
+    const getGroupInfo = async () => {
+      setIsLoading(true);
 
-        const res = await fetchData(`/users/${user_id}/groups`, "GET");
+      const res = await fetchData(`/users/${user_id}/groups`, "GET");
 
         if (res.status === 200) {
           const group = await res.json();
@@ -32,42 +31,35 @@ function ManageGroupModal() {
         }
       };
 
-      getGroupInfo();
-    } catch (err) {
-      console.error(err);
-    }
+    getGroupInfo();
   }, []);
 
   const acceptApplicant = async ({
     _id: applicant_id,
     nickname: applicant_name,
   }) => {
-    try {
-      const res = await fetchData(
-        `/users/${user_id}/groups/${group_id}/${applicant_id}`,
-        "POST",
-        { status: "PARTICIPATING" }
+    const res = await fetchData(
+      `/users/${user_id}/groups/${group_id}/${applicant_id}`,
+      "POST",
+      { status: "PARTICIPATING" }
+    );
+
+    const data = res.json();
+
+    if (res.status === 201) {
+      dispatch(
+        setModalOpen({
+          type: "message",
+          message: `${applicant_name} 수락하였습니다.`,
+        })
       );
-
-      const data = res.json();
-
-      if (res.status === 201) {
-        dispatch(
-          setModalOpen({
-            type: "message",
-            message: `${applicant_name} 수락하였습니다.`,
-          })
-        );
-      } else {
-        dispatch(
-          setModalOpen({
-            type: "message",
-            message: data.message,
-          })
-        );
-      }
-    } catch (err) {
-      console.error(err);
+    } else {
+      dispatch(
+        setModalOpen({
+          type: "message",
+          message: data.message,
+        })
+      );
     }
   };
 
@@ -75,32 +67,28 @@ function ManageGroupModal() {
     _id: applicant_id,
     nickname: applicant_name,
   }) => {
-    try {
-      const res = await fetchData(
-        `/users/${user_id}/groups/${applicant_id}`,
-        "POST",
-        { status: "REJECTED" }
+    const res = await fetchData(
+      `/users/${user_id}/groups/${applicant_id}`,
+      "POST",
+      { status: "REJECTED" }
+    );
+
+    const data = res.json();
+
+    if (res.status === 200) {
+      dispatch(
+        setModalOpen({
+          type: "message",
+          message: `${applicant_name}을 거절하였습니다.`,
+        })
       );
-
-      const data = res.json();
-
-      if (res.status === 200) {
-        dispatch(
-          setModalOpen({
-            type: "message",
-            message: `${applicant_name}을 거절하였습니다.`,
-          })
-        );
-      } else {
-        dispatch(
-          setModalOpen({
-            type: "message",
-            message: data.message,
-          })
-        );
-      }
-    } catch (err) {
-      console.error(err);
+    } else {
+      dispatch(
+        setModalOpen({
+          type: "message",
+          message: data.message,
+        })
+      );
     }
   };
 
