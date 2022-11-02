@@ -40,7 +40,7 @@ function Sidebar({ role, username, socket, groupList }) {
       setNoticeList([...myGroupList]);
     }
 
-    getGroupNotice();
+    (role !== "GUEST") && getGroupNotice();
   }, [isModalOpen, isOpen]);
 
   useEffect(() => {
