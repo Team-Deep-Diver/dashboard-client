@@ -52,6 +52,10 @@ export const ModalContents = styled.div`
     border: 1px solid #878787;
     resize: none;
   }
+
+  & .error-message {
+    color: #ff2700;
+  }
 `;
 
 export const ModalFooter = styled.footer`

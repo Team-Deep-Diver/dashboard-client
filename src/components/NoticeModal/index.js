@@ -1,12 +1,14 @@
-import { ModalWrapper, ModalHeader, ModalContents, ModalFooter } from "./style";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setModalClose } from "../../store/slices/modalSlice";
-import { validateNoticeForm } from "../../utils/validateNoticeForm";
+
 import ConfirmMessageModal from "../ConfirmMessageModal";
+import { setModalClose } from "../../store/slices/modalSlice";
+import { validateNoticeForm } from "../../services/validateNoticeForm";
+import { ModalWrapper, ModalHeader, ModalContents, ModalFooter } from "./style";
 
 function NoticeModal({ socket, adminId, groupList }) {
   const dispatch = useDispatch();
+
   const [errorMessage, setErrorMessage] = useState("");
   const [showConfirmMessage, setShowConfirmMessage] = useState(false);
   const [notice, setNotice] = useState({
@@ -28,6 +30,7 @@ function NoticeModal({ socket, adminId, groupList }) {
 
   const validationCheck = (e) => {
     e.preventDefault();
+
     const errors = validateNoticeForm(notice);
 
     if (errors.length > 0) {
