@@ -8,24 +8,13 @@ import { setModalClose } from "../../store/slices/modalSlice";
 function MessageModal() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { message, messageType } = useSelector((state) => state.modal);
 
-  async function logout() {
-    const res = await fetch(
-      `${process.env.REACT_APP_SERVER_REQUEST_HOST}/logout`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.jwt,
-        },
-      }
-    );
-
-    if (res.status === 200) {
-      navigate("/");
-    }
-  }
+  const logout = () => {
+    dispatch(setModalClose());
+    navigate("/");
+  };
 
   return (
     <motion.div
