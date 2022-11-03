@@ -3,7 +3,9 @@ import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import { setModalOpen, setModalClose } from "../../store/slices/modalSlice";
+
 import { fetchData } from "../../utils/fetchData";
+
 import { ModalWrapper, ModalHeader, ModalContents, ModalFooter } from "./style";
 
 function ManageGroupModal() {

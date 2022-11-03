@@ -2,8 +2,11 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import ConfirmMessageModal from "../ConfirmMessageModal";
+
 import { setModalClose } from "../../store/slices/modalSlice";
+
 import { validateNoticeForm } from "../../services/validateNoticeForm";
+
 import { ModalWrapper, ModalHeader, ModalContents, ModalFooter } from "./style";
 
 function NoticeModal({ socket, adminId, groupList }) {
