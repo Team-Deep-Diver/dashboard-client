@@ -23,7 +23,6 @@ import { Wrapper, Content } from "./style";
 
 function Layout() {
   const { user_id } = useParams();
-  const { isModalOpen, modalType } = useSelector((state) => state.modal);
 
   const [role, setRole] = useState(null);
   const [socket, setSocket] = useState(null);
