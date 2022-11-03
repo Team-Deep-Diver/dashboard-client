@@ -23,14 +23,14 @@ import {
 function Sidebar({ role, username, socket, groupList }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { user_id } = useParams();
+  const { isModalOpen } = useSelector((state) => state.modal);
 
   const optionList = options[role];
   const [isOpen, setIsOpen] = useState(false);
   const [noticeList, setNoticeList] = useState([]);
   const [showMessageModal, setShowMessageModal] = useState(false);
-
-  const { isModalOpen } = useSelector((state) => state.modal);
 
   const confirmAction = () => {
     dispatch(

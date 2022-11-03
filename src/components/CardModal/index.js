@@ -13,13 +13,13 @@ function CardModal({ socket }) {
   const dispatch = useDispatch();
   const { user_id } = useParams();
 
+  const { currentDate } = useSelector((state) => state.calendar);
+  const { message, cardsLength } = useSelector((state) => state.modal);
+
   const [cardColors, setCardColors] = useState([]);
   const [socketType, setSocketType] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [showConfirmMessage, setShowConfirmMessage] = useState(false);
-
-  const { currentDate } = useSelector((state) => state.calendar);
-  const { message, cardsLength } = useSelector((state) => state.modal);
 
   const cardX = (cardsLength % 3) * 6 + 1;
   const cardY = parseInt(cardsLength / 3) * 4 + 1;

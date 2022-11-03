@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { TfiAngleDoubleLeft, TfiAngleDoubleRight } from "react-icons/tfi";
 
-import { Wrapper } from "./style";
 import { getDate } from "../../utils/getDate";
 import { showNextDay, showPrevDay } from "../../store/slices/calendarSlice";
+
+import { Wrapper } from "./style";
 
 function CalendarDate() {
   const dispatch = useDispatch();

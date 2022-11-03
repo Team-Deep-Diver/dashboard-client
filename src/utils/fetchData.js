@@ -1,7 +1,7 @@
-export async function fetchData(endPoint, apiMethod, bodyObj) {
-  try{
+export async function fetchData(endpointURL, apiMethod, bodyObj) {
+  try {
     const res = await fetch(
-      `${process.env.REACT_APP_SERVER_REQUEST_HOST}${endPoint}`,
+      `${process.env.REACT_APP_SERVER_REQUEST_HOST}${endpointURL}`,
       {
         method: apiMethod,
         headers: {
