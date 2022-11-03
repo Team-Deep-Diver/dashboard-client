@@ -28,6 +28,7 @@ function Layout() {
   const [socket, setSocket] = useState(null);
   const [username, setUsername] = useState(null);
   const [groupList, setGroupList] = useState([]);
+  const { isModalOpen, modalType } = useSelector((state) => state.modal);
 
   useEffect(() => {
     const getUserInfo = async () => {
