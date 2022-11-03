@@ -22,7 +22,7 @@ function JoinGroupModal() {
     setResultMessage("그룹명을 검색해주세요");
   };
 
-  async function findGroupByName() {
+  const findGroupByName = async () => {
     const res = await fetchData(`/groups?groupName=${groupName}`, "GET");
 
     setIsLoading(true);
@@ -39,9 +39,9 @@ function JoinGroupModal() {
     }
 
     setIsLoading(false);
-  }
+  };
 
-  async function applyGroupById(groupId) {
+  const applyGroupById = async (groupId) => {
     const res = await fetchData(`/users/${user_id}/groups/${groupId}`, "POST");
 
     if (res.status === 200) {
@@ -56,7 +56,7 @@ function JoinGroupModal() {
         })
       );
     }
-  }
+  };
 
   return (
     <ModalWrapper>
