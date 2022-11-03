@@ -19,6 +19,7 @@ const modalSlice = createSlice({
       state.modalType = type;
       state.message = message;
       state.messageType = messageType;
+      state.isModalOpen = true;
       state.cardsLength = cardsLength;
     },
     setModalClose(state) {
