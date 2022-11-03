@@ -28,7 +28,7 @@ function ConfirmMessageModal({
 
       if (res.status === 400) {
         const { message } = await res.json();
-        return console.error(message);
+        return dispatch(setModalOpen({ type: "message", message }));
       }
 
       return dispatch(setModalOpen({ type: "message", message: endMessage }));

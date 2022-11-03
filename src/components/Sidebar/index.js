@@ -47,7 +47,14 @@ function Sidebar({ role, username, socket, groupList }) {
 
     if (res.status === 400) {
       const { message } = await res.json();
-      return console.error(message);
+
+      return dispatch(
+        setModalOpen({
+          type: "message",
+          messageType: "logout",
+          message,
+        })
+      );
     }
 
     localStorage.removeItem("jwt");
@@ -72,7 +79,7 @@ function Sidebar({ role, username, socket, groupList }) {
 
       const { myGroupList } = await res.json();
       setNoticeList([...myGroupList]);
-    }
+    };
 
     !!user_id && getGroupNotice();
   }, [isModalOpen, isOpen]);
