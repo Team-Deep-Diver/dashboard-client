@@ -2,10 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-
 import MessageModal from "../../components/MessageModal";
 
 import { setModalOpen } from "../../store/slices/modalSlice";

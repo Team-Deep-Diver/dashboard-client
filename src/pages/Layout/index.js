@@ -48,7 +48,7 @@ function Layout() {
       setRole(userInfo.role);
       setUsername(userInfo.nickname);
       setGroupList(userInfo.groups?.map((group) => group.groupName));
-    }
+    };
 
     getUserInfo();
   }, []);
