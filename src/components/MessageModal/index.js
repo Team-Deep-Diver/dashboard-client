@@ -10,7 +10,6 @@ import { modal, Wrapper } from "./style";
 function MessageModal({ socket }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { message, messageType } = useSelector((state) => state.modal);
 
   const { message, messageType } = useSelector((state) => state.modal);
 
