@@ -57,7 +57,6 @@ export const LoginForm = styled.form`
     border-radius: 10px;
     color: #ffffff;
     cursor: pointer;
-    font-family: "GangwonEdu_OTFBoldA";
   }
 
   & .login-button:disabled {

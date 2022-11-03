@@ -128,11 +128,7 @@ function Signup() {
   return (
     <Wrapper>
       <header>
-        <FontAwesomeIcon
-          icon={faArrowLeftLong}
-          size="2x"
-          onClick={() => navigate("/")}
-        />
+        <ImArrowLeft2 size="40" onClick={() => navigate("/")} />
       </header>
       <SignupForm>
         <h1>회원가입</h1>
@@ -174,7 +170,7 @@ function Signup() {
             data-tooltip={`* member는 복수의 그룹에 참여할 수 있습니다. \n * admin은 하나의 그룹을 생성하고, 관리할 수 있습니다.`}
           >
             <span>권한</span>
-            <FontAwesomeIcon icon={faInfoCircle} />
+            <AiFillInfoCircle />
           </div>
           <div className="role">
             <label htmlFor="member">member</label>

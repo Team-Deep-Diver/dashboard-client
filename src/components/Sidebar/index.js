@@ -174,10 +174,7 @@ function Sidebar({ role, username, socket, groupList }) {
                 >
                   <NoticeWrapper>
                     {noticeList?.map((notice, idx) => (
-                      <Notice
-                        colorCode={notice.colorCode}
-                        key={notice.colorCode + idx}
-                      >
+                      <Notice colorCode={notice.colorCode} key={idx}>
                         <strong className="group-name">
                           {notice.groupName}
                         </strong>

@@ -121,6 +121,7 @@ export const Notice = styled.div`
     font-size: 17px;
     display: block;
     font-family: "Pretendard-Slim";
+    color: #000000;
   }
 
   & .font {
@@ -130,5 +131,6 @@ export const Notice = styled.div`
     margin: 0;
     font-family: "Pretendard-Slim";
     font-size: 15px;
+    color: #000000;
   }
 `;

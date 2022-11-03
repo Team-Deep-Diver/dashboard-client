@@ -18,6 +18,11 @@ function MessageModal({ socket }) {
     navigate("/");
   };
 
+  const login = () => {
+    dispatch(setModalClose());
+    navigate("/login");
+  };
+
   const home = async () => {
     socket.emit("resetGuestCards", { socketValue: "guest" });
     dispatch(setModalClose());
@@ -49,7 +54,7 @@ function MessageModal({ socket }) {
               type="submit"
               value="확인"
               className="close-button"
-              onClick={() => navigate("/login")}
+              onClick={login}
             />
           )}
 
