@@ -32,7 +32,7 @@ function Sidebar({ role, username, socket, groupList }) {
   const [noticeList, setNoticeList] = useState([]);
   const [showMessageModal, setShowMessageModal] = useState(false);
 
-  const confirmAction = () => {
+  const returnWelcomePage = () => {
     dispatch(
       setModalOpen({
         type: "message",
@@ -129,7 +129,7 @@ function Sidebar({ role, username, socket, groupList }) {
                 className="modal"
                 onClick={() => {
                   if (option.type === "home") {
-                    confirmAction();
+                    returnWelcomePage();
                   } else if (option.type === "signup") {
                     navigate("/signup");
                   } else if (option.type === "logout") {
