@@ -62,7 +62,7 @@ function Sidebar({ role, username, socket, groupList }) {
   };
 
   useEffect(() => {
-    async function getGroupNotice() {
+    const getGroupNotice = async () => {
       const res = await fetchData(`/users/${user_id}/groupNotice`, "GET");
 
       if (res.status === 400) {

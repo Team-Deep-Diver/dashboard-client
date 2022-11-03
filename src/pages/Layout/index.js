@@ -31,7 +31,7 @@ function Layout() {
   const [groupList, setGroupList] = useState([]);
 
   useEffect(() => {
-    async function getUserInfo() {
+    const getUserInfo = async () => {
       if (!user_id) {
         return setRole("GUEST");
       }

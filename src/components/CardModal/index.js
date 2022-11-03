@@ -45,7 +45,7 @@ function CardModal({ socket }) {
   });
 
   useEffect(() => {
-    async function getCardColorList() {
+    const getCardColorList = async () => {
       try {
         const res = await fetch(
           `${process.env.REACT_APP_SERVER_REQUEST_HOST}/card-color-list`

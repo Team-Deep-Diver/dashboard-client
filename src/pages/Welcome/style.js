@@ -1,5 +1,15 @@
 import styled from "styled-components";
 
+export const hover = {
+  scale: 1.1,
+  textShadow: "0px 0px 8px rgba(255, 255, 255)",
+  boxShadow: "0px 0px 8px rgba(255, 255, 255)",
+};
+
+export const tap = {
+  scale: 0.9
+};
+
 export const Wrapper = styled.header`
   background: rgba(255, 255, 255);
 `;

@@ -1,6 +1,10 @@
-import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
+
+import { motion } from "framer-motion";
+
 import {
+  hover,
+  tap,
   Wrapper,
   Header,
   Content,
@@ -9,54 +13,30 @@ import {
   FontBackGround,
 } from "./style";
 
-export const MyComponent = () => (
-  <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} />
-);
-
 function Welcome() {
   const navigate = useNavigate();
 
-  function goToSignUpPage() {
-    navigate("/signup");
-  }
-
-  function goToGuestPage() {
-    navigate("/guest");
-  }
-
-  function goToLoginPage() {
-    navigate("/login");
-  }
+  const navigatePage = (e) => {
+    e.target.textContent === "회원가입" && navigate("/signup");
+    e.target.textContent === "Guest" && navigate("/guest");
+    e.target.textContent === "Users" && navigate("/login");
+  };
 
   return (
     <Wrapper>
       <Header>
-        <button onClick={goToSignUpPage}>회원가입</button>
+        <button onClick={navigatePage}>회원가입</button>
       </Header>
       <Content>
         <FontBackGround>
           <strong>Hello</strong>
         </FontBackGround>
         <UserTypeWrapper>
-          <motion.div
-            whileHover={{
-              scale: 1.1,
-              textShadow: "0px 0px 8px rgba(255, 255, 255)",
-              boxShadow: "0px 0px 8px rgba(255, 255, 255)",
-            }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <User onClick={goToGuestPage}>Guest</User>
+          <motion.div whileHover={hover} whileTap={tap}>
+            <User onClick={navigatePage}>Guest</User>
           </motion.div>
-          <motion.div
-            whileHover={{
-              scale: 1.1,
-              textShadow: "0px 0px 8px rgba(255, 255, 255)",
-              boxShadow: "0px 0px 8px rgba(255, 255, 255)",
-            }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <User onClick={goToLoginPage}>Users</User>
+          <motion.div whileHover={hover} whileTap={tap}>
+            <User onClick={navigatePage}>Users</User>
           </motion.div>
         </UserTypeWrapper>
       </Content>
