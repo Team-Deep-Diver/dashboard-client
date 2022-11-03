@@ -8,9 +8,10 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 import MessageModal from "../../components/MessageModal";
 
-import { Wrapper, SignupForm } from "./style";
 import { setModalOpen } from "../../store/slices/modalSlice";
 import { validateSignupForm } from "../../utils/validateSignupForm";
+
+import { Wrapper, SignupForm } from "./style";
 
 function Signup() {
   const navigate = useNavigate();

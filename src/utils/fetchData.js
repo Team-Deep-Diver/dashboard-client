@@ -1,8 +1,8 @@
-export async function fetchData(Endpoint, APImethod, bodyObj) {
+export async function fetchData(endPoint, apiMethod, bodyObj) {
   const res = await fetch(
-    `${process.env.REACT_APP_SERVER_REQUEST_HOST}${Endpoint}`,
+    `${process.env.REACT_APP_SERVER_REQUEST_HOST}${endPoint}`,
     {
-      method: APImethod,
+      method: apiMethod,
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.jwt,
