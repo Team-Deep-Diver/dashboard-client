@@ -1,8 +1,13 @@
 import styled from "styled-components";
 
-export const modal = {
+export const modalTypeOne = {
   hidden: { y: "-100vh", opacity: 0 },
   visible: { y: "250px", opacity: 1, transition: { delay: 0.7 } },
+};
+
+export const modalTypeTwo = {
+  hidden: { y: "-100vh", opacity: 0 },
+  visible: { y: "-250px", opacity: 1, transition: { delay: 0.7 } },
 };
 
 export const Wrapper = styled.div`

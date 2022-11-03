@@ -34,8 +34,8 @@ function ManageGroupModal() {
         const group = await res.json();
 
         setGroupId(group.applicants._id);
-        setApplicants(group.applicants.applicants);
-        setMembers(group.members.members);
+        setApplicants(group.applicants);
+        setMembers(group.members);
         setIsLoading(false);
       }
     }

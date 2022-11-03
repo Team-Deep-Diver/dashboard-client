@@ -14,7 +14,7 @@ function CardModal({ socket }) {
   const { user_id } = useParams();
 
   const [cardColors, setCardColors] = useState([]);
-  const [socketType, setSocketType] = useState("deleteCard");
+  const [socketType, setSocketType] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [showConfirmMessage, setShowConfirmMessage] = useState(false);
 
@@ -46,12 +46,16 @@ function CardModal({ socket }) {
 
   useEffect(() => {
     async function getCardColorList() {
-      const res = await fetch(
-        `${process.env.REACT_APP_SERVER_REQUEST_HOST}/card-color-list`
-      );
-      const { colorList } = await res.json();
+      try {
+        const res = await fetch(
+          `${process.env.REACT_APP_SERVER_REQUEST_HOST}/card-color-list`
+        );
+        const { colorList } = await res.json();
 
-      setCardColors([...colorList]);
+        setCardColors([...colorList]);
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     getCardColorList();

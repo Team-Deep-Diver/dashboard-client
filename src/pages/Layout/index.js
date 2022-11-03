@@ -87,7 +87,7 @@ function Layout() {
                 groupList={groupList}
               />
             )}
-            {modalType === "message" && <MessageModal />}
+            {modalType === "message" && <MessageModal socket={socket} />}
             {modalType === "manageGroup" && <ManageGroupModal />}
             {modalType === "handleCard" && <CardModal socket={socket} />}
             {modalType === "myGroupList" && <MyGroupListModal />}

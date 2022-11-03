@@ -1,22 +1,38 @@
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 
 import { motion } from "framer-motion";
 
+import { fetchData } from "../../utils/fetchData";
 import { setModalOpen, setModalClose } from "../../store/slices/modalSlice";
 
-import { modal, Wrapper } from "./style";
+import { modalTypeOne, modalTypeTwo, Wrapper } from "./style";
 
 function ConfirmMessageModal({
   socket,
   socketType,
   socketValue,
+  deleteGroupId,
   confirmMessage,
   endMessage,
 }) {
   const dispatch = useDispatch();
+  const { user_id } = useParams();
 
-  const submitNotice = (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    if (deleteGroupId) {
+      const res = await fetchData(
+        `/users/${user_id}/groups/${deleteGroupId}`,
+        "DELETE"
+      );
+
+      if (res.status === 400) {
+        const { message } = await res.json();
+        return console.error(message);
+      }
+
+      return dispatch(setModalOpen({ type: "message", message: endMessage }));
+    }
 
     dispatch(setModalOpen({ type: "message", message: endMessage }));
     socket?.emit(socketType, { socketValue });
@@ -25,7 +41,7 @@ function ConfirmMessageModal({
   return (
     <motion.div
       className="confirm-modal"
-      variants={modal}
+      variants={deleteGroupId ? modalTypeTwo : modalTypeOne}
       initial="hidden"
       animate="visible"
       exit="hidden"
@@ -43,7 +59,7 @@ function ConfirmMessageModal({
             type="submit"
             value="확인"
             className="button"
-            onClick={submitNotice}
+            onClick={handleSubmit}
           />
         </div>
       </Wrapper>

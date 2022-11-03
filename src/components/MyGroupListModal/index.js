@@ -1,46 +1,44 @@
-import { ModalWrapper, ModalHeader, ModalContents, ModalFooter } from "./style";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import DeleteModal from "../DeleteModal";
+import { useParams } from "react-router-dom";
+
+import ConfirmMessageModal from "../ConfirmMessageModal";
+
+import { fetchData } from "../../utils/fetchData";
 import { setModalClose } from "../../store/slices/modalSlice";
+
+import { ModalWrapper, ModalHeader, ModalContents, ModalFooter } from "./style";
 
 function MyGroupListModal() {
   const dispatch = useDispatch();
   const { user_id } = useParams();
+
   const [groups, setGroups] = useState([]);
-  const [targetedGroupId, setTargetedGroupId] = useState("");
-  const [isConfirm, setIsConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [confirmTarget, setConfirmTarget] = useState(false);
+  const [confirmText, setConfirmText] = useState(false);
+  const [targetedGroupId, setTargetedGroupId] = useState("");
+  const [showConfirmMessage, setShowConfirmMessage] = useState(false);
 
   const handleClick = ({ groupId }, e) => {
-    setIsConfirm(true);
-    setConfirmTarget(e.target.innerText);
+    setConfirmText(e.target.innerText);
     setTargetedGroupId(groupId);
+    setShowConfirmMessage(true);
   };
 
   useEffect(() => {
     const getGroupList = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch(
-          `${process.env.REACT_APP_SERVER_REQUEST_HOST}/users/${user_id}/groups`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + localStorage.jwt,
-            },
-          }
-        );
-        const result = await response.json();
+      setIsLoading(true);
+      const res = await fetchData(`/users/${user_id}/groups`, "GET");
 
-        setGroups(result);
+      if (res.status === 400) {
+        const { message } = await res.json();
         setIsLoading(false);
-      } catch (err) {
-        console.error(err);
+        return console.error(message);
       }
+
+      const data = await res.json();
+      setGroups(data);
+      setIsLoading(false);
     };
 
     getGroupList();
@@ -73,8 +71,9 @@ function MyGroupListModal() {
               </ul>
               <li>
                 {!isLoading &&
-                  groups.length === 0 &&
-                  "그룹에 참가 신청한 사람이 없습니다."}
+                  groups.filter((group) => group.status === "PARTICIPATING")
+                    .length === 0 &&
+                  "참여 중인 그룹이 없습니다."}
               </li>
             </div>
           </div>
@@ -103,8 +102,9 @@ function MyGroupListModal() {
               </ul>
               <li>
                 {!isLoading &&
-                  groups.length === 0 &&
-                  "그룹에 참가 신청한 사람이 없습니다."}
+                  groups.filter((group) => group.status !== "PARTICIPATING")
+                    .length === 0 &&
+                  "지원 내역이 없습니다."}
               </li>
             </div>
           </div>
@@ -117,10 +117,11 @@ function MyGroupListModal() {
             닫기
           </button>
         </ModalFooter>
-        {isConfirm && (
-          <DeleteModal
-            confirmMessage={`정말 ${confirmTarget}하시겠습니까?`}
-            fetchedValue={{ user_id, targetedGroupId }}
+        {showConfirmMessage && (
+          <ConfirmMessageModal
+            deleteGroupId={targetedGroupId}
+            confirmMessage={`정말 ${confirmText}하시겠습니까?`}
+            endMessage={`성공적으로 ${confirmText}되었습니다.`}
           />
         )}
       </ModalWrapper>
