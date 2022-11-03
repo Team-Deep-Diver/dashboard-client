@@ -21,39 +21,36 @@ function ManageGroupModal() {
 
       const res = await fetchData(`/users/${user_id}/groups`, "GET");
 
-        if (res.status === 200) {
-          const group = await res.json();
+      if (res.status === 200) {
+        const data = await res.json();
 
-          setGroupId(group.applicants._id);
-          setApplicants(group.applicants);
-          setMembers(group.members);
-          setIsLoading(false);
-        }
-      };
+        setGroupId(data.groupInfo._id);
+        setApplicants(data.applicants);
+        setMembers(data.members);
+        setIsLoading(false);
+      }
+    };
 
     getGroupInfo();
   }, []);
 
-  const acceptApplicant = async ({
-    _id: applicant_id,
-    nickname: applicant_name,
-  }) => {
+  const acceptApplicant = async (applicant) => {
     const res = await fetchData(
-      `/users/${user_id}/groups/${group_id}/${applicant_id}`,
+      `/users/${user_id}/groups/${group_id}/${applicant._id}`,
       "POST",
       { status: "PARTICIPATING" }
     );
-
-    const data = res.json();
 
     if (res.status === 201) {
       dispatch(
         setModalOpen({
           type: "message",
-          message: `${applicant_name} 수락하였습니다.`,
+          message: `${applicant.nickname} 수락하였습니다.`,
         })
       );
     } else {
+      const data = await res.json();
+
       dispatch(
         setModalOpen({
           type: "message",
@@ -63,26 +60,23 @@ function ManageGroupModal() {
     }
   };
 
-  const rejectApplicant = async ({
-    _id: applicant_id,
-    nickname: applicant_name,
-  }) => {
+  const rejectApplicant = async (applicant) => {
     const res = await fetchData(
-      `/users/${user_id}/groups/${applicant_id}`,
+      `/users/${user_id}/groups/${group_id}/${applicant._id}`,
       "POST",
       { status: "REJECTED" }
     );
 
-    const data = res.json();
-
-    if (res.status === 200) {
+    if (res.status === 201) {
       dispatch(
         setModalOpen({
           type: "message",
-          message: `${applicant_name}을 거절하였습니다.`,
+          message: `${applicant.nickname}을 거절하였습니다.`,
         })
       );
     } else {
+      const data = res.json();
+
       dispatch(
         setModalOpen({
           type: "message",
