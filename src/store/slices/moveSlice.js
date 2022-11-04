@@ -2,7 +2,25 @@ import { createSlice } from "@reduxjs/toolkit";
 import range from "lodash-es/range";
 
 const initialState = {
-  items: [],
+  items: [
+    {
+      cardId: "aaa",
+      snapshotId: "bb",
+      colorCode: "	#FFC0CB",
+      period: {
+        startDate: "2022.10.12",
+        endDate: "2022.10.14",
+      },
+      category: "운동",
+      todo: [],
+      imgUrl: "",
+      description: "hihi",
+      x: 100,
+      y: 100,
+      width: 400,
+      height: 300,
+    },
+  ],
   cells: range(20).map((y) => range(20).map((x) => "none")),
   dragging: {
     snapshotId: "",
@@ -32,7 +50,7 @@ const moveSlice = createSlice({
       };
     },
     dragMoved(state, action) {
-      const { item, point } = action.payload;
+      const { point } = action.payload;
 
       if (state.dragging) {
         state.dragging.nextPoint = point;
@@ -48,6 +66,7 @@ const moveSlice = createSlice({
         if (state.dragging.valid) {
           point.x = state.dragging.nextPoint.x;
           point.y = state.dragging.nextPoint.y;
+          console.log(point.x, point.y);
 
           item = {
             ...item,
@@ -56,6 +75,7 @@ const moveSlice = createSlice({
           };
         }
 
+        console.log(item, state.items);
         const index = state.items.findIndex(
           (i) => i.snapshotId === item.snapshotId
         );

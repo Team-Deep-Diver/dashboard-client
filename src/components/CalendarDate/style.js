@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,6 +10,7 @@ export const Wrapper = styled.div`
   background: #ffffff;
   box-shadow: 0 5px 5px -5px #333;
   margin: 1px;
+  z-index: 1;
 
   .font {
     font-family: "Pretendard-Regular";
