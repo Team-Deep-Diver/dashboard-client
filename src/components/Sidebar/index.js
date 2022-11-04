@@ -22,7 +22,6 @@ import {
 
 function Sidebar({ role, username, socket, groupList }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const { user_id } = useParams();
   const { isModalOpen } = useSelector((state) => state.modal);
@@ -32,15 +31,15 @@ function Sidebar({ role, username, socket, groupList }) {
   const [noticeList, setNoticeList] = useState([]);
   const [showMessageModal, setShowMessageModal] = useState(false);
 
-  const returnWelcomePage = () => {
+  const navigatePage = (type) => {
     dispatch(
       setModalOpen({
         type: "message",
-        messageType: "home",
+        messageType: type,
         message: `카드 정보가 모두 삭제됩니다. \n 그래도 돌아가시겠습니까?`,
       })
     );
-  };
+  }
 
   const logout = async () => {
     const res = await fetchData("/logout", "POST");
@@ -56,8 +55,6 @@ function Sidebar({ role, username, socket, groupList }) {
         })
       );
     }
-
-    localStorage.removeItem("jwt");
 
     dispatch(
       setModalOpen({
@@ -135,10 +132,10 @@ function Sidebar({ role, username, socket, groupList }) {
                 key={option.type}
                 className="modal"
                 onClick={() => {
-                  if (option.type === "home") {
-                    returnWelcomePage();
-                  } else if (option.type === "signup") {
-                    navigate("/signup");
+                  if (option.type === "returnHomePage") {
+                    navigatePage(option.type);
+                  } else if (option.type === "returnSignupPage") {
+                    navigatePage(option.type);
                   } else if (option.type === "logout") {
                     logout();
                   } else {

@@ -1,5 +1,5 @@
-import { validateEmail } from "../services/validateEmail";
-import { validatePassword } from "../services/validatePassword";
+import { validateEmail } from "../utils/validateEmail";
+import { validatePassword } from "../utils/validatePassword";
 
 export function validateSignupForm(
   signupValues,

@@ -15,6 +15,7 @@ function MessageModal({ socket }) {
 
   const logout = () => {
     dispatch(setModalClose());
+    localStorage.removeItem("jwt");
     navigate("/");
   };
 
@@ -23,10 +24,10 @@ function MessageModal({ socket }) {
     navigate("/login");
   };
 
-  const home = async () => {
+  const handleNavigate = async (type) => {
     socket.emit("resetGuestCards", { socketValue: "guest" });
     dispatch(setModalClose());
-    navigate("/");
+    type === "returnHomePage" ? navigate("/") : navigate("/signup");
   };
 
   return (
@@ -61,18 +62,24 @@ function MessageModal({ socket }) {
           {messageType !== "signup" && messageType !== "logout" && (
             <input
               type="submit"
-              value={messageType === "home" ? "취소" : "닫기"}
+              value={
+                messageType === "returnHomePage" ||
+                messageType === "returnSignupPage"
+                  ? "취소"
+                  : "닫기"
+              }
               className="close-button"
               onClick={() => dispatch(setModalClose())}
             />
           )}
 
-          {messageType === "home" && (
+          {(messageType === "returnHomePage" ||
+            messageType === "returnSignupPage") && (
             <input
               type="submit"
               value="확인"
               className="close-button"
-              onClick={home}
+              onClick={() => handleNavigate(messageType)}
             />
           )}
         </div>

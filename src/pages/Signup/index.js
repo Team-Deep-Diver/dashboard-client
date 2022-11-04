@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import { ImArrowLeft2 } from "react-icons/im";
+import { AiFillInfoCircle } from "react-icons/ai";
+
 import MessageModal from "../../components/MessageModal";
 
 import { setModalOpen } from "../../store/slices/modalSlice";

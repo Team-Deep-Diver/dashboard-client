@@ -12,12 +12,12 @@ export const options = {
     {
       name: "Home",
       icon: <FaHome size="30px" style={{ cursor: "pointer" }} />,
-      type: "home"
+      type: "returnHomePage"
     },
     {
       name: "회원가입",
       icon: <FaRegUserCircle size="30px" style={{ cursor: "pointer" }} />,
-      type: "signup",
+      type: "returnSignupPage",
     },
   ],
   MEMBER: [
